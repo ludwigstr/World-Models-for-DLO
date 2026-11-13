@@ -1,11 +1,12 @@
-
+/* Approach pages: theme toggle, mobile nav, and either the data dashboard (#ap-dash)
+   or the simple per-clip chart (#ap-perclip) for pages not converted yet. */
 (function () {
   'use strict';
 
   var D = window.BENCH_DATA || {};
   var SVGNS = 'http://www.w3.org/2000/svg';
   var COLORS = { world: 'var(--series-world)', dynamics: 'var(--series-dynamics)', physics: 'var(--series-physics)' };
-
+  // Page scores (same as the results chart on the main page).
   var MODELS = [
     { key: 'physworld', name: 'PhysWorld', paradigm: 'world', score: 7.5 },
     { key: 'newton', name: 'Newton', paradigm: 'physics', score: 7.6 },
@@ -21,6 +22,7 @@
   var BY = {};
   MODELS.forEach(function (m) { BY[m.key] = m; });
 
+  // ---------------------------------------------------------------- shared helpers
   function el(tag, attrs, parent) {
     var n = document.createElementNS(SVGNS, tag);
     for (var k in attrs) if (attrs[k] != null) n.setAttribute(k, attrs[k]);
@@ -38,12 +40,12 @@
     var pos = (sorted.length - 1) * q, lo = Math.floor(pos), hi = Math.ceil(pos);
     return sorted[lo] + (sorted[hi] - sorted[lo]) * (pos - lo);
   }
-  function hbarPath(x0, x1, y, h) {
+  function hbarPath(x0, x1, y, h) { // horizontal bar, 4px rounded data end, square at the baseline
     var r = Math.min(4, (x1 - x0) / 2, h / 2);
     return 'M' + x0 + ',' + y + ' H' + (x1 - r) + ' Q' + x1 + ',' + y + ' ' + x1 + ',' + (y + r) +
       ' V' + (y + h - r) + ' Q' + x1 + ',' + (y + h) + ' ' + (x1 - r) + ',' + (y + h) + ' H' + x0 + ' Z';
   }
-  function vbarPath(x, w, y, base) {
+  function vbarPath(x, w, y, base) { // vertical column, rounded top
     var r = Math.min(4, w / 2, (base - y) / 2);
     return 'M' + x + ',' + base + ' V' + (y + r) + ' Q' + x + ',' + y + ' ' + (x + r) + ',' + y +
       ' H' + (x + w - r) + ' Q' + (x + w) + ',' + y + ' ' + (x + w) + ',' + (y + r) + ' V' + base + ' Z';
@@ -60,6 +62,7 @@
   }
   var MUTED = 'fill: var(--muted); font-size: 11px';
 
+  // ---------------------------------------------------------------- theme + nav
   var themeBtn = document.getElementById('theme-toggle');
   function theme() { return document.documentElement.getAttribute('data-theme') || 'light'; }
   function syncIcon() { themeBtn.innerHTML = theme() === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>'; }
@@ -70,7 +73,9 @@
     syncIcon();
   });
   syncIcon();
+  // The left sidebar menu (burger, current page) lives in ux.js, shared by every page.
 
+  // ---------------------------------------------------------------- tooltip
   var tip = document.getElementById('tooltip');
   function showTip(html, x, y) {
     tip.innerHTML = html; tip.hidden = false;
@@ -88,6 +93,7 @@
   }
   document.addEventListener('scroll', hideTip, { passive: true });
 
+  // ---------------------------------------------------------------- per-clip series
   var key = document.body.getAttribute('data-approach');
   var me = BY[key] || { name: key, paradigm: 'world' };
   var color = COLORS[me.paradigm];
@@ -107,6 +113,7 @@
     timer = setTimeout(function () { if (window.innerWidth !== lastW) { lastW = window.innerWidth; resizers.forEach(function (f) { f(); }); } }, 100);
   });
 
+  // Helpers for page-specific scripts (e.g. dlolab.js).
   window.APPAGE = {
     el: el, text: text, esc: esc, niceStep: niceStep, niceTop: niceTop, hbarPath: hbarPath, vbarPath: vbarPath,
     svgIn: svgIn, hover: hover, showTip: showTip, hideTip: hideTip, MUTED: MUTED, COLORS: COLORS, MODELS: MODELS,
@@ -116,6 +123,7 @@
   if (document.getElementById('ap-dash')) dashboard();
   else legacy();
 
+  // ================================================================= dashboard
   function dashboard() {
     var cfg = {};
     try { cfg = JSON.parse(document.getElementById('ap-data').textContent); } catch (e) {}
@@ -123,6 +131,7 @@
     var sorted = vals.slice().sort(function (a, b) { return a - b; });
     var mean = vals.length ? vals.reduce(function (s, v) { return s + v; }, 0) / N : null;
 
+    // ---- KPI tiles
     var rankList = MODELS.slice().sort(function (a, b) { return a.score - b.score; });
     var rank = rankList.indexOf(me) + 1;
     var neighbour = rank === 1 ? rankList[1] : rankList[0];
@@ -145,6 +154,7 @@
       return '<div class="stat"><span class="stat-value' + (k.small ? ' kpi-small' : '') + '">' + k.v + '</span><span class="stat-label">' + esc(k.l) + '</span></div>';
     }).join('');
 
+    // ---- per-clip chart with order toggle and comparison overlay
     var order = 'clip', compareKey = '';
     var cmpSel = document.getElementById('ap-compare');
     cmpSel.innerHTML = '<option value="">none</option>' + others.map(function (s) {
@@ -211,6 +221,7 @@
       text(svg, R, H - 4, order === 'clip' ? 'clip, in recording order' : 'clips, sorted from easiest to hardest', { 'text-anchor': 'end' }, MUTED);
     }
 
+    // ---- head-to-head
     var h2hBox = document.getElementById('ap-h2h');
     function drawH2H() {
       if (!mine || !others.length) { h2hBox.innerHTML = '<p class="muted-note">Needs per-clip results.</p>'; return; }
@@ -235,6 +246,7 @@
       });
     }
 
+    // ---- histogram
     var histBox = document.getElementById('ap-hist');
     function drawHist() {
       if (!mine) { histBox.innerHTML = ''; return; }
@@ -269,6 +281,7 @@
       document.getElementById('ap-hist-sub').textContent = N + ' clips in ' + bw + ' mm/node bins';
     }
 
+    // ---- variants
     var varBox = document.getElementById('ap-variants');
     function drawVariants() {
       var vs = cfg.variants || [];
@@ -303,6 +316,7 @@
       text(svg, R, H - 2, 'mm/node', { 'text-anchor': 'end' }, MUTED);
     }
 
+    // ---- error vs clip length
     var scBox = document.getElementById('ap-scatter');
     function drawScatter() {
       if (!mine) { scBox.closest('.dash-card').hidden = true; return; }
@@ -336,6 +350,7 @@
       text(svg, R, H - 2, 'frames in the clip (4 fps)', { 'text-anchor': 'end' }, MUTED);
     }
 
+    // ---- compute
     var cBox = document.getElementById('ap-compute');
     function drawCompute() {
       var cs = cfg.compute || [];
@@ -359,6 +374,7 @@
       });
     }
 
+    // ---- spec sheet
     var numBox = document.getElementById('ap-numbers'), specBox = document.getElementById('ap-spec');
     if (numBox) numBox.innerHTML = (cfg.numbers || []).map(function (n) {
       return '<div class="num-tile"><b>' + esc(n.value) + '</b><span>' + esc(n.label) + '</span></div>';
@@ -367,6 +383,7 @@
       return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>';
     }).join('');
 
+    // draw only the cards that are on the page
     function all() {
       drawClips();
       if (h2hBox) drawH2H();
@@ -379,6 +396,7 @@
     resizers.push(all);
   }
 
+  // ================================================================= simple per-clip chart (pages not converted yet)
   function legacy() {
     var box = document.getElementById('ap-perclip');
     if (!mine || !box || !N) return;
@@ -421,6 +439,7 @@
   }
 })();
 
+/* Parameter boxes in the approach hero: click a box to open a plain-language explanation below them. */
 (function () {
   'use strict';
   var panel = document.getElementById('cfg-explain');
@@ -428,6 +447,9 @@
   if (!panel || !src) return;
   var X;
   try { X = JSON.parse(src.textContent); } catch (e) { return; }
+  // column headings: per page via data-labels="first|second" on the data script, else the defaults
+  var LB = (src.getAttribute('data-labels') || 'How this model defines it|How it is found').split('|');
+  var L1 = LB[0], L2 = LB[1] || '';
   var tiles = document.querySelectorAll('[data-x]');
   var current = null;
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
@@ -442,17 +464,17 @@
     if (!d) return;
     current = key;
     tiles.forEach(function (t) { var on = t === tile; t.classList.toggle('is-active', on); t.setAttribute('aria-expanded', on ? 'true' : 'false'); });
+    // "v" may hold <sup> markup written by us; everything else is plain text
     panel.innerHTML =
       '<div class="cx-head">' +
         '<div><p class="cx-kicker">' + esc(d.grp || 'Result') + '</p>' +
-        '<h4 class="cx-title">' + esc(d.t) + ' <span>' + esc(d.sym) + '</span></h4></div>' +
+        '<h4 class="cx-title">' + esc(d.t) + (d.sym ? ' <span>' + esc(d.sym) + '</span>' : '') + '</h4></div>' +
         '<span class="cx-value">' + d.v + '</span>' +
         '<button type="button" class="cx-close" aria-label="Close the explanation"><i class="fas fa-xmark"></i></button>' +
       '</div>' +
       '<dl class="cx-body">' +
-        '<div><dt><i class="fas fa-circle-question"></i>How this model defines it</dt><dd>' + esc(d.what) + '</dd></div>' +
-        '<div><dt><i class="fas fa-calculator"></i>How it is found</dt><dd>' + esc(d.how) + '</dd></div>' +
-        '<div><dt><i class="fas fa-bullseye"></i>Why it matters</dt><dd>' + esc(d.why) + '</dd></div>' +
+        '<div><dt><i class="fas fa-circle-question"></i>' + esc(L1) + '</dt><dd>' + esc(d.what) + '</dd></div>' +
+        '<div><dt><i class="fas fa-calculator"></i>' + esc(L2) + '</dt><dd>' + esc(d.how) + '</dd></div>' +
       '</dl>';
     panel.hidden = false;
     requestAnimationFrame(function () { panel.classList.add('is-open'); });

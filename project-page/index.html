@@ -11,14 +11,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="./static/css/index.css?v=20261110e">
+  <link rel="stylesheet" href="./static/css/index.css?v=20261113b">
   <script>
+    // Apply the saved theme before first paint (no flash).
     try { var t = localStorage.getItem('dlo-theme-v2'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
   </script>
 </head>
 
 <body>
 
+<!-- =============================== NAVBAR =============================== -->
 <header class="topnav" id="topnav">
   <div class="topnav-inner">
     <a class="brand" href="#top"><i class="fas fa-wave-square"></i><span>DLO World Models</span></a>
@@ -43,6 +45,7 @@
 
 <main id="top">
 
+<!-- =============================== HERO / TITLE =============================== -->
 <section class="hero">
   <svg class="hero-cables" viewBox="0 0 1200 560" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
     <g class="sway s1"><path class="c1" pathLength="1" d="M90,360 C380,360 540,110 1110,96"/></g>
@@ -70,13 +73,13 @@
     </div>
 
     <div class="publication-links">
-      <a href="./static/media/paper.pdf" target="_blank" rel="noopener" class="pill-btn"><i class="fas fa-file-pdf"></i><span>Paper</span></a>
       <a href="https://github.com/ludwigstr/World-Models-for-DLO" class="pill-btn"><i class="fab fa-github"></i><span>Code</span></a>
-      <a href="https://github.com/ludwigstr/World-Models-for-DLO/tree/main/results" target="_blank" rel="noopener" class="pill-btn"><i class="fas fa-database"></i><span>Dataset</span></a>
+      <a href="https://github.com/ludwigstr/World-Models-for-DLO/tree/main/data" target="_blank" rel="noopener" class="pill-btn"><i class="fas fa-database"></i><span>Dataset</span></a>
     </div>
   </div>
 </section>
 
+<!-- =============================== ABSTRACT =============================== -->
 <section class="section" id="overview">
   <div class="wrap narrow">
     <h2 class="section-title">Abstract</h2>
@@ -103,6 +106,7 @@
   </div>
 </section>
 
+<!-- =============================== PIPELINE OVERVIEW =============================== -->
 <section class="section alt" id="pipeline">
   <div class="wrap narrow">
     <h2 class="section-title">Pipeline Overview</h2>
@@ -132,84 +136,43 @@
     </div>
 
     <h3 class="sub-title">Perception &amp; DLO Tracking</h3>
-    <p class="prose">
-      All approaches share one perception front-end that turns overhead camera recordings
-      of real manipulation sequences into cable skeletons. Click a step for its details.
-    </p>
+    <p class="prose">Click a box for its details.</p>
 
-    <div class="stepper" role="tablist" aria-label="Tracking pipeline steps">
-      <button class="step is-active" role="tab" aria-selected="true" data-step="ov"><span class="step-num">1</span><span class="step-name">Overview</span></button>
-      <button class="step" role="tab" aria-selected="false" data-step="0"><span class="step-num">2</span><span class="step-name">Segmentation</span></button>
-      <button class="step" role="tab" aria-selected="false" data-step="1"><span class="step-num">3</span><span class="step-name">Board &amp; modules</span></button>
-      <button class="step" role="tab" aria-selected="false" data-step="2"><span class="step-num">4</span><span class="step-name">Cable routes</span></button>
-      <button class="step" role="tab" aria-selected="false" data-step="3"><span class="step-num">5</span><span class="step-name">Thin-wire re-trace</span></button>
-      <button class="step" role="tab" aria-selected="false" data-step="4"><span class="step-num">6</span><span class="step-name">16 nodes</span></button>
+    <div class="stepper stepper-3" role="tablist" aria-label="Setup and tracking">
+      <button class="step is-active" role="tab" aria-selected="true" data-step="cell"><span class="step-num">1</span><span class="step-name">Handling cell</span></button>
+      <button class="step" role="tab" aria-selected="false" data-step="harness"><span class="step-num">2</span><span class="step-name">Movers &amp; harness</span></button>
+      <button class="step" role="tab" aria-selected="false" data-step="track"><span class="step-num">3</span><span class="step-name">Tracking &amp; ground truth</span></button>
     </div>
 
     <div class="step-panels">
-      <div class="step-panel is-active" data-step="ov">
-        <h4>From overhead video to cable nodes</h4>
-        <p>One shared perception front-end turns overhead recordings of the assembly board into
-          cable skeletons. From the raw frame and a learned class map it detects the board and modules,
-          routes each cable, tracks all four over time, and resamples them to 16 nodes per cable,
-          which is the input every approach is scored on.</p>
-      </div>
-      <div class="step-panel" data-step="0" hidden>
-        <h4>Segmentation: class map per frame</h4>
-        <p>Each overhead recording is first decoded into frames. For every extracted frame, the
-          segmentation pipeline produces two images: the raw camera frame (2000&nbsp;&times;&nbsp;2660&nbsp;px)
-          and a class map that labels cable pixels (yellow) and mover pixels (green). Downstream stages
-          work on these per-frame images.</p>
+      <div class="step-panel is-active" data-step="cell">
+        <h4>The wire-harness handling cell</h4>
         <ul>
-          <li>The board is <strong>backlit</strong>, so everything on it is dark against a bright field. The
-            connector modules are solidly dark and caught by a global threshold; the thin wires are only
-            <em>grey</em> once blurred by the optics, so they are found with a morphological <strong>black-hat</strong>
-            that responds to local contrast rather than absolute level.</li>
-          <li>A learned class map is the wire and module source wherever a clip has one. It is cleaner
-            than the black-hat mask, with no shadow or glare false positives.</li>
-          <li>Frames are sampled at 4&nbsp;fps (0.25&nbsp;s per step).</li>
+          <li>Ten approaches, six learned models and four physics simulators, are benchmarked on one shared task.</li>
+          <li>The task is planar wire handling: the cables move across a flat board, so their motion is described in 2D.</li>
+          <li>The usable workspace measures 1.68&nbsp;&times;&nbsp;1.20&nbsp;m.</li>
+          <li>Without efficient models of deformable linear objects (DLOs), coordinating several movers on this setup still requires advanced methods.</li>
         </ul>
       </div>
-      <div class="step-panel" data-step="1" hidden>
-        <h4>Board and module detection</h4>
+      <div class="step-panel" data-step="harness" hidden>
+        <h4>Movers and harness</h4>
         <ul>
-          <li><code>find_board</code> locates the board bezel and gives the pixel-to-millimetre transform, so all tracks are in metres on the board plane.</li>
-          <li><code>track_harness</code> finds the five modules per frame from the class map, the hub and the four plugs on their movers, with stable identities and the hub first.</li>
-          <li>The hub and plug positions are the <strong>boundary conditions (actions)</strong> handed to every approach.</li>
+          <li>Five movers float on the surface: one carries the central hub connector, four carry the peripheral plug connectors.</li>
+          <li>All connectors are mounted 55&nbsp;mm above their mover.</li>
+          <li>Four cable bundles, with varying length, run from the hub to the four plugs and form a branched harness topology.</li>
+          <li>During operation the movers translate along controlled trajectories while the cables follow passively.</li>
         </ul>
       </div>
-      <div class="step-panel" data-step="2" hidden>
-        <h4>Cable routes</h4>
-        <ol>
-          <li><strong>Per-frame detector</strong> (<code>tracking_v2.py</code>): generates diverse route candidates, uses one global length per cable, and runs Viterbi over the whole clip.</li>
-          <li><strong>TrackDLO-style tracker</strong> (<code>track_hybrid.py</code>): CPD/GMM with a motion-coherence prior, all four cables in one model, followed frame to frame.
-            A chain is reset to the detector's route when it leaves the evidence or when its ends jump by more than 60&nbsp;mm.</li>
-        </ol>
-      </div>
-      <div class="step-panel" data-step="3" hidden>
-        <h4>Thin-wire re-trace of cable 3 (magenta)</h4>
-        <p>Cable 3 is a loose bundle of two or three thin wires that the class map misses over long stretches.
-          <code>track_pink.py</code> traces it directly in the camera image:</p>
+      <div class="step-panel" data-step="track" hidden>
+        <h4>Tracking and ground truth</h4>
         <ul>
-          <li>thin dark lines are found with a black-hat filter;</li>
-          <li>the route is the cheapest path from the hub to its mover, with extra cost on the three thick cables and a pull towards the previous frame.</li>
+          <li>An overhead camera observes the workspace.</li>
+          <li>Each of the four cable bundles is segmented and resampled to a curve of <em>N</em>&nbsp;=&nbsp;16 nodes in board coordinates.</li>
+          <li>Node&nbsp;0 sits at the hub and node&nbsp;<em>N</em>&minus;1 at the corresponding plug.</li>
+          <li>Both boundary nodes are driven kinematically by the measured mover positions.</li>
+          <li>The prediction target is the set of 14 interior node positions at each time step.</li>
+          <li>The evaluation set comprises 36 recordings; all models are scored against this common ground truth.</li>
         </ul>
-      </div>
-      <div class="step-panel" data-step="4" hidden>
-        <h4>16 equidistant nodes per cable</h4>
-        <p>Each cable is traced from its hub connector to its plug mover and resampled to
-          <strong>16 equidistant nodes</strong>, so every cable gets the same fixed-length representation.
-          Node&nbsp;0 sits at the hub and node&nbsp;15 at the plug; the 14 interior nodes describe the cable's
-          shape between them.</p>
-        <ul>
-          <li>The two end nodes (hub and plug) are the measured boundary conditions handed to every approach.</li>
-          <li>The 14 interior nodes are the prediction target: the shape each model must reproduce from the end motions alone.</li>
-          <li>A fixed node count makes the per-node error directly comparable across cables, clips, and methods.</li>
-        </ul>
-        <p>One clip is stored as an <code>npz</code> with <code>c0..c3</code> (one array per cable) of shape
-          (T,&nbsp;16,&nbsp;2) in metres on the board plane, plus <code>fps</code>, <code>source_frames</code>,
-          a per-frame <code>reset</code> flag, and the magenta cable length. Across the <strong>36 benchmark
-          recordings</strong> this covers 4 cables with 16 nodes each over 5,853 frames in total.</p>
       </div>
     </div>
 
@@ -223,6 +186,7 @@
   </div>
 </section>
 
+<!-- =============================== APPROACHES =============================== -->
 <section class="section" id="approaches">
   <div class="wrap narrow">
     <h2 class="section-title">Benchmark Approaches</h2>
@@ -237,11 +201,9 @@
       <button class="category-tab" role="tab" aria-selected="false" aria-controls="panel-physics" id="tab-physics" data-cat="physics">
         <span class="swatch" style="--sw: var(--series-physics)"></span><span>Physics Engines</span><span class="category-count">4</span>
       </button>
-      <button class="category-tab" role="tab" aria-selected="false" aria-controls="panel-compare" id="tab-compare" data-cat="compare">
-        <i class="fas fa-table-columns"></i><span>Compare all</span>
-      </button>
     </div>
 
+    <!-- ===== World Models ===== -->
     <div class="category-panel is-active" id="panel-world" role="tabpanel" aria-labelledby="tab-world">
       <div class="panel-head">
         <p class="category-desc">Models that learn or build an internal representation of the cable and predict
@@ -253,10 +215,7 @@
         <span class="al-head"><span class="al-name">RopeDreamer</span><span class="detail-score">18.5 mm/node</span></span>
         <span class="cite">Missal et al. 2026</span>
         <ul class="al-points">
-          <li>A Dreamer-style recurrent state-space model (RSSM).</li>
-          <li>The cable state is a kinematic chain: a base position plus one rotation per link.</li>
-          <li>Because the links keep their length, a decoded state can never stretch the cable.</li>
-          <li>Trained only on MuJoCo rollouts along the real connector paths of the 36 clips, with randomised speed and cable parameters; nothing is fitted on the real clips, which only supply a 5-frame warm-up.</li>
+          <li>A recurrent world model (Dreamer-style RSSM) trained only on MuJoCo simulations; its state is a fixed-length chain, so a predicted cable can never stretch.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
@@ -265,10 +224,7 @@
         <span class="al-head"><span class="al-name">PhysTwin</span><span class="detail-score">22.0 mm/node</span></span>
         <span class="cite">Jiang et al. 2025</span>
         <ul class="al-points">
-          <li>A planar spring-mass digital twin, one per clip.</li>
-          <li>Mass points are the 16 cable nodes; springs between neighbours resist stretching, springs between non-neighbours resist bending.</li>
-          <li>Fitted to the tracked nodes in two stages: CMA-ES for the global parameters (stiffness, damping, drag, friction, connection radius), then gradient-based optimization (Adam) for the per-spring stiffness.</li>
-          <li>Re-simulated from frame 0 with the measured end motions.</li>
+          <li>A planar spring-mass digital twin fitted separately to each clip, then re-simulated with the measured connector motions.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
@@ -277,16 +233,14 @@
         <span class="al-head"><span class="al-name">PhysWorld</span><span class="detail-score">7.5 mm/node</span></span>
         <span class="cite">Yang et al. 2025</span>
         <ul class="al-points">
-          <li>An elastoplastic MPM digital twin is fitted to each clip (stiffness E, Poisson&#x27;s ratio &nu;, density &rho;, friction &mu;, yield stress).</li>
-          <li>Each twin generates synthetic demonstrations along the real connector paths, with varied speed and part-aware perturbation of E and &rho;.</li>
-          <li>One graph world model (GNN) is trained on the demonstrations of all 36 clips.</li>
-          <li>With the network frozen, one per-node property set &Phi; (log E, log &rho;; 128 values) is fitted jointly on all 36 real clips.</li>
+          <li>An MPM digital twin of each clip generates synthetic demonstrations that train a graph world model, adapted to the real cables through one shared set of per-node properties.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
       </div>
     </div>
 
+    <!-- ===== Dynamics Models ===== -->
     <div class="category-panel" id="panel-dynamics" role="tabpanel" aria-labelledby="tab-dynamics" hidden>
       <div class="panel-head">
         <p class="category-desc">Learned dynamics models that map the current cable state and connector motion
@@ -298,10 +252,7 @@
         <span class="al-head"><span class="al-name">Yang et al.</span><span class="detail-score">16.0 mm/node</span></span>
         <span class="cite">RAS 2022</span>
         <ul class="al-points">
-          <li>Eight parameters of an NVIDIA Newton rod simulator are identified on the real clips by differential evolution; the simulator then generates the training data.</li>
-          <li>Each node&#x27;s rest turning angle (the frame-0 shape) is fed in as input.</li>
-          <li>An interaction network with a bidirectional LSTM runs along the cable chain.</li>
-          <li>Trained on that synthetic data only; the network gets no physical parameters and is not adapted on the real clips.</li>
+          <li>A graph network with a bidirectional LSTM, trained on data from a Newton rod simulator whose parameters were identified on the real clips.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
@@ -310,10 +261,7 @@
         <span class="al-head"><span class="al-name">Caporali et al.</span><span class="detail-score">15.8 mm/node</span></span>
         <span class="cite">RA-L 2024</span>
         <ul class="al-points">
-          <li>A FiLM-conditioned MLP learns the one-step response of a planar mass-spring-damper chain.</li>
-          <li>Trained on synthetic data only; the network stays frozen on real clips.</li>
-          <li>Physical parameters (mass, bending stiffness, damping) are estimated online, one optimisation step per frame.</li>
-          <li>The rest shape is taken once from frame 0 and held fixed.</li>
+          <li>A neural network that imitates a mass-spring cable simulator and estimates the cable&#x27;s mass, stiffness and damping online while it predicts.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
@@ -322,16 +270,14 @@
         <span class="al-head"><span class="al-name">AdaptiGraph</span><span class="detail-score">10.3 mm/node</span></span>
         <span class="cite">Zhang et al. RSS 2024</span>
         <ul class="al-points">
-          <li>A material-conditioned graph neural dynamics model (GBND).</li>
-          <li>A normalised bending stiffness &phi; conditions the model: four values, one per cable.</li>
-          <li>Trained on mass-spring simulation data only; the network is not fine-tuned on real data.</li>
-          <li>The four &phi; are chosen by a grid search on the rollout error over all 36 clips.</li>
+          <li>A graph dynamics network trained on mass-spring simulations and adapted to the real cables through one stiffness value per cable.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
       </div>
     </div>
 
+    <!-- ===== Physics Engines ===== -->
     <div class="category-panel" id="panel-physics" role="tabpanel" aria-labelledby="tab-physics" hidden>
       <div class="panel-head">
         <p class="category-desc">Physics engines that simulate the measured scene (board, hub, movers) with the cable ends driven along
@@ -344,10 +290,7 @@
         <span class="al-head"><span class="al-name">MuJoCo</span><span class="detail-score">9.7 mm/node</span></span>
         <span class="cite">elasticity.cable</span>
         <ul class="al-points">
-          <li>Cables as MuJoCo elasticity.cable composites, a discrete elastic rod (DER) model.</li>
-          <li>Measured scene: hub and four plugs PD-driven along tracked poses.</li>
-          <li>Per-joint spring stiffness, rest angle and damping, plus per-cable bend, twist and mass and one friction value are fitted (181 values).</li>
-          <li>Fitted by CMA-ES on the mean node error; after a 300-step settle the whole clip is replayed.</li>
+          <li>MuJoCo&#x27;s elastic cable model, with per-joint stiffness, rest angles and damping fitted by CMA-ES on all 36 clips.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
@@ -356,10 +299,7 @@
         <span class="al-head"><span class="al-name">Genesis</span><span class="detail-score">12.7 mm/node</span></span>
         <span class="cite">genesis-world 1.3.3</span>
         <ul class="al-points">
-          <li>Each cable as a chain of rigid links with hinge joints (MJCF loaded into Genesis 1.3.3).</li>
-          <li>Measured scene: hub and plugs PD-driven along their tracks, movers as colliding boxes.</li>
-          <li>Per-joint stiffness, rest angle and damping, plus per-cable mass and one friction value are fitted (185 values).</li>
-          <li>Fitted by CMA-ES on the mean node error against the tracked nodes.</li>
+          <li>Each cable as a chain of rigid links with hinge joints in Genesis, with per-joint stiffness, rest angles and damping fitted by CMA-ES on all 36 clips.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
@@ -368,10 +308,7 @@
         <span class="al-head"><span class="al-name">Newton</span><span class="detail-score">7.6 mm/node</span></span>
         <span class="cite">NVIDIA Newton 1.5</span>
         <ul class="al-points">
-          <li>Newton&#x27;s native 3-D rod model (VBD solver).</li>
-          <li>Full scene: board, hub and movers as colliding bodies; cable ends kinematic on their tracks.</li>
-          <li>Per-joint bending, twist, damping and rest angles, plus stretch stiffness, frictions and bending hysteresis are fitted (231 values); the mass is pinned at the measured 0.044 kg/m.</li>
-          <li>Fitted by CMA-ES on the mean node error in the board plane.</li>
+          <li>NVIDIA Newton&#x27;s rod model, with per-joint bending, twist, rest angles and frictions fitted by CMA-ES on all 36 clips.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
@@ -380,46 +317,22 @@
         <span class="al-head"><span class="al-name">DLO-Lab</span><span class="detail-score">12.0 mm/node</span></span>
         <span class="cite">DER rod, Genesis fork</span>
         <ul class="al-points">
-          <li>Differentiable discrete elastic rods (DER) of the DLO-Lab fork of Genesis.</li>
-          <li>Four rods, one per cable, in the measured scene.</li>
-          <li>Three moduli (K, E, G), per-element stiffness scales and rest curvatures are fitted (287 values); mass and friction stay fixed.</li>
-          <li>Fitted by gradient descent through the rod solver on the mean node error, with a line search on that metric.</li>
+          <li>A differentiable discrete elastic rod whose stiffness and rest curvature along each cable are fitted by gradient descent through the solver.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
       </div>
     </div>
 
-    <div class="category-panel" id="panel-compare" role="tabpanel" aria-labelledby="tab-compare" hidden>
-      <p class="category-desc">How each approach gets the cable's physics: where its knowledge comes from, which physical
-        properties it represents, and what it adapts on the real clip. Scroll sideways on small screens.</p>
-      <div class="table-scroll">
-        <table class="data-table compare-table">
-          <thead>
-            <tr><th>Approach</th><th>Learns from</th><th>Physical properties</th><th>Rest shape</th><th>Adapted on real clip</th><th class="num">mm/node</th></tr>
-          </thead>
-          <tbody>
-            <tr><td><span class="dot" style="--sw: var(--series-world)"></span><a href="approaches/ropedreamer.html">RopeDreamer</a></td><td>MuJoCo rollouts</td><td>Implicit (learned)</td><td>From the training sim</td><td>Nothing (5-frame warm-up only)</td><td class="num">18.5</td></tr>
-            <tr><td><span class="dot" style="--sw: var(--series-world)"></span><a href="approaches/phystwin.html">PhysTwin</a></td><td>Per-clip twin fit</td><td>k per spring, &gamma;, &delta;, &mu;</td><td>Frame-0 spring rest lengths</td><td>Whole twin, per clip</td><td class="num">22.0</td></tr>
-            <tr><td><span class="dot" style="--sw: var(--series-world)"></span><a href="approaches/physworld.html">PhysWorld</a></td><td>MPM twin demos</td><td>E, &nu;, &rho;, &mu;, yield stress (twin) + per-node &Phi;</td><td>Frame-0 shape + yield stress (twin)</td><td>One shared &Phi;, 128 values</td><td class="num">7.5</td></tr>
-            <tr><td><span class="dot" style="--sw: var(--series-dynamics)"></span><a href="approaches/yang.html">Yang et al.</a></td><td>Newton rollouts</td><td>Implicit (learned)</td><td>Frame-0 angles fed in</td><td>8 simulator values, identified once</td><td class="num">16.0</td></tr>
-            <tr><td><span class="dot" style="--sw: var(--series-dynamics)"></span><a href="approaches/caporali.html">Caporali et al.</a></td><td>Mass-spring sim</td><td>m, k_b, k_d (network inputs)</td><td>Frame-0 angles fed in</td><td>m, k_b, k_d online, every frame</td><td class="num">15.8</td></tr>
-            <tr><td><span class="dot" style="--sw: var(--series-dynamics)"></span><a href="approaches/adaptigraph.html">AdaptiGraph</a></td><td>Mass-spring sim</td><td>4 &phi; (bending stiffness, one per cable)</td><td>Frame-0 angles fed in</td><td>4 &phi;, shared by all clips</td><td class="num">10.3</td></tr>
-            <tr><td><span class="dot" style="--sw: var(--series-physics)"></span><a href="approaches/mujoco.html">MuJoCo</a></td><td>Fit on 36 clips</td><td>Per-joint bend spring &amp; damping; per-cable bend, twist, mass; &mu; (181)</td><td>Per-joint rest angles</td><td>Shared fit</td><td class="num">9.7</td></tr>
-            <tr><td><span class="dot" style="--sw: var(--series-physics)"></span><a href="approaches/genesis.html">Genesis</a></td><td>Fit on 36 clips</td><td>Per-joint hinge stiffness &amp; damping; per-cable mass; &mu; (185)</td><td>Per-joint rest angles</td><td>Shared fit</td><td class="num">12.7</td></tr>
-            <tr><td><span class="dot" style="--sw: var(--series-physics)"></span><a href="approaches/newton.html">Newton</a></td><td>Fit on 36 clips</td><td>Per-joint bend, twist &amp; damping; stretch; frictions (231); mass pinned</td><td>Per-joint rest angles</td><td>Shared fit</td><td class="num">7.6</td></tr>
-            <tr><td><span class="dot" style="--sw: var(--series-physics)"></span><a href="approaches/dlolab.html">DLO-Lab</a></td><td>Fit on 36 clips</td><td>K, E, G + per-element stretch, bend, twist scales (287)</td><td>Per-element rest curvatures</td><td>Shared fit</td><td class="num">12.0</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
   </div>
 </section>
 
+<!-- =============================== RESULTS =============================== -->
 <section class="section alt" id="results">
   <div class="wrap narrow">
     <h2 class="section-title">Results</h2>
 
+    <!-- ===== Mean error per approach ===== -->
     <h3 class="sub-title" id="ranking">Mean Node Error (mm/node) per Approach</h3>
 
     <div class="filter-row" id="rank-filters" role="group" aria-label="Filter by paradigm">
@@ -441,6 +354,7 @@
   </div>
 </section>
 
+<!-- =============================== PER-CLIP =============================== -->
 <section class="section" id="per-clip">
   <div class="wrap narrow">
     <h2 class="section-title">Per-clip Explorer</h2>
@@ -470,6 +384,7 @@
   </div>
 </section>
 
+<!-- =============================== BIBTEX =============================== -->
 <section class="section" id="BibTeX">
   <div class="wrap narrow">
     <div class="bib-head">
@@ -491,6 +406,7 @@
 
 </main>
 
+<!-- =============================== FOOTER =============================== -->
 <footer class="footer">
   <div class="wrap narrow center">
     <a class="icon-link" href="https://github.com/ludwigstr/World-Models-for-DLO" aria-label="Code on GitHub">
