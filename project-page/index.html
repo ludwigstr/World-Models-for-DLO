@@ -215,7 +215,7 @@
         <span class="al-head"><span class="al-name">RopeDreamer</span><span class="detail-score">18.5 mm/node</span></span>
         <span class="cite">Missal et al. 2026</span>
         <ul class="al-points">
-          <li>A recurrent world model (Dreamer-style RSSM) trained only on MuJoCo simulations; its state is a fixed-length chain, so a predicted cable can never stretch.</li>
+          <li>A Dreamer-style recurrent world model with the wire as a fixed-length kinematic chain; trained on MuJoCo transitions.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
@@ -224,7 +224,7 @@
         <span class="al-head"><span class="al-name">PhysTwin</span><span class="detail-score">22.0 mm/node</span></span>
         <span class="cite">Jiang et al. 2025</span>
         <ul class="al-points">
-          <li>A planar spring-mass digital twin fitted separately to each clip, then re-simulated with the measured connector motions.</li>
+          <li>A planar mass-spring digital twin of the cables, built separately for each clip.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
@@ -233,7 +233,7 @@
         <span class="al-head"><span class="al-name">PhysWorld</span><span class="detail-score">7.5 mm/node</span></span>
         <span class="cite">Yang et al. 2025</span>
         <ul class="al-points">
-          <li>An MPM digital twin of each clip generates synthetic demonstrations that train a graph world model, adapted to the real cables through one shared set of per-node properties.</li>
+          <li>An MPM digital twin that synthesizes demonstrations on which a graph world model is trained.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
@@ -252,7 +252,7 @@
         <span class="al-head"><span class="al-name">Yang et al.</span><span class="detail-score">16.0 mm/node</span></span>
         <span class="cite">RAS 2022</span>
         <ul class="al-points">
-          <li>A graph network with a bidirectional LSTM, trained on data from a Newton rod simulator whose parameters were identified on the real clips.</li>
+          <li>An interaction network with a bidirectional LSTM, trained only on synthetic data from an identified Newton simulator.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
@@ -261,7 +261,7 @@
         <span class="al-head"><span class="al-name">Caporali et al.</span><span class="detail-score">15.8 mm/node</span></span>
         <span class="cite">RA-L 2024</span>
         <ul class="al-points">
-          <li>A neural network that imitates a mass-spring cable simulator and estimates the cable&#x27;s mass, stiffness and damping online while it predicts.</li>
+          <li>A conditioned network trained on an analytical mass-spring model; the cable parameters are estimated online.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
@@ -270,7 +270,7 @@
         <span class="al-head"><span class="al-name">AdaptiGraph</span><span class="detail-score">10.3 mm/node</span></span>
         <span class="cite">Zhang et al. RSS 2024</span>
         <ul class="al-points">
-          <li>A graph dynamics network trained on mass-spring simulations and adapted to the real cables through one stiffness value per cable.</li>
+          <li>A graph network over the cable nodes, conditioned on one bending-stiffness value per cable.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
@@ -290,7 +290,7 @@
         <span class="al-head"><span class="al-name">MuJoCo</span><span class="detail-score">9.7 mm/node</span></span>
         <span class="cite">elasticity.cable</span>
         <ul class="al-points">
-          <li>MuJoCo&#x27;s elastic cable model, with per-joint stiffness, rest angles and damping fitted by CMA-ES on all 36 clips.</li>
+          <li>MuJoCo&#x27;s composite cable: a chain of capsule segments with per-joint bending stiffness and rest angles.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
@@ -299,7 +299,7 @@
         <span class="al-head"><span class="al-name">Genesis</span><span class="detail-score">12.7 mm/node</span></span>
         <span class="cite">genesis-world 1.3.3</span>
         <ul class="al-points">
-          <li>Each cable as a chain of rigid links with hinge joints in Genesis, with per-joint stiffness, rest angles and damping fitted by CMA-ES on all 36 clips.</li>
+          <li>A chain of rigid bodies connected by hinge joints in the Genesis engine.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
@@ -308,7 +308,7 @@
         <span class="al-head"><span class="al-name">Newton</span><span class="detail-score">7.6 mm/node</span></span>
         <span class="cite">NVIDIA Newton 1.5</span>
         <ul class="al-points">
-          <li>NVIDIA Newton&#x27;s rod model, with per-joint bending, twist, rest angles and frictions fitted by CMA-ES on all 36 clips.</li>
+          <li>NVIDIA Newton&#x27;s native rod with per-joint bending, twisting and bending hysteresis.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
@@ -317,7 +317,7 @@
         <span class="al-head"><span class="al-name">DLO-Lab</span><span class="detail-score">12.0 mm/node</span></span>
         <span class="cite">DER rod, Genesis fork</span>
         <ul class="al-points">
-          <li>A differentiable discrete elastic rod whose stiffness and rest curvature along each cable are fitted by gradient descent through the solver.</li>
+          <li>A differentiable rod simulator whose parameters are fitted by gradient descent.</li>
         </ul>
         <span class="al-go">Open details<i class="fas fa-arrow-right"></i></span>
       </a>
