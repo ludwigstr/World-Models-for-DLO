@@ -1,0 +1,306 @@
+{
+ "approach": "MuJoCo general fit (181 parameters), 36-clip refit",
+ "params": "data/mujoco_general_fit.npz",
+ "params_sha256": "bc7d9b32c1544b67bb428d0fdd69b82e00519b017a227970ad243af17eefe71c",
+ "device": "cpu, one fresh process per clip",
+ "reported_source": "data/mujoco_general_fit_validate.json (fresh-process validation)",
+ "clips_failed": [],
+ "metric": "16 nodes, mean over cables, every frame (mujoco_general_fit_cmaes._eval_one)",
+ "n_clips": 36,
+ "mean_reproduced": 9.696053207587115,
+ "mean_reported": 9.696053207587115,
+ "max_abs_clip_diff": 7.105427357601002e-15,
+ "tolerance_mm": 0.5,
+ "clips_over_tolerance": {},
+ "ok": true,
+ "clips": {
+  "20261021_160124": {
+   "reproduced": 12.89735734401774,
+   "reported": 12.897357344017735,
+   "diff": 5.329070518200751e-15,
+   "eval_one_return": 12.897357344017735,
+   "nan_nodes": 0,
+   "n_frames": 166
+  },
+  "20261021_162340": {
+   "reproduced": 6.89134320313098,
+   "reported": 6.891343203130978,
+   "diff": 1.7763568394002505e-15,
+   "eval_one_return": 6.891343203130978,
+   "nan_nodes": 0,
+   "n_frames": 175
+  },
+  "20261021_162632": {
+   "reproduced": 9.017005390628956,
+   "reported": 9.017005390628952,
+   "diff": 3.552713678800501e-15,
+   "eval_one_return": 9.017005390628952,
+   "nan_nodes": 0,
+   "n_frames": 171
+  },
+  "20261021_163244": {
+   "reproduced": 11.0535113151653,
+   "reported": 11.053511315165302,
+   "diff": -1.7763568394002505e-15,
+   "eval_one_return": 11.053511315165302,
+   "nan_nodes": 0,
+   "n_frames": 123
+  },
+  "20261021_163624": {
+   "reproduced": 6.062261153704657,
+   "reported": 6.062261153704658,
+   "diff": -8.881784197001252e-16,
+   "eval_one_return": 6.062261153704658,
+   "nan_nodes": 0,
+   "n_frames": 170
+  },
+  "20261021_164010": {
+   "reproduced": 7.15950223817418,
+   "reported": 7.159502238174181,
+   "diff": -8.881784197001252e-16,
+   "eval_one_return": 7.159502238174181,
+   "nan_nodes": 0,
+   "n_frames": 181
+  },
+  "20261021_164524": {
+   "reproduced": 6.85160386879968,
+   "reported": 6.851603868799682,
+   "diff": -1.7763568394002505e-15,
+   "eval_one_return": 6.851603868799682,
+   "nan_nodes": 0,
+   "n_frames": 176
+  },
+  "20261021_164755": {
+   "reproduced": 5.914413883537196,
+   "reported": 5.914413883537193,
+   "diff": 2.6645352591003757e-15,
+   "eval_one_return": 5.914413883537193,
+   "nan_nodes": 0,
+   "n_frames": 164
+  },
+  "20261021_165018": {
+   "reproduced": 7.652008869739583,
+   "reported": 7.652008869739584,
+   "diff": -8.881784197001252e-16,
+   "eval_one_return": 7.652008869739584,
+   "nan_nodes": 0,
+   "n_frames": 166
+  },
+  "20261021_165246": {
+   "reproduced": 8.376291145477651,
+   "reported": 8.37629114547765,
+   "diff": 1.7763568394002505e-15,
+   "eval_one_return": 8.37629114547765,
+   "nan_nodes": 0,
+   "n_frames": 181
+  },
+  "20261021_165753": {
+   "reproduced": 6.86533148172334,
+   "reported": 6.865331481723338,
+   "diff": 1.7763568394002505e-15,
+   "eval_one_return": 6.865331481723338,
+   "nan_nodes": 0,
+   "n_frames": 172
+  },
+  "20261021_170550": {
+   "reproduced": 7.500778958636757,
+   "reported": 7.500778958636758,
+   "diff": -8.881784197001252e-16,
+   "eval_one_return": 7.500778958636758,
+   "nan_nodes": 0,
+   "n_frames": 158
+  },
+  "20261021_171620": {
+   "reproduced": 14.95251660967453,
+   "reported": 14.952516609674529,
+   "diff": 1.7763568394002505e-15,
+   "eval_one_return": 14.952516609674529,
+   "nan_nodes": 0,
+   "n_frames": 149
+  },
+  "20261021_171842": {
+   "reproduced": 6.535851630103762,
+   "reported": 6.535851630103762,
+   "diff": 0.0,
+   "eval_one_return": 6.535851630103762,
+   "nan_nodes": 0,
+   "n_frames": 164
+  },
+  "20261021_172103": {
+   "reproduced": 6.938014685934593,
+   "reported": 6.938014685934592,
+   "diff": 8.881784197001252e-16,
+   "eval_one_return": 6.938014685934592,
+   "nan_nodes": 0,
+   "n_frames": 156
+  },
+  "20261021_172318": {
+   "reproduced": 7.546274094942423,
+   "reported": 7.546274094942425,
+   "diff": -1.7763568394002505e-15,
+   "eval_one_return": 7.546274094942425,
+   "nan_nodes": 0,
+   "n_frames": 161
+  },
+  "20261021_172716": {
+   "reproduced": 8.05899368908046,
+   "reported": 8.05899368908046,
+   "diff": 0.0,
+   "eval_one_return": 8.05899368908046,
+   "nan_nodes": 0,
+   "n_frames": 159
+  },
+  "20261021_172928": {
+   "reproduced": 7.275329781819407,
+   "reported": 7.275329781819405,
+   "diff": 1.7763568394002505e-15,
+   "eval_one_return": 7.275329781819405,
+   "nan_nodes": 0,
+   "n_frames": 149
+  },
+  "20261021_173234": {
+   "reproduced": 7.814561566430083,
+   "reported": 7.814561566430081,
+   "diff": 1.7763568394002505e-15,
+   "eval_one_return": 7.814561566430081,
+   "nan_nodes": 0,
+   "n_frames": 154
+  },
+  "20261021_173628": {
+   "reproduced": 6.742653920489524,
+   "reported": 6.7426539204895235,
+   "diff": 8.881784197001252e-16,
+   "eval_one_return": 6.7426539204895235,
+   "nan_nodes": 0,
+   "n_frames": 168
+  },
+  "20261021_173858": {
+   "reproduced": 6.744658055170882,
+   "reported": 6.744658055170882,
+   "diff": 0.0,
+   "eval_one_return": 6.744658055170882,
+   "nan_nodes": 0,
+   "n_frames": 160
+  },
+  "20261021_174117": {
+   "reproduced": 8.19159736396796,
+   "reported": 8.191597363967958,
+   "diff": 1.7763568394002505e-15,
+   "eval_one_return": 8.191597363967958,
+   "nan_nodes": 0,
+   "n_frames": 174
+  },
+  "20261021_174701": {
+   "reproduced": 6.9354796580610785,
+   "reported": 6.9354796580610785,
+   "diff": 0.0,
+   "eval_one_return": 6.9354796580610785,
+   "nan_nodes": 0,
+   "n_frames": 173
+  },
+  "20261021_175638": {
+   "reproduced": 21.5199730965305,
+   "reported": 21.519973096530492,
+   "diff": 7.105427357601002e-15,
+   "eval_one_return": 21.519973096530492,
+   "nan_nodes": 0,
+   "n_frames": 155
+  },
+  "20261021_180139": {
+   "reproduced": 16.574262117720373,
+   "reported": 16.57426211772038,
+   "diff": -7.105427357601002e-15,
+   "eval_one_return": 16.57426211772038,
+   "nan_nodes": 0,
+   "n_frames": 156
+  },
+  "20261021_180422": {
+   "reproduced": 10.56051180392904,
+   "reported": 10.56051180392904,
+   "diff": 0.0,
+   "eval_one_return": 10.56051180392904,
+   "nan_nodes": 0,
+   "n_frames": 176
+  },
+  "20261021_180646": {
+   "reproduced": 7.443738752902971,
+   "reported": 7.443738752902972,
+   "diff": -8.881784197001252e-16,
+   "eval_one_return": 7.443738752902972,
+   "nan_nodes": 0,
+   "n_frames": 147
+  },
+  "20261026_125511": {
+   "reproduced": 6.6423993354707,
+   "reported": 6.6423993354707,
+   "diff": 0.0,
+   "eval_one_return": 6.6423993354707,
+   "nan_nodes": 0,
+   "n_frames": 168
+  },
+  "20261026_130128": {
+   "reproduced": 6.558486071870453,
+   "reported": 6.558486071870451,
+   "diff": 1.7763568394002505e-15,
+   "eval_one_return": 6.558486071870451,
+   "nan_nodes": 0,
+   "n_frames": 178
+  },
+  "20261026_130441": {
+   "reproduced": 22.347202574311307,
+   "reported": 22.347202574311304,
+   "diff": 3.552713678800501e-15,
+   "eval_one_return": 22.347202574311304,
+   "nan_nodes": 0,
+   "n_frames": 164
+  },
+  "20261028_100701": {
+   "reproduced": 8.451427909707888,
+   "reported": 8.451427909707888,
+   "diff": 0.0,
+   "eval_one_return": 8.451427909707888,
+   "nan_nodes": 0,
+   "n_frames": 165
+  },
+  "20261028_101001": {
+   "reproduced": 9.84511616517698,
+   "reported": 9.845116165176979,
+   "diff": 1.7763568394002505e-15,
+   "eval_one_return": 9.845116165176979,
+   "nan_nodes": 0,
+   "n_frames": 161
+  },
+  "20261028_101510": {
+   "reproduced": 10.213423149848385,
+   "reported": 10.213423149848385,
+   "diff": 0.0,
+   "eval_one_return": 10.213423149848385,
+   "nan_nodes": 0,
+   "n_frames": 166
+  },
+  "20261028_105803": {
+   "reproduced": 14.490374112106494,
+   "reported": 14.490374112106489,
+   "diff": 5.329070518200751e-15,
+   "eval_one_return": 14.490374112106489,
+   "nan_nodes": 0,
+   "n_frames": 146
+  },
+  "20261028_114103": {
+   "reproduced": 17.94479754216966,
+   "reported": 17.94479754216966,
+   "diff": 0.0,
+   "eval_one_return": 17.94479754216966,
+   "nan_nodes": 0,
+   "n_frames": 146
+  },
+  "20261028_121810": {
+   "reproduced": 12.488862932980608,
+   "reported": 12.488862932980608,
+   "diff": 0.0,
+   "eval_one_return": 12.488862932980608,
+   "nan_nodes": 0,
+   "n_frames": 155
+  }
+ }
+}

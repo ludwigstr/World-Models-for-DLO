@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Newton in the DLO world-model benchmark: Newton&#x27;s native rod model (VBD solver, 10 iterations, 1 ms steps) in the full 3-D scene, with board, hub and movers as colliding bodies and the cable ends kinematic on their tracks.">
+  <title>Newton &middot; DLO Benchmark</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0b0b'/%3E%3Cg fill='none' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M7 19C14 19 15 8 25 8' stroke='%233987e5'/%3E%3Cpath d='M7 19C15 19 17 15 25 15' stroke='%23eb6834'/%3E%3Cpath d='M7 19C15 20 17 23 25 23' stroke='%231baf7a'/%3E%3C/g%3E%3Ccircle cx='7' cy='19' r='3.2' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../static/css/index.css?v=20261111b">
+  <script>
+    try { var t = localStorage.getItem('dlo-theme-v2'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+  </script>
+</head>
+<body data-approach="newton">
+
+<header class="topnav" id="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="../index.html"><i class="fas fa-wave-square"></i><span>DLO World Models</span></a>
+    <nav class="nav-links" id="nav-links" aria-label="Sections">
+      <a href="../index.html#overview">Overview</a>
+      <a href="../index.html#pipeline">Pipeline</a>
+      <a href="../index.html#approaches" class="is-current">Approaches</a>
+      <a href="../index.html#results">Results</a>
+      <a href="../index.html#per-clip">Per clip</a>
+      <a href="../index.html#BibTeX">BibTeX</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"><i class="fas fa-moon"></i></button>
+      <button class="icon-btn nav-burger" id="nav-burger" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="section ap-hero">
+  <div class="wrap">
+    <a class="back-link" href="../index.html#approaches"><i class="fas fa-arrow-left"></i>All approaches</a>
+    <p class="ap-kicker"><span class="swatch" style="--sw: var(--series-physics)"></span>Physics Engine</p>
+    <h1 class="ap-title">Newton</h1>
+    <p class="ap-cite">NVIDIA Newton 1.5</p>
+    <h2 class="ap-hero-video-title">Predictions on all 36 clips</h2>
+    <figure class="ap-hero-video">
+      <video src="../static/media/newton_grid9x4.mp4" autoplay muted loop playsinline controls preload="metadata"></video>
+      <figcaption>Newton prediction (dashed) over the measured cables (solid) across all 36 clips, best clip top-left, at 3&times; speed.</figcaption>
+    </figure>
+    <div class="cfg-boxes" aria-label="Reported configuration and cable parameters">
+      <button type="button" class="cfg-score" data-x="score" aria-expanded="false" aria-controls="cfg-explain"><span class="cfg-score-v">7.6</span><span class="cfg-score-l">mm/node</span></button>
+      <div class="cfg-groups">
+        <div class="cfg-group"><p class="cfg-title"><b>Shared fit</b><span>CMA-ES, all values per cable</span></p><div class="cfg-tiles"><div class="cfg-cell"><span class="cfg-l"><span>Stretching<em> &middot; N/m</em></span></span><button type="button" class="cfg-tile" data-x="g0-K" aria-expanded="false" aria-controls="cfg-explain" aria-label="Stretching: explain"><span class="cfg-v">641</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Bending<em> &middot; N&middot;m/rad</em></span></span><button type="button" class="cfg-tile" data-x="g0-ke" aria-expanded="false" aria-controls="cfg-explain" aria-label="Bending: explain"><span class="cfg-v">0.002<span class="cfg-to">&ndash;</span>1.39</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Twisting<em> &middot; N&middot;m/rad</em></span></span><button type="button" class="cfg-tile" data-x="g0-kt" aria-expanded="false" aria-controls="cfg-explain" aria-label="Twisting: explain"><span class="cfg-v">0.001<span class="cfg-to">&ndash;</span>0.92</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Linear density<em> &middot; kg/m</em></span></span><button type="button" class="cfg-tile" data-x="g0-rho" aria-expanded="false" aria-controls="cfg-explain" aria-label="Linear density: explain"><span class="cfg-v">0.044</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Friction</span></span><button type="button" class="cfg-tile" data-x="g0-mu" aria-expanded="false" aria-controls="cfg-explain" aria-label="Friction: explain"><span class="cfg-v">0.28</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Rest shape</span></span><button type="button" class="cfg-tile" data-x="g0-rest" aria-expanded="false" aria-controls="cfg-explain" aria-label="Rest shape: explain"><span class="cfg-v">&minus;33&deg;<span class="cfg-to">&ndash;</span>+36&deg;</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Parameters</span></span><button type="button" class="cfg-tile" data-x="g0-n" aria-expanded="false" aria-controls="cfg-explain" aria-label="Parameters: explain"><span class="cfg-v">231</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Fitting / training<em> &middot; h</em></span></span><button type="button" class="cfg-tile" data-x="g0-time" aria-expanded="false" aria-controls="cfg-explain" aria-label="Fitting / training: explain"><span class="cfg-v">102.5</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Data<em> &middot; transitions</em></span></span><span class="cfg-tile is-empty" title="Not part of this configuration"><span class="cfg-v">&ndash;</span></span></div></div></div>
+      </div>
+    </div>
+    <div class="cfg-explain" id="cfg-explain" role="region" aria-label="Parameter explanation" aria-live="polite" hidden></div>
+    <script type="application/json" id="cfg-explain-data">{"score": {"t": "Mean node error", "sym": "mm/node", "v": "7.6", "what": "How far, on average, the predicted cable is from the real one, in millimetres per node.", "how": "Averaged over the 16 nodes of the 4 cables and over every frame from frame 0, then over the 36 clips. The simulation only gets the measured motion of the hub and the plugs.", "why": "It is the number every approach is ranked by. Lower is better."}, "g0-K": {"t": "Stretching", "sym": "stretch stiffness of the cable joints", "v": "641 N/m", "grp": "Shared fit", "what": "A Newton cable is a rod of 15 capsule segments joined by cable joints. Unlike a rigid chain, each joint can be pulled apart elastically: force = K × separation along the cable axis (N/m). K is this stretching stiffness; the sideways (shear) direction of the joint uses the same value.", "how": "One value for all cables, fitted by CMA-ES in log space.", "why": "A finite K lets the cable give a little under pull; if it is too low the cable stretches like rubber."}, "g0-ke": {"t": "Bending", "sym": "bend stiffness ke, per joint", "v": "0.002 &ndash; 1.39 N&middot;m/rad", "grp": "Shared fit", "what": "Each cable joint has a bending spring: torque = ke × bend angle away from the joint’s rest pose (N·m/rad), solved implicitly by Newton’s VBD solver. ke plays the role of E·I / segment length of an elastic rod.", "how": "56 values (4 cables × 14 joints), fitted by CMA-ES. Each joint also has a fitted bend damping, and two shared Dahl values add internal friction, so part of a bend does not spring back.", "why": "A stiffness per joint copies stiff and soft spots along the real cable."}, "g0-kt": {"t": "Twisting", "sym": "twist stiffness kt, per joint", "v": "0.001 &ndash; 0.92 N&middot;m/rad", "grp": "Shared fit", "what": "The same joint has its own twist spring: torque = kt × rotation between neighbouring segments about the cable axis (N·m/rad), the role of G·J / segment length of a rod.", "how": "56 values fitted by CMA-ES, separately from bending (earlier fits copied the bending value into this slot).", "why": "The planar tracks show twist only indirectly, through how a cable rolls when a plug turns."}, "g0-rho": {"t": "Linear density", "sym": "capsule density", "v": "0.044 kg/m", "grp": "Shared fit", "what": "Each capsule segment has a volume density = mass per metre / (π r²). Gravity acts on that mass and presses the cable on the board.", "how": "Not fitted: pinned at the measured 0.044 kg/m.", "why": "With a free mass an earlier fit made the cables almost weightless, so that they floated over the movers. The measured value prevents that."}, "g0-mu": {"t": "Friction", "sym": "Coulomb μ, contact pairs", "v": "0.28", "grp": "Shared fit", "what": "Coulomb friction in Newton’s contact model. Every shape has a coefficient and a contact uses the combination of the two shapes; the tangential force is limited to μ × the normal force from the cable’s weight.", "how": "Four values fitted by CMA-ES: sliding friction of board and movers, sliding friction of the cable, and one torsional and one rolling coefficient for the whole scene.", "why": "It decides whether a cable slides along with the connector or stays where it is."}, "g0-rest": {"t": "Rest shape", "sym": "rest angle in the joint frame", "v": "&minus;33&deg; &ndash; +36&deg;", "grp": "Shared fit", "what": "A Newton rod stores its rest shape in the joint frames. The fitted rest angle rotates the child frame of each joint about the bend axis, so the joint’s zero-torque pose is already bent by that angle.", "how": "56 angles (4 cables × 14 joints), fitted by CMA-ES. Setting the angle as a joint target instead has no effect in the VBD solver.", "why": "This pre-bend is the permanent set of the real cable; it is the most effective parameter in every physics engine of the benchmark."}, "g0-n": {"t": "Parameters", "sym": "fitted values", "v": "231", "grp": "Shared fit", "what": "How many numbers are fitted.", "how": "56 bend + 56 twist + 56 damping + 56 rest angles + Dahl hysteresis (2) + stretch (1) + frictions (4).", "why": "Almost everything is per joint and per cable."}, "g0-time": {"t": "Fitting / training", "sym": "wall-clock time", "v": "102.5 h", "grp": "Shared fit", "what": "How long the fit took.", "how": "CMA-ES with population 18; every candidate simulates all clips (about 10.5–12 h per generation).", "why": "Physics fits are slow because every candidate is simulated."}}</script>
+    <p class="cfg-note">Reported configuration and its cable parameters (Paper, Table&nbsp;2). <span class="cfg-hint"><i class="fas fa-hand-pointer"></i>Click a box to see what it means.</span></p>
+  </div>
+</section>
+
+<section class="section ap-section">
+  <div class="wrap">
+    <h2 class="ap-h2">Best and worst clip</h2>
+    <p class="ap-lead">The clips Newton predicts most and least accurately, with the measured cables (solid) and the prediction (dashed).</p>
+    <div class="vid-pair">
+      <figure class="vid-item">
+        <video src="../static/media/newton_best_20261021_163624.mp4" autoplay muted loop playsinline controls preload="metadata"></video>
+        <figcaption><span class="vid-tag vid-best">Best clip</span> 20261021_163624 &middot; 5.39&nbsp;mm/node</figcaption>
+      </figure>
+      <figure class="vid-item">
+        <video src="../static/media/newton_worst_20261021_175638.mp4" autoplay muted loop playsinline controls preload="metadata"></video>
+        <figcaption><span class="vid-tag vid-worst">Worst clip</span> 20261021_175638 &middot; 18.94&nbsp;mm/node</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<div class="wrap ap-results-intro"><h2 class="ap-h2">Per-clip results</h2></div>
+
+<section class="section ap-section">
+  <div class="wrap ap-dash" id="ap-dash">
+
+    <div class="dash-card">
+      <div class="dash-head">
+        <h3>Error on each of the 36 clips</h3>
+        <div class="dash-controls">
+          <div class="seg" role="group" aria-label="Order">
+            <button type="button" class="seg-btn is-on" data-order="clip">Recording order</button>
+            <button type="button" class="seg-btn" data-order="sorted">Sorted by error</button>
+          </div>
+          <label class="select-wrap compact"><span class="muted">Compare</span><select id="ap-compare" aria-label="Compare with another model"></select></label>
+        </div>
+      </div>
+      <div class="legend" id="ap-clips-legend"></div>
+      <div id="ap-clips" class="chart" role="img" aria-label="Error on each clip"></div>
+    </div>
+
+</div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap narrow center">
+    <a class="icon-link" href="https://github.com/ludwigstr/World-Models-for-DLO" aria-label="Code on GitHub"><i class="fab fa-github"></i></a>
+  </div>
+</footer>
+
+<div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+<script src="../static/js/data.js?v=20261110b"></script>
+<script src="../static/js/approach.js?v=20261111a"></script>
+<script src="../static/js/ux.js?v=20261108n"></script>
+</body>
+</html>

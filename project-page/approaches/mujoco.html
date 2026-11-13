@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="MuJoCo in the DLO world-model benchmark: The four cables as MuJoCo elasticity.cable composites in the measured scene (board, hub, movers). The hub and the four plugs are driven by PD actuators along their tracked poses; after a 300-step settle the whole clip is replayed.">
+  <title>MuJoCo &middot; DLO Benchmark</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0b0b'/%3E%3Cg fill='none' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M7 19C14 19 15 8 25 8' stroke='%233987e5'/%3E%3Cpath d='M7 19C15 19 17 15 25 15' stroke='%23eb6834'/%3E%3Cpath d='M7 19C15 20 17 23 25 23' stroke='%231baf7a'/%3E%3C/g%3E%3Ccircle cx='7' cy='19' r='3.2' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../static/css/index.css?v=20261111b">
+  <script>
+    try { var t = localStorage.getItem('dlo-theme-v2'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+  </script>
+</head>
+<body data-approach="mujoco">
+
+<header class="topnav" id="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="../index.html"><i class="fas fa-wave-square"></i><span>DLO World Models</span></a>
+    <nav class="nav-links" id="nav-links" aria-label="Sections">
+      <a href="../index.html#overview">Overview</a>
+      <a href="../index.html#pipeline">Pipeline</a>
+      <a href="../index.html#approaches" class="is-current">Approaches</a>
+      <a href="../index.html#results">Results</a>
+      <a href="../index.html#per-clip">Per clip</a>
+      <a href="../index.html#BibTeX">BibTeX</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"><i class="fas fa-moon"></i></button>
+      <button class="icon-btn nav-burger" id="nav-burger" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="section ap-hero">
+  <div class="wrap">
+    <a class="back-link" href="../index.html#approaches"><i class="fas fa-arrow-left"></i>All approaches</a>
+    <p class="ap-kicker"><span class="swatch" style="--sw: var(--series-physics)"></span>Physics Engine</p>
+    <h1 class="ap-title">MuJoCo</h1>
+    <p class="ap-cite">elasticity.cable</p>
+    <h2 class="ap-hero-video-title">Predictions on all 36 clips</h2>
+    <figure class="ap-hero-video">
+      <video src="../static/media/mujoco_grid9x4.mp4" autoplay muted loop playsinline controls preload="metadata"></video>
+      <figcaption>MuJoCo prediction (dashed) over the measured cables (solid) across all 36 clips, best clip top-left, at 3&times; speed.</figcaption>
+    </figure>
+    <div class="cfg-boxes" aria-label="Reported configuration and cable parameters">
+      <button type="button" class="cfg-score" data-x="score" aria-expanded="false" aria-controls="cfg-explain"><span class="cfg-score-v">9.7</span><span class="cfg-score-l">mm/node</span></button>
+      <div class="cfg-groups">
+        <div class="cfg-group"><p class="cfg-title"><b>Shared fit</b><span>CMA-ES on all clips</span></p><div class="cfg-tiles"><div class="cfg-cell"><span class="cfg-l"><span>Stretching</span></span><button type="button" class="cfg-tile is-empty" data-x="g0-nostretch" aria-expanded="false" aria-controls="cfg-explain" aria-label="Stretching: explain"><span class="cfg-v">&ndash;</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Bending<em> &middot; N&middot;m/rad</em></span></span><button type="button" class="cfg-tile" data-x="g0-kb" aria-expanded="false" aria-controls="cfg-explain" aria-label="Bending: explain"><span class="cfg-v">0.002<span class="cfg-to">&ndash;</span>6.7</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Twisting<em> &middot; Pa</em></span></span><button type="button" class="cfg-tile" data-x="g0-kt" aria-expanded="false" aria-controls="cfg-explain" aria-label="Twisting: explain"><span class="cfg-v">4.0&middot;10<sup>4</sup><span class="cfg-to">&ndash;</span>1.9&middot;10<sup>5</sup></span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Linear density<em> &middot; kg/m</em></span></span><button type="button" class="cfg-tile" data-x="g0-rho" aria-expanded="false" aria-controls="cfg-explain" aria-label="Linear density: explain"><span class="cfg-v">0.15<span class="cfg-to">&ndash;</span>0.42</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Friction</span></span><button type="button" class="cfg-tile" data-x="g0-mu" aria-expanded="false" aria-controls="cfg-explain" aria-label="Friction: explain"><span class="cfg-v">0.33</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Rest shape</span></span><button type="button" class="cfg-tile" data-x="g0-rest" aria-expanded="false" aria-controls="cfg-explain" aria-label="Rest shape: explain"><span class="cfg-v">&minus;51&deg;<span class="cfg-to">&ndash;</span>+62&deg;</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Parameters</span></span><button type="button" class="cfg-tile" data-x="g0-n" aria-expanded="false" aria-controls="cfg-explain" aria-label="Parameters: explain"><span class="cfg-v">181</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Fitting / training<em> &middot; h</em></span></span><button type="button" class="cfg-tile" data-x="g0-time" aria-expanded="false" aria-controls="cfg-explain" aria-label="Fitting / training: explain"><span class="cfg-v">127</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Data<em> &middot; transitions</em></span></span><span class="cfg-tile is-empty" title="Not part of this configuration"><span class="cfg-v">&ndash;</span></span></div></div></div>
+      </div>
+    </div>
+    <div class="cfg-explain" id="cfg-explain" role="region" aria-label="Parameter explanation" aria-live="polite" hidden></div>
+    <script type="application/json" id="cfg-explain-data">{"score": {"t": "Mean node error", "sym": "mm/node", "v": "9.7", "what": "How far, on average, the predicted cable is from the real one, in millimetres per node.", "how": "Averaged over the 16 nodes of the 4 cables and over every frame from frame 0, then over the 36 clips. The simulation only gets the measured motion of the hub and the plugs.", "why": "It is the number every approach is ranked by. Lower is better."}, "g0-kb": {"t": "Bending", "sym": "ball-joint spring, per joint", "v": "0.002 &ndash; 6.7 N&middot;m/rad", "grp": "Shared fit", "what": "The MuJoCo cable is a chain of 15 rigid capsule segments joined by 14 ball joints. Each joint has a rotational spring: torque = stiffness × angle away from the joint’s rest orientation (N·m/rad). This per-joint spring is added on top of the uniform bending modulus of MuJoCo’s cable plugin, a discrete elastic rod with one value per cable.", "how": "56 joint springs (4 cables × 14 joints) and the 4 plugin bend moduli are fitted by CMA-ES. The objective is the benchmark error itself, over all frames of all 36 clips.", "why": "A stiffness per joint lets the model copy stiff and soft spots along the real cable."}, "g0-kt": {"t": "Twisting", "sym": "twist modulus of the cable plugin", "v": "4.0&middot;10<sup>4<\/sup> &ndash; 1.9&middot;10<sup>5<\/sup> Pa", "grp": "Shared fit", "what": "Twist is the rotation of one segment relative to the next about the cable axis. MuJoCo’s cable plugin resists it like an elastic rod: torque = G·J × twist per unit length, where G is the twist (shear) modulus in Pa and J follows from the 3 mm radius.", "how": "One value per cable, fitted by CMA-ES in log space.", "why": "The planar tracks show twist only indirectly, through how a cable rolls or flips when a plug turns."}, "g0-rho": {"t": "Linear density", "sym": "capsule density", "v": "0.15 &ndash; 0.42 kg/m", "grp": "Shared fit", "what": "Each capsule segment has a volume density = mass per metre / (π r²), which gives it mass and rotational inertia. Gravity (9.81 m/s²) acts on it, so the mass sets both the inertia and the force that presses the cable on the board.", "how": "One value per cable, fitted by CMA-ES and kept within 0.02 to 0.5 kg/m (the measured cable is 0.044 kg/m).", "why": "Friction force is μ × weight, so mass and μ can trade off. The limits stop the fit from using an unrealistic mass."}, "g0-mu": {"t": "Friction", "sym": "Coulomb μ, contact solver", "v": "0.33", "grp": "Shared fit", "what": "Coulomb sliding friction in MuJoCo’s contact solver. Where a capsule touches the board or a mover, the tangential force is limited to μ × the normal contact force, which comes from the cable’s weight.", "how": "One value for cables and board, fitted by CMA-ES (limits 0.05 to 5). Torsional and rolling friction are not active in this scene.", "why": "It decides whether a cable slides along with the connector or stays where it is."}, "g0-rest": {"t": "Rest shape", "sym": "spring reference angle, per joint", "v": "&minus;51&deg; &ndash; +62&deg;", "grp": "Shared fit", "what": "Each ball-joint spring pulls towards a reference orientation instead of towards straight. The fitted value is that reference: a rotation about the board normal by the rest angle. It is the bend the joint keeps without load, the cable’s permanent set.", "how": "56 angles (4 cables × 14 joints), fitted by CMA-ES together with the springs.", "why": "Without rest angles a bent cable can only be explained by friction holding it; with them the bend is a property of the cable."}, "g0-n": {"t": "Parameters", "sym": "fitted values", "v": "181", "grp": "Shared fit", "what": "How many numbers are fitted.", "how": "56 joint springs + 56 rest angles + 56 joint dampings + 4 plugin bend moduli + 4 plugin twist moduli + 4 masses + 1 friction coefficient = 181.", "why": "All of them are shared by every clip."}, "g0-time": {"t": "Fitting / training", "sym": "wall-clock time", "v": "127 h", "grp": "Shared fit", "what": "How long the fit took.", "how": "CMA-ES runs many full simulations of every clip per generation.", "why": "Physics fits are slow because every candidate is simulated."}, "g0-nostretch": {"t": "Stretching", "sym": "not in this model", "v": "not modelled", "what": "Not modelled. The MuJoCo cable is a chain of rigid capsule segments joined by ball joints. A rigid segment cannot change its length, so the cable is inextensible and there is no stretching stiffness.", "how": "Nothing to fit or sample: the model has no such quantity.", "why": "The simulated cable always keeps the length it has in frame 0. Slack or tension in a real cable can only show up as bending.", "grp": "Shared fit"}}</script>
+    <p class="cfg-note">Reported configuration and its cable parameters (Paper, Table&nbsp;2). <span class="cfg-hint"><i class="fas fa-hand-pointer"></i>Click a box to see what it means.</span></p>
+  </div>
+</section>
+
+<section class="section ap-section">
+  <div class="wrap">
+    <h2 class="ap-h2">Best and worst clip</h2>
+    <p class="ap-lead">The clips MuJoCo predicts most and least accurately, with the measured cables (solid) and the prediction (dashed).</p>
+    <div class="vid-pair">
+      <figure class="vid-item">
+        <video src="../static/media/mujoco_best_20261021_164755.mp4" autoplay muted loop playsinline controls preload="metadata"></video>
+        <figcaption><span class="vid-tag vid-best">Best clip</span> 20261021_164755 &middot; 5.91&nbsp;mm/node</figcaption>
+      </figure>
+      <figure class="vid-item">
+        <video src="../static/media/mujoco_worst_20261026_130441.mp4" autoplay muted loop playsinline controls preload="metadata"></video>
+        <figcaption><span class="vid-tag vid-worst">Worst clip</span> 20261026_130441 &middot; 22.35&nbsp;mm/node</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<div class="wrap ap-results-intro"><h2 class="ap-h2">Per-clip results</h2></div>
+
+<section class="section ap-section">
+  <div class="wrap ap-dash" id="ap-dash">
+
+    <div class="dash-card">
+      <div class="dash-head">
+        <h3>Error on each of the 36 clips</h3>
+        <div class="dash-controls">
+          <div class="seg" role="group" aria-label="Order">
+            <button type="button" class="seg-btn is-on" data-order="clip">Recording order</button>
+            <button type="button" class="seg-btn" data-order="sorted">Sorted by error</button>
+          </div>
+          <label class="select-wrap compact"><span class="muted">Compare</span><select id="ap-compare" aria-label="Compare with another model"></select></label>
+        </div>
+      </div>
+      <div class="legend" id="ap-clips-legend"></div>
+      <div id="ap-clips" class="chart" role="img" aria-label="Error on each clip"></div>
+    </div>
+
+</div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap narrow center">
+    <a class="icon-link" href="https://github.com/ludwigstr/World-Models-for-DLO" aria-label="Code on GitHub"><i class="fab fa-github"></i></a>
+  </div>
+</footer>
+
+<div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+<script src="../static/js/data.js?v=20261110b"></script>
+<script src="../static/js/approach.js?v=20261111a"></script>
+<script src="../static/js/ux.js?v=20261108n"></script>
+</body>
+</html>

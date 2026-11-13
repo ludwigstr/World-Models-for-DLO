@@ -1,0 +1,269 @@
+{
+ "approach": "DLO-Lab general fit (293 parameters), gradient descent from scratch, 36 clips",
+ "params": "data/dlolab_general_grad_zero_b_h.json",
+ "params_sha256": "fadcbd61d8f0cfd03c7ded1e374a86832790bffe194a3359a0092d4ea91aa6ba",
+ "device": "cpu (Genesis CPU backend), one fresh process per clip",
+ "reported_source": "data/dlolab_general_grad_zero_b_h_validate.json (fresh-process validation)",
+ "metric": "16 nodes, mean over cables, every frame (dlolab_general_fit_cmaes._eval_one)",
+ "n_clips": 36,
+ "mean_reproduced": 12.030913133657812,
+ "mean_reported": 12.030913133657812,
+ "max_abs_clip_diff": 0.0,
+ "tolerance_mm": 0.5,
+ "clips_over_tolerance": {},
+ "ok": true,
+ "clips": {
+  "20261021_160124": {
+   "reproduced": 30.84038840093592,
+   "reported": 30.84038840093592,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 166
+  },
+  "20261021_162340": {
+   "reproduced": 6.954393244060081,
+   "reported": 6.954393244060081,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 175
+  },
+  "20261021_162632": {
+   "reproduced": 7.343124957328264,
+   "reported": 7.343124957328264,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 171
+  },
+  "20261021_163244": {
+   "reproduced": 9.535852687369609,
+   "reported": 9.535852687369609,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 123
+  },
+  "20261021_163624": {
+   "reproduced": 6.752129043464813,
+   "reported": 6.752129043464813,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 170
+  },
+  "20261021_164010": {
+   "reproduced": 7.026411075335772,
+   "reported": 7.026411075335772,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 181
+  },
+  "20261021_164524": {
+   "reproduced": 6.58692397395475,
+   "reported": 6.58692397395475,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 176
+  },
+  "20261021_164755": {
+   "reproduced": 5.754479231545266,
+   "reported": 5.754479231545266,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 164
+  },
+  "20261021_165018": {
+   "reproduced": 7.4408116496607795,
+   "reported": 7.4408116496607795,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 166
+  },
+  "20261021_165246": {
+   "reproduced": 7.935352121766971,
+   "reported": 7.935352121766971,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 181
+  },
+  "20261021_165753": {
+   "reproduced": 6.681963464954831,
+   "reported": 6.681963464954831,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 172
+  },
+  "20261021_170550": {
+   "reproduced": 10.352347332894256,
+   "reported": 10.352347332894256,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 158
+  },
+  "20261021_171620": {
+   "reproduced": 30.884982777863627,
+   "reported": 30.884982777863627,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 149
+  },
+  "20261021_171842": {
+   "reproduced": 5.547414091495558,
+   "reported": 5.547414091495558,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 164
+  },
+  "20261021_172103": {
+   "reproduced": 7.170501276206118,
+   "reported": 7.170501276206118,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 156
+  },
+  "20261021_172318": {
+   "reproduced": 6.434393750292498,
+   "reported": 6.434393750292498,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 161
+  },
+  "20261021_172716": {
+   "reproduced": 8.134269121427346,
+   "reported": 8.134269121427346,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 159
+  },
+  "20261021_172928": {
+   "reproduced": 7.101777585383059,
+   "reported": 7.101777585383059,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 149
+  },
+  "20261021_173234": {
+   "reproduced": 8.18558765797053,
+   "reported": 8.18558765797053,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 154
+  },
+  "20261021_173628": {
+   "reproduced": 5.946263305400461,
+   "reported": 5.946263305400461,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 168
+  },
+  "20261021_173858": {
+   "reproduced": 6.2720191112356956,
+   "reported": 6.2720191112356956,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 160
+  },
+  "20261021_174117": {
+   "reproduced": 5.996290727576948,
+   "reported": 5.996290727576948,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 174
+  },
+  "20261021_174701": {
+   "reproduced": 6.307973095713981,
+   "reported": 6.307973095713981,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 173
+  },
+  "20261021_175638": {
+   "reproduced": 30.369624456630333,
+   "reported": 30.369624456630333,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 155
+  },
+  "20261021_180139": {
+   "reproduced": 31.765562217042945,
+   "reported": 31.765562217042945,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 156
+  },
+  "20261021_180422": {
+   "reproduced": 8.932118333681188,
+   "reported": 8.932118333681188,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 176
+  },
+  "20261021_180646": {
+   "reproduced": 6.642390439915154,
+   "reported": 6.642390439915154,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 147
+  },
+  "20261026_125511": {
+   "reproduced": 5.290227591536251,
+   "reported": 5.290227591536251,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 168
+  },
+  "20261026_130128": {
+   "reproduced": 5.338680677314217,
+   "reported": 5.338680677314217,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 178
+  },
+  "20261026_130441": {
+   "reproduced": 29.61927298828426,
+   "reported": 29.61927298828426,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 164
+  },
+  "20261028_100701": {
+   "reproduced": 18.629337669459247,
+   "reported": 18.629337669459247,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 165
+  },
+  "20261028_101001": {
+   "reproduced": 14.331604785802144,
+   "reported": 14.331604785802144,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 161
+  },
+  "20261028_101510": {
+   "reproduced": 10.797928260026032,
+   "reported": 10.797928260026032,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 166
+  },
+  "20261028_105803": {
+   "reproduced": 18.342693884833963,
+   "reported": 18.342693884833963,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 146
+  },
+  "20261028_114103": {
+   "reproduced": 26.024029840625694,
+   "reported": 26.024029840625694,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 146
+  },
+  "20261028_121810": {
+   "reproduced": 15.843751982692664,
+   "reported": 15.843751982692664,
+   "diff": 0.0,
+   "nan_nodes": 0,
+   "n_frames": 155
+  }
+ }
+}

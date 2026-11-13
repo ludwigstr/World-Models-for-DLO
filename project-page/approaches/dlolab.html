@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="DLO-Lab in the DLO world-model benchmark: The native, differentiable Cosserat rod of the DLO-Lab fork of Genesis, one rod per cable in the measured scene. Fits use reverse-mode gradient descent on a distance-transform loss against the video masks.">
+  <title>DLO-Lab &middot; DLO Benchmark</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0b0b'/%3E%3Cg fill='none' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M7 19C14 19 15 8 25 8' stroke='%233987e5'/%3E%3Cpath d='M7 19C15 19 17 15 25 15' stroke='%23eb6834'/%3E%3Cpath d='M7 19C15 20 17 23 25 23' stroke='%231baf7a'/%3E%3C/g%3E%3Ccircle cx='7' cy='19' r='3.2' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../static/css/index.css?v=20261111b">
+  <script>
+    try { var t = localStorage.getItem('dlo-theme-v2'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+  </script>
+</head>
+<body data-approach="dlolab">
+
+<header class="topnav" id="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="../index.html"><i class="fas fa-wave-square"></i><span>DLO World Models</span></a>
+    <nav class="nav-links" id="nav-links" aria-label="Sections">
+      <a href="../index.html#overview">Overview</a>
+      <a href="../index.html#pipeline">Pipeline</a>
+      <a href="../index.html#approaches" class="is-current">Approaches</a>
+      <a href="../index.html#results">Results</a>
+      <a href="../index.html#per-clip">Per clip</a>
+      <a href="../index.html#BibTeX">BibTeX</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"><i class="fas fa-moon"></i></button>
+      <button class="icon-btn nav-burger" id="nav-burger" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="section ap-hero">
+  <div class="wrap">
+    <a class="back-link" href="../index.html#approaches"><i class="fas fa-arrow-left"></i>All approaches</a>
+    <p class="ap-kicker"><span class="swatch" style="--sw: var(--series-physics)"></span>Physics Engine</p>
+    <h1 class="ap-title">DLO-Lab</h1>
+    <p class="ap-cite">Cosserat rods of the DLO-Lab fork of Genesis, per-element stiffness scales and rest curvatures fitted by gradient descent through the differentiable rod solver on all 36 clips</p>
+    <h2 class="ap-hero-video-title">Predictions on all 36 clips</h2>
+    <figure class="ap-hero-video">
+      <video src="../static/media/dlolab_grid9x4.mp4" autoplay muted loop playsinline controls preload="metadata"></video>
+      <figcaption>DLO-Lab prediction (dashed) over the measured cables (solid) across all 36 clips, best clip top-left, at 3&times; speed.</figcaption>
+    </figure>
+    <div class="cfg-boxes" aria-label="Reported configuration and cable parameters">
+      <button type="button" class="cfg-score" data-x="score" aria-expanded="false" aria-controls="cfg-explain"><span class="cfg-score-v">12.0</span><span class="cfg-score-l">mm/node</span></button>
+      <div class="cfg-groups">
+        <div class="cfg-group"><p class="cfg-title"><b>Cosserat rod fit</b><span>gradient descent, all 36 clips</span></p><div class="cfg-tiles"><div class="cfg-cell"><span class="cfg-l"><span>Stretching<em> &middot; Pa</em></span></span><button type="button" class="cfg-tile" data-x="g0-K" aria-expanded="false" aria-controls="cfg-explain" aria-label="Stretching: explain"><span class="cfg-v">2.2&middot;10<sup>5</sup><span class="cfg-to">&ndash;</span>3.8&middot;10<sup>5</sup></span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Bending<em> &middot; Pa</em></span></span><button type="button" class="cfg-tile" data-x="g0-E" aria-expanded="false" aria-controls="cfg-explain" aria-label="Bending: explain"><span class="cfg-v">1.2&middot;10<sup>7</sup><span class="cfg-to">&ndash;</span>2.8&middot;10<sup>7</sup></span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Twisting<em> &middot; Pa</em></span></span><button type="button" class="cfg-tile" data-x="g0-G" aria-expanded="false" aria-controls="cfg-explain" aria-label="Twisting: explain"><span class="cfg-v">6.1&middot;10<sup>3</sup></span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Linear density<em> &middot; kg/m</em></span></span><button type="button" class="cfg-tile" data-x="g0-rho" aria-expanded="false" aria-controls="cfg-explain" aria-label="Linear density: explain"><span class="cfg-v">0.045</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Friction</span></span><button type="button" class="cfg-tile" data-x="g0-mu" aria-expanded="false" aria-controls="cfg-explain" aria-label="Friction: explain"><span class="cfg-v">0.10</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Rest shape</span></span><button type="button" class="cfg-tile" data-x="g0-rest" aria-expanded="false" aria-controls="cfg-explain" aria-label="Rest shape: explain"><span class="cfg-v">&minus;22&deg;<span class="cfg-to">&ndash;</span>+21&deg;</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Parameters</span></span><button type="button" class="cfg-tile" data-x="g0-n" aria-expanded="false" aria-controls="cfg-explain" aria-label="Parameters: explain"><span class="cfg-v">287</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Fitting / training<em> &middot; h</em></span></span><button type="button" class="cfg-tile" data-x="g0-time" aria-expanded="false" aria-controls="cfg-explain" aria-label="Fitting / training: explain"><span class="cfg-v">7.5</span></button></div><div class="cfg-cell"><span class="cfg-l"><span>Data<em> &middot; transitions</em></span></span><span class="cfg-tile is-empty" title="Not part of this configuration"><span class="cfg-v">&ndash;</span></span></div></div></div>
+      </div>
+    </div>
+    <div class="cfg-explain" id="cfg-explain" role="region" aria-label="Parameter explanation" aria-live="polite" hidden></div>
+    <script type="application/json" id="cfg-explain-data">{"score": {"t": "Mean node error", "sym": "mm/node", "v": "12.0", "what": "How far, on average, the predicted cable is from the real one, in millimetres per node.", "how": "Averaged over the 16 nodes of the 4 cables and over every frame from frame 0, then over the 36 clips. The simulation only gets the measured motion of the hub and the plugs.", "why": "It is the number every approach is ranked by. Lower is better."}, "g0-K": {"t": "Stretching", "sym": "stretch modulus K × scale per edge", "v": "2.2&middot;10<sup>5<\/sup> &ndash; 3.8&middot;10<sup>5<\/sup> Pa", "grp": "Cosserat rod fit", "what": "DLO-Lab is a differentiable discrete elastic rod: vertices joined by edges, with separate energies for stretching, bending and twisting. The stretching energy of an edge is ½ · K · A · strain² · rest length, with strain = length / rest length − 1 and A = π r² (r = 3 mm). K is a modulus in Pa; K·A is the axial stiffness.", "how": "One shared K (2.9·10⁵ Pa) times a scale for each of the 60 edges (4 cables × 15), found by gradient descent through the rod solver, starting from K = 10⁴ Pa and all scales 1.", "why": "It keeps the cable near its length. A scale per edge lets single segments give more or less."}, "g0-E": {"t": "Bending", "sym": "Young’s modulus E × scale per hinge", "v": "1.2&middot;10<sup>7<\/sup> &ndash; 2.8&middot;10<sup>7<\/sup> Pa", "grp": "Cosserat rod fit", "what": "The bending energy at each inner vertex is ½ · E·I · (κ − κ_rest)² / l, where κ is the discrete curvature between the two neighbouring edges (two components), I = π r⁴ / 4 and l the length that belongs to the vertex. E is Young’s modulus in Pa; E·I is the bending stiffness.", "how": "One shared E (1.4·10⁷ Pa) times a scale for each of the 56 hinges (4 cables × 14), found by gradient descent from E = 10⁵ Pa and all scales 1.", "why": "A stiffness per hinge copies stiff and soft spots along the real cable."}, "g0-G": {"t": "Twisting", "sym": "shear modulus G × scale per hinge", "v": "6.1&middot;10<sup>3<\/sup> Pa", "grp": "Cosserat rod fit", "what": "The twisting energy at each inner vertex is ½ · G·J · (twist − rest twist)² / l, where twist is the rotation of the cross-section between neighbouring edges about the cable axis and J = π r⁴ / 2. G is the shear modulus in Pa; G·J is the twisting stiffness.", "how": "One shared G (6.1·10³ Pa) times a scale per hinge, by gradient descent. The 56 scales stayed at 1.00: planar tracks give almost no gradient for twist.", "why": "Twist changes how a cable rolls when a plug turns, but the planar data hardly constrains it."}, "g0-rho": {"t": "Linear density", "sym": "mass per vertex", "v": "0.045 kg/m", "grp": "Cosserat rod fit", "what": "Mass is lumped at the rod vertices: 2 g per vertex, which is 0.045 kg/m at the mean cable length. Gravity acts on it and presses the rod on the board.", "how": "Held fixed. Mass has no gradient in this solver, so the gradient run leaves it at its start value.", "why": "A fixed, realistic mass keeps the fit from trading mass against stiffness."}, "g0-mu": {"t": "Friction", "sym": "Coulomb μ, rod-board coupling", "v": "0.10", "grp": "Cosserat rod fit", "what": "Coulomb friction of the coupling between rod and board: the tangential force on a vertex is limited to μ × its normal contact force.", "how": "Held fixed at 0.1. Friction has no gradient in this solver, so the gradient run leaves it at its start value.", "why": "It decides whether a cable slides along or stays where it is."}, "g0-rest": {"t": "Rest shape", "sym": "rest curvature κ_rest per hinge", "v": "&minus;22&deg; &ndash; +21&deg;", "grp": "Cosserat rod fit", "what": "Each inner vertex stores a rest curvature κ_rest with two components. The bending energy is zero when the curvature equals it, so κ_rest is the bend the cable keeps without load. The box shows it as the equivalent bend angle, 2·atan(κ/2).", "how": "112 values (4 cables × 14 hinges × 2 components), found by gradient descent starting from 0, a straight rod.", "why": "Rest shape is the most effective parameter in every physics engine of the benchmark."}, "g0-n": {"t": "Parameters", "sym": "fitted values", "v": "287", "grp": "Cosserat rod fit", "what": "How many numbers are fitted.", "how": "3 moduli (K, E, G), 172 per-element scales (56 bending, 60 stretch, 56 twist) and 112 rest curvatures. μ, damping and the 4 masses are held fixed.", "why": "Most values are per element and per cable."}, "g0-time": {"t": "Fitting / training", "sym": "wall-clock time", "v": "7.5 h", "grp": "Cosserat rod fit", "what": "How long the fit took.", "how": "Gradient descent, 10 iterations with line search, back-propagating through the rod solver on 3 GPUs.", "why": "Back-propagation reaches a good fit in far fewer solver runs than a population search."}}</script>
+    <p class="cfg-note">Reported configuration and its cable parameters (Paper, Table&nbsp;2). <span class="cfg-hint"><i class="fas fa-hand-pointer"></i>Click a box to see what it means.</span></p>
+  </div>
+</section>
+
+<section class="section ap-section">
+  <div class="wrap">
+    <h2 class="ap-h2">Best and worst clip</h2>
+    <p class="ap-lead">The clips DLO-Lab predicts most and least accurately, with the measured cables (solid) and the prediction (dashed).</p>
+    <div class="vid-pair">
+      <figure class="vid-item">
+        <video src="../static/media/dlolab_best_20261026_125511.mp4" autoplay muted loop playsinline controls preload="metadata"></video>
+        <figcaption><span class="vid-tag vid-best">Best clip</span> 20261026_125511 &middot; 5.29&nbsp;mm/node</figcaption>
+      </figure>
+      <figure class="vid-item">
+        <video src="../static/media/dlolab_worst_20261021_180139.mp4" autoplay muted loop playsinline controls preload="metadata"></video>
+        <figcaption><span class="vid-tag vid-worst">Worst clip</span> 20261021_180139 &middot; 31.77&nbsp;mm/node</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<div class="wrap ap-results-intro"><h2 class="ap-h2">Per-clip results</h2></div>
+
+<section class="section ap-section">
+  <div class="wrap ap-dash" id="ap-dash">
+
+    <div class="dash-card">
+      <div class="dash-head">
+        <h3>Error on each of the 36 clips</h3>
+        <div class="dash-controls">
+          <div class="seg" role="group" aria-label="Order">
+            <button type="button" class="seg-btn is-on" data-order="clip">Recording order</button>
+            <button type="button" class="seg-btn" data-order="sorted">Sorted by error</button>
+          </div>
+          <label class="select-wrap compact"><span class="muted">Compare</span><select id="ap-compare" aria-label="Compare with another model"></select></label>
+        </div>
+      </div>
+      <div class="legend" id="ap-clips-legend"></div>
+      <div id="ap-clips" class="chart" role="img" aria-label="Error on each clip"></div>
+    </div>
+
+</div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap narrow center">
+    <a class="icon-link" href="https://github.com/ludwigstr/World-Models-for-DLO" aria-label="Code on GitHub"><i class="fab fa-github"></i></a>
+  </div>
+</footer>
+
+<div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+<script src="../static/js/data.js?v=20261110b"></script>
+<script src="../static/js/approach.js?v=20261111a"></script>
+<script src="../static/js/ux.js?v=20261108n"></script>
+</body>
+</html>

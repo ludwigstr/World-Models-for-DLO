@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Caporali et al. in the DLO world-model benchmark: An MLP with FiLM conditioning learns the one-step response of an analytical mass-spring model from synthetic data only. On a real clip the network stays frozen and the model parameters are estimated online.">
+  <title>Caporali et al. &middot; DLO Benchmark</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0b0b'/%3E%3Cg fill='none' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M7 19C14 19 15 8 25 8' stroke='%233987e5'/%3E%3Cpath d='M7 19C15 19 17 15 25 15' stroke='%23eb6834'/%3E%3Cpath d='M7 19C15 20 17 23 25 23' stroke='%231baf7a'/%3E%3C/g%3E%3Ccircle cx='7' cy='19' r='3.2' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../static/css/index.css?v=20261111b">
+  <script>
+    try { var t = localStorage.getItem('dlo-theme-v2'); if (t) document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+  </script>
+</head>
+<body data-approach="caporali">
+
+<header class="topnav" id="topnav">
+  <div class="topnav-inner">
+    <a class="brand" href="../index.html"><i class="fas fa-wave-square"></i><span>DLO World Models</span></a>
+    <nav class="nav-links" id="nav-links" aria-label="Sections">
+      <a href="../index.html#overview">Overview</a>
+      <a href="../index.html#pipeline">Pipeline</a>
+      <a href="../index.html#approaches" class="is-current">Approaches</a>
+      <a href="../index.html#results">Results</a>
+      <a href="../index.html#per-clip">Per clip</a>
+      <a href="../index.html#BibTeX">BibTeX</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"><i class="fas fa-moon"></i></button>
+      <button class="icon-btn nav-burger" id="nav-burger" aria-label="Menu" aria-expanded="false" aria-controls="nav-links"><i class="fas fa-bars"></i></button>
+    </div>
+  </div>
+</header>
+
+<main>
+<section class="section ap-hero">
+  <div class="wrap">
+    <a class="back-link" href="../index.html#approaches"><i class="fas fa-arrow-left"></i>All approaches</a>
+    <p class="ap-kicker"><span class="swatch" style="--sw: var(--series-dynamics)"></span>Dynamics Model</p>
+    <h1 class="ap-title">Caporali et al.</h1>
+    <p class="ap-cite">RA-L 2024</p>
+    <h2 class="ap-hero-video-title">Predictions on all 36 clips</h2>
+    <figure class="ap-hero-video">
+      <video src="../static/media/caporali_grid9x4.mp4" autoplay muted loop playsinline controls preload="metadata"></video>
+      <figcaption>Caporali prediction (dashed) over the measured cables (solid) across all 36 clips, best clip top-left, at 3&times; speed.</figcaption>
+    </figure>
+    <div class="cfg-boxes" aria-label="Reported configuration and cable parameters">
+      <button type="button" class="cfg-score" data-x="score" aria-expanded="false" aria-controls="cfg-explain"><span class="cfg-score-v">15.8</span><span class="cfg-score-l">mm/node</span></button>
+      <div class="cfg-groups">
+      <div class="cfg-matrix">
+      <span class="cm-corner" aria-hidden="true"></span>
+      <span class="cfg-l"><span>Stretching<em> &middot; N/m</em></span></span>
+      <span class="cfg-l"><span>Bending<em> &middot; N&middot;m/rad</em></span></span>
+      <span class="cfg-l"><span>Twisting</span></span>
+      <span class="cfg-l"><span>Linear density<em> &middot; kg/m</em></span></span>
+      <span class="cfg-l"><span>Friction<em> &middot; N</em></span></span>
+      <span class="cfg-l"><span>Rest shape</span></span>
+      <span class="cfg-l"><span>Parameters</span></span>
+      <span class="cfg-l"><span>Fitting / training<em> &middot; h</em></span></span>
+      <span class="cfg-l"><span>Data<em> &middot; transitions</em></span></span>
+      <span class="cm-row"><b>Network training</b><span>FiLM MLP on simulated data</span></span>
+      <button type="button" class="cfg-tile" data-x="g0-ks" aria-expanded="false" aria-controls="cfg-explain" aria-label="Stretching: explain"><span class="cfg-v">1&middot;10<sup>5</sup></span></button>
+      <button type="button" class="cfg-tile" data-x="g0-kb" aria-expanded="false" aria-controls="cfg-explain" aria-label="Bending: explain"><span class="cfg-v">0.2<span class="cfg-to">&ndash;</span>3.0</span></button>
+      <button type="button" class="cfg-tile is-empty" data-x="g0-notwist" aria-expanded="false" aria-controls="cfg-explain" aria-label="Twisting: explain"><span class="cfg-v">&ndash;</span></button>
+      <button type="button" class="cfg-tile" data-x="g0-m" aria-expanded="false" aria-controls="cfg-explain" aria-label="Linear density: explain"><span class="cfg-v">0.022<span class="cfg-to">&ndash;</span>0.17</span></button>
+      <button type="button" class="cfg-tile" data-x="g0-kc" aria-expanded="false" aria-controls="cfg-explain" aria-label="Friction: explain"><span class="cfg-v">0.05<span class="cfg-to">&ndash;</span>0.4</span></button>
+      <button type="button" class="cfg-tile" data-x="g0-rest" aria-expanded="false" aria-controls="cfg-explain" aria-label="Rest shape: explain"><span class="cfg-v">&minus;34&deg;<span class="cfg-to">&ndash;</span>+34&deg;</span></button>
+      <button type="button" class="cfg-tile" data-x="g0-weights" aria-expanded="false" aria-controls="cfg-explain" aria-label="Parameters: explain"><span class="cfg-v">0.42&thinsp;M<span class="cfg-u"> weights</span></span></button>
+      <button type="button" class="cfg-tile" data-x="g0-time" aria-expanded="false" aria-controls="cfg-explain" aria-label="Fitting / training: explain"><span class="cfg-v">0.34</span></button>
+      <button type="button" class="cfg-tile" data-x="g0-data" aria-expanded="false" aria-controls="cfg-explain" aria-label="Data: explain"><span class="cfg-v">1.54M</span></button>
+      <span class="cm-row"><b>Online estimation</b><span>per cable, on the real clip</span></span>
+      <button type="button" class="cfg-tile" data-x="g1-ks2" aria-expanded="false" aria-controls="cfg-explain" aria-label="Stretching: explain"><span class="cfg-v">1&middot;10<sup>5</sup></span></button>
+      <button type="button" class="cfg-tile" data-x="g1-kb2" aria-expanded="false" aria-controls="cfg-explain" aria-label="Bending: explain"><span class="cfg-v">0.2<span class="cfg-to">&ndash;</span>3.0</span></button>
+      <span class="cfg-tile is-empty" title="Not part of this configuration"><span class="cfg-v">&ndash;</span></span>
+      <button type="button" class="cfg-tile" data-x="g1-m2" aria-expanded="false" aria-controls="cfg-explain" aria-label="Linear density: explain"><span class="cfg-v">0.023<span class="cfg-to">&ndash;</span>0.15</span></button>
+      <button type="button" class="cfg-tile" data-x="g1-kc2" aria-expanded="false" aria-controls="cfg-explain" aria-label="Friction: explain"><span class="cfg-v">0.15</span></button>
+      <button type="button" class="cfg-tile" data-x="g1-rest2" aria-expanded="false" aria-controls="cfg-explain" aria-label="Rest shape: explain"><span class="cfg-v">&minus;34&deg;<span class="cfg-to">&ndash;</span>+34&deg;</span></button>
+      <button type="button" class="cfg-tile" data-x="g1-n2" aria-expanded="false" aria-controls="cfg-explain" aria-label="Parameters: explain"><span class="cfg-v">342</span></button>
+      <button type="button" class="cfg-tile" data-x="g1-time2" aria-expanded="false" aria-controls="cfg-explain" aria-label="Fitting / training: explain"><span class="cfg-v">0.21</span></button>
+      <span class="cfg-tile is-empty" title="Not part of this configuration"><span class="cfg-v">&ndash;</span></span>
+      </div>
+      </div>
+    </div>
+    <div class="cfg-explain" id="cfg-explain" role="region" aria-label="Parameter explanation" aria-live="polite" hidden></div>
+    <script type="application/json" id="cfg-explain-data">{"score": {"t": "Mean node error", "sym": "mm/node", "v": "15.8", "what": "How far, on average, the predicted cable is from the real one, in millimetres per node.", "how": "Averaged over the 16 nodes of the 4 cables and over every frame from frame 0, then over the 36 clips. The simulation only gets the measured motion of the hub and the plugs.", "why": "It is the number every approach is ranked by. Lower is better."}, "g0-ks": {"t": "Stretching", "sym": "axial spring k_s", "v": "1&middot;10<sup>5<\/sup> N/m", "grp": "Network training", "what": "The training data comes from a planar mass-spring-damper chain (Caporali et al., Eq. 1): 16 node masses joined by axial springs. Spring force = k_s × (edge length − rest length), with rest length = cable length / 15. k_s is the stretching stiffness.", "how": "Fixed at 10⁵ N/m, not sampled. The value is high enough that the simulated cable stays within 1 % of its length even when it is dragged fast.", "why": "A real cable hardly stretches. With a soft k_s the simulated cable would shorten instead of buckling, and the bending behaviour would be wrong."}, "g0-kb": {"t": "Bending", "sym": "torsional spring k_b", "v": "0.2 &ndash; 3.0 N&middot;m/rad", "grp": "Network training", "what": "At each inner node a torsional spring acts on the turning angle θ between the two neighbouring edges: energy = ½ · k_b · (θ − θ_rest)². k_b (N·m/rad) is the bending stiffness; the node forces follow as the gradient of this energy.", "how": "Sampled log-uniformly in 0.2 to 3.0 N·m/rad for each training chain, uniform along the cable. The network gets the value as an input.", "why": "By seeing many stiffnesses the network learns how the response changes with k_b, which is what the online estimation uses later."}, "g0-m": {"t": "Linear density", "sym": "total mass m, inertia only", "v": "0.022 &ndash; 0.17 kg/m", "grp": "Network training", "what": "The cable mass m is split equally over the 16 nodes. This model has no gravity (the chain is planar and the board is flat), so mass acts only as inertia: it sets how fast a node accelerates under the spring forces.", "how": "Sampled log-uniformly in 0.02 to 0.10 kg per cable for each training chain (shown per metre). The network gets the value as an input.", "why": "Mass sets how quickly the chain follows the moving ends."}, "g0-kc": {"t": "Friction", "sym": "dry friction force k_c per node", "v": "0.05 &ndash; 0.4 N", "grp": "Network training", "what": "Without gravity there is no normal force and therefore no friction coefficient μ. Board friction is a dry-friction force k_c per node (N) that acts against the node’s motion in the board plane; it stands for μ × normal force as one number. In each step it can remove at most the momentum the node has, so slow nodes stick. A viscous term −k_d · velocity acts in addition.", "how": "k_c is sampled uniformly in 0.05 to 0.4 N and the viscous k_d log-uniformly in 5 to 40 N·s/m for each training chain. Both are inputs of the network.", "why": "Dry friction has a breakaway threshold: part of a cable stays in place while the connector already pulls at its end. Viscous damping alone cannot do that."}, "g0-rest": {"t": "Rest shape", "sym": "rest turning angles θ_rest", "v": "&minus;34&deg; &ndash; +34&deg;", "grp": "Network training", "what": "The rest turning angle θ_rest of each inner node: the angle at which its bending spring has zero energy. With θ_rest = 0 the free shape would be a straight line; with a profile along the cable it is an arbitrary curve.", "how": "The real frame-0 turning angles of the chain’s start state, scaled by ×0.6 to 1.2 and capped at 0.6 rad (34°). This extends the paper, which uses a straight rest shape.", "why": "Real cables keep a bent shape. Without θ_rest the estimator would have to explain a held bend by friction alone."}, "g0-weights": {"t": "Parameters", "sym": "network weights", "v": "0.42&thinsp;M weights", "grp": "Network training", "what": "The learned values of the FiLM MLP (width 256). It takes the cable shape, the motion of the ends and the physical parameters (m, k_b, k_d, k_c and the rest angles) and returns how far every node moves in one step.", "how": "Trained for 25 epochs on one-step transitions of the mass-spring simulator only.", "why": "The network replaces the simulator at prediction time and can be differentiated with respect to its parameter inputs."}, "g0-time": {"t": "Fitting / training", "sym": "wall-clock time", "v": "0.34 h", "grp": "Network training", "what": "How long training took.", "how": "The 25 training epochs on the synthetic transitions.", "why": "Training this small network is cheap."}, "g0-data": {"t": "Data", "sym": "transitions", "v": "1.54M", "grp": "Network training", "what": "The number of training examples.", "how": "Every chain starts from a real tracked cable state and its ends follow the real end paths (speed varied ×0.8–1.2).", "why": "Starting from real states keeps the data close to the real cables."}, "g1-ks2": {"t": "Stretching", "sym": "not a network input", "v": "1&middot;10<sup>5<\/sup> N/m", "grp": "Online estimation", "what": "The network has no input for stretching. It learned from a simulator with k_s = 10⁵ N/m, so the near-inextensible behaviour is built into its weights.", "how": "Not estimated.", "why": "The predicted cable keeps its length as far as the network learned to do so."}, "g1-kb2": {"t": "Bending", "sym": "k_b input, estimated online", "v": "0.2 &ndash; 3.0 N&middot;m/rad", "grp": "Online estimation", "what": "The k_b input of the frozen network: the bending stiffness of the torsional springs that the network should assume for this real cable. It has the same meaning as in the training simulator.", "how": "Starts at 1.0 N·m/rad. After every frame one Adam step (learning rate 0.05) changes m, k_b and k_d so that the one-step prediction error gets smaller; the values stay inside the trained ranges. One value per cable.", "why": "It lets the frozen network adapt to each real cable while it runs. In this strongly damped model mainly the ratio k_b / k_d is fixed by the data, so read the two values together."}, "g1-m2": {"t": "Linear density", "sym": "m input, estimated online", "v": "0.023 &ndash; 0.15 kg/m", "grp": "Online estimation", "what": "The mass input of the frozen network: the node inertia it should assume for this cable (no gravity, as in the training simulator).", "how": "Starts at 0.04 kg per cable and is adjusted online with the same Adam step as k_b.", "why": "Mass sets how quickly the predicted cable follows the moving ends."}, "g1-kc2": {"t": "Friction", "sym": "k_c input, fixed", "v": "0.15 N", "grp": "Online estimation", "what": "The dry-friction input of the frozen network: the friction force per node (N) in the board plane, standing for μ × normal force.", "how": "Fixed at 0.15 N, not estimated. The viscous damping k_d starts at 20 N·s/m and is estimated online.", "why": "Dry and viscous friction both resist motion; fixing one keeps the online estimate well determined."}, "g1-rest2": {"t": "Rest shape", "sym": "rest-angle inputs", "v": "&minus;34&deg; &ndash; +34&deg;", "grp": "Online estimation", "what": "The rest turning angles given to the network: for each inner node the angle its bending spring relaxes to.", "how": "Taken from frame 0 of the real clip and capped at 0.6 rad (34°). They are not estimated.", "why": "They tell the network which shape the cable returns to."}, "g1-n2": {"t": "Parameters", "sym": "estimated values", "v": "342", "grp": "Online estimation", "what": "How many physical values are estimated on the real clips.", "how": "Mass, bending stiffness and damping per cable, estimated online.", "why": "Only these few numbers change per clip; the network weights stay the same."}, "g1-time2": {"t": "Fitting / training", "sym": "wall-clock time", "v": "0.21 h", "grp": "Online estimation", "what": "How long the online estimation took over all clips.", "how": "One small optimisation step per frame.", "why": "Adapting to a new cable is fast."}, "g0-notwist": {"t": "Twisting", "sym": "not in this model", "v": "not modelled", "what": "Not modelled. The simulator is a planar (2-D) chain: its nodes have positions but no orientation, so rotation about the cable axis does not exist.", "how": "Nothing to fit or sample: the model has no such quantity.", "why": "The network never sees twist in training, so it cannot predict effects that come from twist.", "grp": "Network training"}}</script>
+    <p class="cfg-note">Reported configuration and its cable parameters (Paper, Table&nbsp;2). <span class="cfg-hint"><i class="fas fa-hand-pointer"></i>Click a box to see what it means.</span></p>
+  </div>
+</section>
+
+<section class="section ap-section">
+  <div class="wrap">
+    <h2 class="ap-h2">Best and worst clip</h2>
+    <p class="ap-lead">The clips Caporali et al. predicts most and least accurately, with the measured cables (solid) and the prediction (dashed).</p>
+    <div class="vid-pair">
+      <figure class="vid-item">
+        <video src="../static/media/caporali_best_20261021_164755.mp4" autoplay muted loop playsinline controls preload="metadata"></video>
+        <figcaption><span class="vid-tag vid-best">Best clip</span> 20261021_164755 &middot; 10.22&nbsp;mm/node</figcaption>
+      </figure>
+      <figure class="vid-item">
+        <video src="../static/media/caporali_worst_20261021_180139.mp4" autoplay muted loop playsinline controls preload="metadata"></video>
+        <figcaption><span class="vid-tag vid-worst">Worst clip</span> 20261021_180139 &middot; 33.97&nbsp;mm/node</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<div class="wrap ap-results-intro"><h2 class="ap-h2">Per-clip results</h2></div>
+
+<section class="section ap-section">
+  <div class="wrap ap-dash" id="ap-dash">
+
+    <div class="dash-card">
+      <div class="dash-head">
+        <h3>Error on each of the 36 clips</h3>
+        <div class="dash-controls">
+          <div class="seg" role="group" aria-label="Order">
+            <button type="button" class="seg-btn is-on" data-order="clip">Recording order</button>
+            <button type="button" class="seg-btn" data-order="sorted">Sorted by error</button>
+          </div>
+          <label class="select-wrap compact"><span class="muted">Compare</span><select id="ap-compare" aria-label="Compare with another model"></select></label>
+        </div>
+      </div>
+      <div class="legend" id="ap-clips-legend"></div>
+      <div id="ap-clips" class="chart" role="img" aria-label="Error on each clip"></div>
+    </div>
+
+</div>
+</section>
+</main>
+
+<footer class="footer">
+  <div class="wrap narrow center">
+    <a class="icon-link" href="https://github.com/ludwigstr/World-Models-for-DLO" aria-label="Code on GitHub"><i class="fab fa-github"></i></a>
+  </div>
+</footer>
+
+<div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+<script src="../static/js/data.js?v=20261110b"></script>
+<script src="../static/js/approach.js?v=20261111a"></script>
+<script src="../static/js/ux.js?v=20261108n"></script>
+</body>
+</html>

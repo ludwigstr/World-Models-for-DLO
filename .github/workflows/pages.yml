@@ -1,0 +1,48 @@
+name: Deploy project-page to GitHub Pages
+
+# Publishes ONLY the project-page/ folder (a small, self-contained static site),
+# not the whole 6.8 GB repository, so it stays under the GitHub Pages 1 GB limit.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'project-page/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      # Partial + sparse checkout: fetch only project-page/, not the multi-GB repo.
+      - name: Checkout project-page only
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: project-page
+          sparse-checkout-cone-mode: true
+          filter: blob:none
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload project-page as the Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: project-page
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
