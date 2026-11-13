@@ -430,6 +430,8 @@ button { font-family: inherit; }
 .ap-kicker { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin: 1.6rem 0 0.3rem; font-size: 0.85rem; font-weight: 600; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.06em; }
 .ap-title { text-align: center; font-size: clamp(2rem, 5vw, 2.8rem); margin: 0; letter-spacing: -0.015em; line-height: 1.15; }
 .ap-cite { text-align: center; color: var(--muted); margin: 0.4rem 0 0; display: flex; justify-content: center; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+.ap-cite > span { max-width: 60rem; text-wrap: balance; }
+.ap-cite a { color: var(--accent-ink); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
 .ap-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 1.8rem; }
 .ap-stat-text { font-size: 1.15rem; line-height: 1.9; }
 .ap-section { padding-top: 1rem; }
