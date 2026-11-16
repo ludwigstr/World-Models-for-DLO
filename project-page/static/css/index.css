@@ -324,7 +324,6 @@ button { font-family: inherit; }
 .chart .clip-dot { cursor: pointer; transition: r .12s; }
 .chart .clip-dot.is-dim { opacity: 0.25; }
 .chart .clip-dot.is-hover, .chart .clip-dot.is-selected { stroke: var(--ink); }
-.chart .median-tick { stroke: var(--ink); stroke-width: 2; }
 .chart .clip-link { stroke: var(--ink); stroke-width: 1; opacity: 0.45; pointer-events: none; }
 
 .tooltip {
