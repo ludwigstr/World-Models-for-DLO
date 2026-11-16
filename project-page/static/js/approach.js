@@ -8,7 +8,7 @@
   var COLORS = { world: 'var(--series-world)', dynamics: 'var(--series-dynamics)', physics: 'var(--series-physics)' };
   // Page scores (same as the results chart on the main page).
   var MODELS = [
-    { key: 'physworld', name: 'PhysWorld', paradigm: 'world', score: 7.5 },
+    { key: 'physworld', name: 'PhysWorld', paradigm: 'world', score: 7.2 },
     { key: 'newton', name: 'Newton', paradigm: 'physics', score: 7.6 },
     { key: 'mujoco', name: 'MuJoCo', paradigm: 'physics', score: 9.7 },
     { key: 'genesis', name: 'Genesis', paradigm: 'physics', score: 12.7 },

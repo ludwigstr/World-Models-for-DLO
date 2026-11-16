@@ -1,0 +1,304 @@
+{
+ "approach": "PhysWorld, one MPM twin for all 36 clips, one pooled GNN on its demos + ONE set of 128 Phi values shared by all 36 clips (stored fit replayed, no re-fit)",
+ "params": "data/wm/physworld_mpm_gnn_pooled/gnn_pooled.pt + data/wm/physworld_shared_phi.json ('phi_shared_raw')",
+ "reported_source": "data/wm/physworld_shared_phi.json ('shared_fit.clips')",
+ "device": "cuda",
+ "metric": "16 nodes (ends pinned), mean over cables, frames 5..T-1 (after warm-up)",
+ "n_clips": 36,
+ "mean_reproduced": 7.1849212854013125,
+ "mean_reported": 7.1849212854013125,
+ "max_abs_clip_diff": 0.0,
+ "tolerance_mm": 0.5,
+ "clips_over_tolerance": {},
+ "ok": true,
+ "clips": {
+  "20261021_160124": {
+   "reproduced": 12.760767348464803,
+   "reported": 12.760767348464803,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 161
+  },
+  "20261021_162340": {
+   "reproduced": 5.672397841493982,
+   "reported": 5.672397841493982,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 170
+  },
+  "20261021_162632": {
+   "reproduced": 7.383672190514178,
+   "reported": 7.383672190514178,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 166
+  },
+  "20261021_163244": {
+   "reproduced": 7.8449044255448515,
+   "reported": 7.8449044255448515,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 118
+  },
+  "20261021_163624": {
+   "reproduced": 5.836612156704315,
+   "reported": 5.836612156704315,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 165
+  },
+  "20261021_164010": {
+   "reproduced": 5.285689950348817,
+   "reported": 5.285689950348817,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 176
+  },
+  "20261021_164524": {
+   "reproduced": 5.275020680097728,
+   "reported": 5.275020680097728,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 171
+  },
+  "20261021_164755": {
+   "reproduced": 5.619506777625047,
+   "reported": 5.619506777625047,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 159
+  },
+  "20261021_165018": {
+   "reproduced": 5.696900060927038,
+   "reported": 5.696900060927038,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 161
+  },
+  "20261021_165246": {
+   "reproduced": 6.135566252107145,
+   "reported": 6.135566252107145,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 176
+  },
+  "20261021_165753": {
+   "reproduced": 5.396780154310881,
+   "reported": 5.396780154310881,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 167
+  },
+  "20261021_170550": {
+   "reproduced": 7.88185434656376,
+   "reported": 7.88185434656376,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 153
+  },
+  "20261021_171620": {
+   "reproduced": 7.504632388102234,
+   "reported": 7.504632388102234,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 144
+  },
+  "20261021_171842": {
+   "reproduced": 5.712026584157266,
+   "reported": 5.712026584157266,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 159
+  },
+  "20261021_172103": {
+   "reproduced": 6.447354404420349,
+   "reported": 6.447354404420349,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 151
+  },
+  "20261021_172318": {
+   "reproduced": 5.602591516412176,
+   "reported": 5.602591516412176,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 156
+  },
+  "20261021_172716": {
+   "reproduced": 5.595945705083848,
+   "reported": 5.595945705083848,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 154
+  },
+  "20261021_172928": {
+   "reproduced": 6.749567208342139,
+   "reported": 6.749567208342139,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 144
+  },
+  "20261021_173234": {
+   "reproduced": 6.07124440064935,
+   "reported": 6.07124440064935,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 149
+  },
+  "20261021_173628": {
+   "reproduced": 6.323698820232288,
+   "reported": 6.323698820232288,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 163
+  },
+  "20261021_173858": {
+   "reproduced": 6.306687882639498,
+   "reported": 6.306687882639498,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 155
+  },
+  "20261021_174117": {
+   "reproduced": 5.551133709597179,
+   "reported": 5.551133709597179,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 169
+  },
+  "20261021_174701": {
+   "reproduced": 6.401947019011935,
+   "reported": 6.401947019011935,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 168
+  },
+  "20261021_175638": {
+   "reproduced": 7.865250662107428,
+   "reported": 7.865250662107428,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 150
+  },
+  "20261021_180139": {
+   "reproduced": 9.14998356360747,
+   "reported": 9.14998356360747,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 151
+  },
+  "20261021_180422": {
+   "reproduced": 6.351806784151816,
+   "reported": 6.351806784151816,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 171
+  },
+  "20261021_180646": {
+   "reproduced": 7.163256912975503,
+   "reported": 7.163256912975503,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 142
+  },
+  "20261026_125511": {
+   "reproduced": 6.835535500473839,
+   "reported": 6.835535500473839,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 163
+  },
+  "20261026_130128": {
+   "reproduced": 6.455398172953851,
+   "reported": 6.455398172953851,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 173
+  },
+  "20261026_130441": {
+   "reproduced": 10.184979960371802,
+   "reported": 10.184979960371802,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 159
+  },
+  "20261028_100701": {
+   "reproduced": 6.8508123349829475,
+   "reported": 6.8508123349829475,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 160
+  },
+  "20261028_101001": {
+   "reproduced": 8.860832727665324,
+   "reported": 8.860832727665324,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 156
+  },
+  "20261028_101510": {
+   "reproduced": 10.160913620311701,
+   "reported": 10.160913620311701,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 161
+  },
+  "20261028_105803": {
+   "reproduced": 10.893652445334505,
+   "reported": 10.893652445334505,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 141
+  },
+  "20261028_114103": {
+   "reproduced": 11.399101939548553,
+   "reported": 11.399101939548553,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 141
+  },
+  "20261028_121810": {
+   "reproduced": 7.429139826611693,
+   "reported": 7.429139826611693,
+   "diff": 0.0,
+   "max_abs_per_frame_diff": null,
+   "nan_nodes": 0,
+   "n_frames_scored": 150
+  }
+ }
+}

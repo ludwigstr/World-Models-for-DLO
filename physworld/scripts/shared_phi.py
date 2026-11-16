@@ -19,12 +19,13 @@ def main():
     ap.add_argument("--box", type=float, default=1.5)
     ap.add_argument("--out", default="data/wm/physworld_shared_phi.json")
     ap.add_argument("--device", default="cuda:0")
+    ap.add_argument("--gnn", default="data/wm/physworld_mpm_gnn_pooled/gnn_pooled.pt")
     a = ap.parse_args()
     out = ROOT / a.out
     if out.exists():
         sys.exit(f"refusing to overwrite {out}")
     dev, warm = a.device, 5
-    ck = torch.load(ROOT / "data/wm/physworld_mpm_gnn_pooled/gnn_pooled.pt", map_location=dev, weights_only=False)
+    ck = torch.load(ROOT / a.gnn, map_location=dev, weights_only=False)
     model = PhysWorldGNN(16, G.H).to(dev)
     model.load_state_dict(ck["state_dict"])
     model.eval()
@@ -33,15 +34,12 @@ def main():
     mu, sd = ck["phi_mu"].to(dev), ck["phi_sd"].to(dev)
 
     clips = sorted(p.stem for p in (ROOT / "../data/tracks").glob("*.npz"))
-    P, twin, fitted = {}, {}, {}
+    P, twin = {}, {}
     for c in clips:
         z = np.load(ROOT / f"../data/tracks/{c}.npz")
         P[c] = torch.tensor(np.stack([z[f"c{k}"] for k in range(4)]), dtype=torch.float32, device=dev)
-        r = json.loads((ROOT / f"data/wm/physworld_mpm_gnn_pooled/{c}.json").read_text())
-        twin[c] = torch.tensor(r["phi_twin"], dtype=torch.float32, device=dev)
-        fitted[c] = torch.tensor(r["phi_fitted"], dtype=torch.float32, device=dev)
+        twin[c] = torch.load(ROOT / f"data/wm/physworld_mpm_demos/{c}.pt", weights_only=False)["phi_twin"].float().to(dev)
     mean_twin = torch.stack([twin[c] for c in clips]).mean(0)
-    mean_fit = torch.stack([fitted[c] for c in clips]).mean(0)
 
     def score(phi_of):
         d = {}
@@ -50,15 +48,14 @@ def main():
             d[c] = float(e.mean())
         return d
 
-    res = {"baselines": {}, "note": __doc__}
+    res = {"baselines": {}}
 
     def save():
         tmp = out.with_suffix(".tmp")
         tmp.write_text(json.dumps(res, indent=1))
         tmp.replace(out)
 
-    for name, f in [("own fitted Phi", lambda c: fitted[c]), ("own twin Phi", lambda c: twin[c]),
-                    ("shared: mean fitted Phi", lambda c: mean_fit), ("shared: mean twin Phi", lambda c: mean_twin)]:
+    for name, f in [("twin Phi", lambda c: twin[c]), ("mean twin Phi", lambda c: mean_twin)]:
         t = time.time()
         d = score(f)
         res["baselines"][name] = {"mean": float(np.mean(list(d.values()))), "clips": d}

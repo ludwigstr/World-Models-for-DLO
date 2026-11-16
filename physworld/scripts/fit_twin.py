@@ -123,7 +123,7 @@ def main():
     ap.add_argument("--r-grasp", type=float, default=0.012)
     ap.add_argument("--mass-scale-dt", type=float, default=1e-4)
     ap.add_argument("--tag", default=""); ap.add_argument("--device", default="cuda:0")
-    ap.add_argument; ap.add_argument("--dir-suffix", default="")
+    ap.add_argument("--tracks", default="../data/tracks"); ap.add_argument("--dir-suffix", default="")
     a = ap.parse_args(); dev = a.device
     torch.manual_seed(0); rng = np.random.default_rng(0)
     z = np.load(ROOT / a.tracks / f"{a.clip}.npz"); P = np.stack([z[f"c{k}"] for k in range(4)])

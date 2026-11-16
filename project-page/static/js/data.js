@@ -79,42 +79,42 @@ window.BENCH_DATA = {
  },
  "perClip": {
   "physworld": {
-   "20261021_160124": 9.417,
-   "20261021_162340": 6.77,
-   "20261021_162632": 6.933,
-   "20261021_163244": 6.517,
-   "20261021_163624": 5.753,
-   "20261021_164010": 7.101,
-   "20261021_164524": 6.567,
-   "20261021_164755": 5.915,
-   "20261021_165018": 6.022,
-   "20261021_165246": 5.846,
-   "20261021_165753": 5.491,
-   "20261021_170550": 16.793,
-   "20261021_171620": 10.279,
-   "20261021_171842": 5.595,
-   "20261021_172103": 6.45,
-   "20261021_172318": 5.086,
-   "20261021_172716": 5.081,
-   "20261021_172928": 5.589,
-   "20261021_173234": 5.859,
-   "20261021_173628": 7.184,
-   "20261021_173858": 5.687,
-   "20261021_174117": 5.687,
-   "20261021_174701": 6.501,
-   "20261021_175638": 9.747,
-   "20261021_180139": 10.827,
-   "20261021_180422": 5.921,
-   "20261021_180646": 7.187,
-   "20261026_125511": 6.985,
-   "20261026_130128": 6.336,
-   "20261026_130441": 10.244,
-   "20261028_100701": 7.067,
-   "20261028_101001": 9.064,
-   "20261028_101510": 9.561,
-   "20261028_105803": 9.72,
-   "20261028_114103": 8.881,
-   "20261028_121810": 8.749
+   "20261021_160124": 12.761,
+   "20261021_162340": 5.672,
+   "20261021_162632": 7.384,
+   "20261021_163244": 7.845,
+   "20261021_163624": 5.837,
+   "20261021_164010": 5.286,
+   "20261021_164524": 5.275,
+   "20261021_164755": 5.62,
+   "20261021_165018": 5.697,
+   "20261021_165246": 6.136,
+   "20261021_165753": 5.397,
+   "20261021_170550": 7.882,
+   "20261021_171620": 7.505,
+   "20261021_171842": 5.712,
+   "20261021_172103": 6.447,
+   "20261021_172318": 5.603,
+   "20261021_172716": 5.596,
+   "20261021_172928": 6.75,
+   "20261021_173234": 6.071,
+   "20261021_173628": 6.324,
+   "20261021_173858": 6.307,
+   "20261021_174117": 5.551,
+   "20261021_174701": 6.402,
+   "20261021_175638": 7.865,
+   "20261021_180139": 9.15,
+   "20261021_180422": 6.352,
+   "20261021_180646": 7.163,
+   "20261026_125511": 6.836,
+   "20261026_130128": 6.455,
+   "20261026_130441": 10.185,
+   "20261028_100701": 6.851,
+   "20261028_101001": 8.861,
+   "20261028_101510": 10.161,
+   "20261028_105803": 10.894,
+   "20261028_114103": 11.399,
+   "20261028_121810": 7.429
   },
   "caporali": {
    "20261021_160124": 18.308,
@@ -461,11 +461,10 @@ window.BENCH_DATA = {
  },
  "meta": {
   "physworld": {
-   "mean": 7.5,
+   "mean": 7.1849212854013125,
    "metric": "16 nodes (ends pinned), mean over cables, frames 5..T-1 (after warm-up)",
-   "approach": "PhysWorld, one pooled GNN on the demos of the 36-clip MPM twins + one shared Phi (128 values) fitted across all 36 clips",
-   "median": 6.668,
-   "folder": "results/<approach>/physworld_shared_phi.json"
+   "approach": "PhysWorld, one MPM twin for all 36 clips, one pooled GNN on its demos + one shared Phi (128 values) fitted across all 36 clips",
+   "folder": "physworld_7.2"
   },
   "caporali": {
    "mean": 15.778798678898896,
@@ -478,7 +477,7 @@ window.BENCH_DATA = {
    "mean": 22.0,
    "metric": "14 inner nodes (ends kinematic), mean over cables, every frame",
    "approach": "PhysTwin, per-clip spring-mass twin; two-stage fit (CMA-ES then per-spring gradient), window stage-2 run",
-   "median": 17.50,
+   "median": 17.5,
    "folder": "phystwin_22.0"
   },
   "adaptigraph": {
@@ -539,14 +538,14 @@ window.BENCH_DATA = {
      "frame": 83
     },
     "worst": {
-     "file": "physworld_20261021_160124_frame165_worst.png",
-     "frame": 165
+     "file": "physworld_20261021_160124_frame152_worst.png",
+     "frame": 152
     }
    },
    "20261021_162340": {
     "worst": {
-     "file": "physworld_20261021_162340_frame050_worst.png",
-     "frame": 50
+     "file": "physworld_20261021_162340_frame052_worst.png",
+     "frame": 52
     },
     "middle": {
      "file": "physworld_20261021_162340_frame087_middle.png",
@@ -554,19 +553,19 @@ window.BENCH_DATA = {
     }
    },
    "20261021_162632": {
-    "worst": {
-     "file": "physworld_20261021_162632_frame052_worst.png",
-     "frame": 52
-    },
     "middle": {
      "file": "physworld_20261021_162632_frame085_middle.png",
      "frame": 85
+    },
+    "worst": {
+     "file": "physworld_20261021_162632_frame052_worst.png",
+     "frame": 52
     }
    },
    "20261021_163244": {
     "worst": {
-     "file": "physworld_20261021_163244_frame034_worst.png",
-     "frame": 34
+     "file": "physworld_20261021_163244_frame083_worst.png",
+     "frame": 83
     },
     "middle": {
      "file": "physworld_20261021_163244_frame061_middle.png",
@@ -584,13 +583,13 @@ window.BENCH_DATA = {
     }
    },
    "20261021_164010": {
-    "worst": {
-     "file": "physworld_20261021_164010_frame050_worst.png",
-     "frame": 50
-    },
     "middle": {
      "file": "physworld_20261021_164010_frame090_middle.png",
      "frame": 90
+    },
+    "worst": {
+     "file": "physworld_20261021_164010_frame050_worst.png",
+     "frame": 50
     }
    },
    "20261021_164524": {
@@ -614,39 +613,39 @@ window.BENCH_DATA = {
     }
    },
    "20261021_165018": {
+    "worst": {
+     "file": "physworld_20261021_165018_frame054_worst.png",
+     "frame": 54
+    },
     "middle": {
      "file": "physworld_20261021_165018_frame083_middle.png",
      "frame": 83
-    },
-    "worst": {
-     "file": "physworld_20261021_165018_frame126_worst.png",
-     "frame": 126
     }
    },
    "20261021_165246": {
+    "worst": {
+     "file": "physworld_20261021_165246_frame051_worst.png",
+     "frame": 51
+    },
     "middle": {
      "file": "physworld_20261021_165246_frame090_middle.png",
      "frame": 90
-    },
-    "worst": {
-     "file": "physworld_20261021_165246_frame134_worst.png",
-     "frame": 134
     }
    },
    "20261021_165753": {
-    "worst": {
-     "file": "physworld_20261021_165753_frame052_worst.png",
-     "frame": 52
-    },
     "middle": {
      "file": "physworld_20261021_165753_frame086_middle.png",
      "frame": 86
+    },
+    "worst": {
+     "file": "physworld_20261021_165753_frame052_worst.png",
+     "frame": 52
     }
    },
    "20261021_170550": {
     "worst": {
-     "file": "physworld_20261021_170550_frame070_worst.png",
-     "frame": 70
+     "file": "physworld_20261021_170550_frame154_worst.png",
+     "frame": 154
     },
     "middle": {
      "file": "physworld_20261021_170550_frame079_middle.png",
@@ -664,23 +663,23 @@ window.BENCH_DATA = {
     }
    },
    "20261021_171842": {
-    "middle": {
-     "file": "physworld_20261021_171842_frame082_middle.png",
-     "frame": 82
-    },
     "worst": {
      "file": "physworld_20261021_171842_frame114_worst.png",
      "frame": 114
+    },
+    "middle": {
+     "file": "physworld_20261021_171842_frame082_middle.png",
+     "frame": 82
     }
    },
    "20261021_172103": {
-    "middle": {
-     "file": "physworld_20261021_172103_frame078_middle.png",
-     "frame": 78
-    },
     "worst": {
      "file": "physworld_20261021_172103_frame129_worst.png",
      "frame": 129
+    },
+    "middle": {
+     "file": "physworld_20261021_172103_frame078_middle.png",
+     "frame": 78
     }
    },
    "20261021_172318": {
@@ -695,8 +694,8 @@ window.BENCH_DATA = {
    },
    "20261021_172716": {
     "worst": {
-     "file": "physworld_20261021_172716_frame069_worst.png",
-     "frame": 69
+     "file": "physworld_20261021_172716_frame156_worst.png",
+     "frame": 156
     },
     "middle": {
      "file": "physworld_20261021_172716_frame079_middle.png",
@@ -704,13 +703,13 @@ window.BENCH_DATA = {
     }
    },
    "20261021_172928": {
-    "middle": {
-     "file": "physworld_20261021_172928_frame074_middle.png",
-     "frame": 74
-    },
     "worst": {
      "file": "physworld_20261021_172928_frame116_worst.png",
      "frame": 116
+    },
+    "middle": {
+     "file": "physworld_20261021_172928_frame074_middle.png",
+     "frame": 74
     }
    },
    "20261021_173234": {
@@ -719,18 +718,18 @@ window.BENCH_DATA = {
      "frame": 77
     },
     "worst": {
-     "file": "physworld_20261021_173234_frame152_worst.png",
-     "frame": 152
+     "file": "physworld_20261021_173234_frame099_worst.png",
+     "frame": 99
     }
    },
    "20261021_173628": {
-    "middle": {
-     "file": "physworld_20261021_173628_frame084_middle.png",
-     "frame": 84
-    },
     "worst": {
      "file": "physworld_20261021_173628_frame142_worst.png",
      "frame": 142
+    },
+    "middle": {
+     "file": "physworld_20261021_173628_frame084_middle.png",
+     "frame": 84
     }
    },
    "20261021_173858": {
@@ -744,49 +743,49 @@ window.BENCH_DATA = {
     }
    },
    "20261021_174117": {
-    "middle": {
-     "file": "physworld_20261021_174117_frame087_middle.png",
-     "frame": 87
-    },
     "worst": {
      "file": "physworld_20261021_174117_frame130_worst.png",
      "frame": 130
+    },
+    "middle": {
+     "file": "physworld_20261021_174117_frame087_middle.png",
+     "frame": 87
     }
    },
    "20261021_174701": {
-    "worst": {
-     "file": "physworld_20261021_174701_frame048_worst.png",
-     "frame": 48
-    },
     "middle": {
      "file": "physworld_20261021_174701_frame086_middle.png",
+     "frame": 86
+    },
+    "worst": {
+     "file": "physworld_20261021_174701_frame086_worst.png",
      "frame": 86
     }
    },
    "20261021_175638": {
-    "worst": {
-     "file": "physworld_20261021_175638_frame030_worst.png",
-     "frame": 30
-    },
     "middle": {
      "file": "physworld_20261021_175638_frame077_middle.png",
      "frame": 77
+    },
+    "worst": {
+     "file": "physworld_20261021_175638_frame154_worst.png",
+     "frame": 154
     }
    },
    "20261021_180139": {
-    "middle": {
-     "file": "physworld_20261021_180139_frame078_middle.png",
-     "frame": 78
-    },
     "worst": {
      "file": "physworld_20261021_180139_frame095_worst.png",
      "frame": 95
+    },
+    "middle": {
+     "file": "physworld_20261021_180139_frame078_middle.png",
+     "frame": 78
     }
    },
    "20261021_180422": {
     "worst": {
-     "file": "physworld_20261021_180422_frame069_worst.png",
-     "frame": 69
+     "file": "physworld_20261021_180422_frame048_worst.png",
+     "frame": 48
     },
     "middle": {
      "file": "physworld_20261021_180422_frame088_middle.png",
@@ -794,23 +793,23 @@ window.BENCH_DATA = {
     }
    },
    "20261021_180646": {
-    "worst": {
-     "file": "physworld_20261021_180646_frame023_worst.png",
-     "frame": 23
-    },
     "middle": {
      "file": "physworld_20261021_180646_frame073_middle.png",
      "frame": 73
+    },
+    "worst": {
+     "file": "physworld_20261021_180646_frame055_worst.png",
+     "frame": 55
     }
    },
    "20261026_125511": {
-    "middle": {
-     "file": "physworld_20261026_125511_frame084_middle.png",
-     "frame": 84
-    },
     "worst": {
      "file": "physworld_20261026_125511_frame147_worst.png",
      "frame": 147
+    },
+    "middle": {
+     "file": "physworld_20261026_125511_frame084_middle.png",
+     "frame": 84
     }
    },
    "20261026_130128": {
@@ -829,14 +828,14 @@ window.BENCH_DATA = {
      "frame": 82
     },
     "worst": {
-     "file": "physworld_20261026_130441_frame096_worst.png",
-     "frame": 96
+     "file": "physworld_20261026_130441_frame094_worst.png",
+     "frame": 94
     }
    },
    "20261028_100701": {
     "worst": {
-     "file": "physworld_20261028_100701_frame052_worst.png",
-     "frame": 52
+     "file": "physworld_20261028_100701_frame051_worst.png",
+     "frame": 51
     },
     "middle": {
      "file": "physworld_20261028_100701_frame082_middle.png",
@@ -844,29 +843,29 @@ window.BENCH_DATA = {
     }
    },
    "20261028_101001": {
+    "worst": {
+     "file": "physworld_20261028_101001_frame120_worst.png",
+     "frame": 120
+    },
     "middle": {
      "file": "physworld_20261028_101001_frame080_middle.png",
      "frame": 80
-    },
-    "worst": {
-     "file": "physworld_20261028_101001_frame085_worst.png",
-     "frame": 85
     }
    },
    "20261028_101510": {
+    "worst": {
+     "file": "physworld_20261028_101510_frame047_worst.png",
+     "frame": 47
+    },
     "middle": {
      "file": "physworld_20261028_101510_frame083_middle.png",
      "frame": 83
-    },
-    "worst": {
-     "file": "physworld_20261028_101510_frame140_worst.png",
-     "frame": 140
     }
    },
    "20261028_105803": {
     "worst": {
-     "file": "physworld_20261028_105803_frame035_worst.png",
-     "frame": 35
+     "file": "physworld_20261028_105803_frame118_worst.png",
+     "frame": 118
     },
     "middle": {
      "file": "physworld_20261028_105803_frame073_middle.png",
@@ -874,23 +873,23 @@ window.BENCH_DATA = {
     }
    },
    "20261028_114103": {
-    "middle": {
-     "file": "physworld_20261028_114103_frame073_middle.png",
-     "frame": 73
-    },
     "worst": {
      "file": "physworld_20261028_114103_frame130_worst.png",
      "frame": 130
+    },
+    "middle": {
+     "file": "physworld_20261028_114103_frame073_middle.png",
+     "frame": 73
     }
    },
    "20261028_121810": {
-    "worst": {
-     "file": "physworld_20261028_121810_frame075_worst.png",
-     "frame": 75
-    },
     "middle": {
      "file": "physworld_20261028_121810_frame077_middle.png",
      "frame": 77
+    },
+    "worst": {
+     "file": "physworld_20261028_121810_frame154_worst.png",
+     "frame": 154
     }
    }
   },

@@ -54,9 +54,11 @@ def main():
     ap.add_argument("--n", type=int, default=64); ap.add_argument("--batch", type=int, default=4)
     ap.add_argument("--sigma", type=float, default=0.5); ap.add_argument("--ell", type=float, default=0.2)
     ap.add_argument("--seed", type=int, default=0); ap.add_argument("--out-tag", default="")
+    ap.add_argument("--global-sigma", type=float, default=0.0)
+    ap.add_argument("--nu-sigma", type=float, default=0.1)
     ap.add_argument("--device", default="cuda:0")
     ap.add_argument("--speed-range", type=float, nargs=2, default=None)
-    ap.add_argument; ap.add_argument("--dir-suffix", default="")
+    ap.add_argument("--tracks", default="../data/tracks"); ap.add_argument("--dir-suffix", default="")
     a = ap.parse_args(); dev = a.device
     rng = np.random.default_rng(a.seed); torch.manual_seed(a.seed)
     flag = ROOT / f"data/wm/physworld_mpm_demos{a.dir_suffix}/SPEED_RANGE"
@@ -82,16 +84,24 @@ def main():
     def draw():
         out = []
         for _ in range(2):
-            pert = torch.cat([chol[g] @ torch.randn(chol[g].shape[0], device=dev) for g in range(4)])
+            pert = torch.cat([chol[g] @ torch.randn(chol[g].shape[0], device=dev) + a.global_sigma * torch.randn((), device=dev)
+                              for g in range(4)])
             out.append(pert[tw1.sp.slice])
-        return lE0 + out[0], lrho0 + out[1]
+        if a.global_sigma > 0:
+            lmu = torch.log(mu0) + (a.global_sigma * torch.randn(4, device=dev))[tw1.sp.gid.long()]
+            nu_d = float(min(0.45, max(0.0, nu + a.nu_sigma * torch.randn(()).item())))
+            sy_d = sy * math.exp(a.global_sigma * torch.randn(()).item())
+        else:
+            lmu, nu_d, sy_d = torch.log(mu0), nu, sy
+        return lE0 + out[0], lrho0 + out[1], lmu, nu_d, sy_d
 
     def simulate(twin, props, drives, nmax):
         lE = torch.cat([p[0] for p in props]); lrho = torch.cat([p[1] for p in props])
-        pp = {"E": torch.exp(lE), "rho": torch.exp(lrho), "mu": mu0.repeat(len(props)),
-              "nu": torch.full_like(lE, nu), "sy": torch.full_like(lE, sy)}
+        pp = {"E": torch.exp(lE), "rho": torch.exp(lrho), "mu": torch.exp(torch.cat([p[2] for p in props])),
+              "nu": torch.cat([torch.full_like(p[0], p[3]) for p in props]),
+              "sy": torch.cat([torch.full_like(p[0], p[4]) for p in props])}
         pp["rhoi"] = pp["rho"] if not ms else torch.maximum(pp["rho"], rho_for_dt(pp["E"], pp["nu"], twin.dx, ms, MS_CFL))
-        M = pp["E"] * (1 - nu) / ((1 + nu) * (1 - 2 * nu))
+        M = pp["E"] * (1 - pp["nu"]) / ((1 + pp["nu"]) * (1 - 2 * pp["nu"]))
         dt = min(1e-4, MS_CFL * twin.dx / torch.sqrt(M / pp["rhoi"]).max().item() * 1.0001)
         twin.mpm.dt = twin.frame_s / int(100 * math.ceil(twin.frame_s / dt / 100))
         ends = torch.cat([d[0] for d in drives]).to(dev); yaw = torch.cat([d[1] for d in drives]).to(dev)
@@ -128,14 +138,15 @@ def main():
                 rejected.append({"demo": k + i, "reason": why, **metas[i]}); continue
             phi = node_phi(tw1, props[i][0], props[i][1])
             demos.append({"nodes": nd[..., :2].cpu(), "ends": drives[i][0].cpu(), "yaw": drives[i][1].cpu(),
-                          "phi": phi.cpu(), "meta": metas[i]})
+                          "phi": phi.cpu(), "meta": metas[i], "nu": props[i][3], "sy": props[i][4],
+                          "mu_cable": [float(torch.exp(props[i][2][tw1.sp.gid == g][0])) for g in range(4)]})
         k += nb
         log(f"  {k}/{a.n} demos, kept {len(demos)}, rejected {len(rejected)} ({time.time()-t0:.0f}s)")
     out = ROOT / f"data/wm/physworld_mpm_demos{a.dir_suffix}/{a.clip}{a.out_tag}.pt"
     out.parent.mkdir(parents=True, exist_ok=True)
     phi_real = node_phi(tw1, lE0, lrho0).cpu()
     torch.save({"clip": a.clip, "demos": demos, "rejected": rejected, "phi_twin": phi_real, "sigma": a.sigma,
-                "ell": a.ell, "twin": a.twin, "speed_range": list(SW.SPEED_RANGE), "sec": time.time() - t0, "n_frames_total": int(sum(d["nodes"].shape[0] for d in demos))}, out)
+                "ell": a.ell, "global_sigma": a.global_sigma, "twin": a.twin, "speed_range": list(SW.SPEED_RANGE), "sec": time.time() - t0, "n_frames_total": int(sum(d["nodes"].shape[0] for d in demos))}, out)
     log(f"saved {out}: {len(demos)} kept, {len(rejected)} rejected {[r['reason'] for r in rejected]}; "
         f"{time.time()-t0:.0f}s")
 

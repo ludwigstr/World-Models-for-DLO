@@ -157,7 +157,7 @@ def main():
     ap.add_argument("--device", default="cuda:0"); ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--phi-box", type=float, default=1.5)
     ap.add_argument("--phi-objective", default="rollout", choices=["rollout", "onestep"])
-    ap.add_argument; ap.add_argument("--dir-suffix", default="")
+    ap.add_argument("--tracks", default="../data/tracks"); ap.add_argument("--dir-suffix", default="")
     ap.add_argument("--load", default="")
     a = ap.parse_args(); dev = a.device; torch.manual_seed(a.seed)
     use_yaw = not a.no_yaw
