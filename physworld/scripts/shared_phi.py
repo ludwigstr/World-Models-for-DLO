@@ -48,7 +48,7 @@ def main():
             d[c] = float(e.mean())
         return d
 
-    res = {"baselines": {}}
+    res = {"baselines": {}, "phi_twin_mean": mean_twin.cpu().tolist()}
 
     def save():
         tmp = out.with_suffix(".tmp")

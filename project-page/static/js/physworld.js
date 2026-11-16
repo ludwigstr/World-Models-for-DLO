@@ -15,7 +15,7 @@
     rho: { label: 'Density ρ', unit: 'kg/m³', scale: 1,
            what: 'Density of each node: how heavy the cable is at that point.' }
   };
-  var st = { q: 'E', show: 'fit', view: 'heat', clip: -1 };
+  var st = { q: 'E', show: 'fit', view: 'heat', clip: P.shared ? 0 : -1 };
 
   function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
   function rgb(h) { h = h.replace('#', ''); if (h.length === 3) h = h.split('').map(function (c) { return c + c; }).join(''); var n = parseInt(h, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
@@ -64,6 +64,7 @@
     return '<option value="' + i + '">Clip ' + (i + 1) + ' · ' + k.mean.toFixed(2) + ' mm/node</option>';
   }).join('');
   if (sel) sel.addEventListener('change', function () { st.clip = +sel.value; draw(); });
+  if (sel && P.shared) { var selWrap = sel.closest('label') || sel; selWrap.hidden = true; }
   var tabs = document.getElementById('phi-tabs');
   tabs.innerHTML = Object.keys(Q).map(function (k) {
     return '<button type="button" role="tab" class="chip-btn' + (k === st.q ? ' is-active' : '') + '" aria-selected="' + (k === st.q) + '" data-q="' + k + '">' + esc(Q[k].label) + '</button>';
@@ -90,10 +91,11 @@
 
   function draw() {
     var D = shown(), q = Q[st.q];
-    var who = st.clip >= 0 ? 'clip ' + (st.clip + 1) + ' (' + P.clips[st.clip].mean.toFixed(2) + ' mm/node after Φ, ' + P.clips[st.clip].before.toFixed(2) + ' before)'
+    var who = P.shared ? 'the one Φ shared by all 36 clips (' + P.clips[0].mean.toFixed(2) + ' mm/node after the fit, ' + P.clips[0].before.toFixed(2) + ' before)'
+      : st.clip >= 0 ? 'clip ' + (st.clip + 1) + ' (' + P.clips[st.clip].mean.toFixed(2) + ' mm/node after Φ, ' + P.clips[st.clip].before.toFixed(2) + ' before)'
                            : 'the geometric mean over the ' + P.clips.length + ' clips';
     sub.textContent = q.what + ' ' + (st.show === 'fit'
-      ? 'Values after fine-tuning on the real clip, in ' + q.unit + ', for ' + who + '.'
+      ? 'Values after the fit on the real clips, in ' + q.unit + ', for ' + who + '.'
       : 'Change from the twin’s value (fitted ÷ twin) for ' + who + '. The fit may move each value at most ×' + Math.exp(BOX).toFixed(1) + ' up or down.');
     if (st.view === 'heat') heat(D); else profile(D);
     cards(D);
