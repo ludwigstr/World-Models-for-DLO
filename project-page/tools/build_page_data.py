@@ -27,7 +27,6 @@ for folder, key in APPROACHES.items():
     meta[key] = {"mean": j["mean_reproduced"], "metric": j["metric"], "approach": j["approach"]}
     per_clip[key] = {c: round(v["reproduced"], 3) for c, v in j["clips"].items()}
     vals = np.array(list(per_clip[key].values()))
-    meta[key]["median"] = float(np.median(vals))
     meta[key]["folder"] = folder
     s = {}
     for png in (pv / folder).glob("*.png"):
@@ -47,7 +46,7 @@ out = {
     "perClip": per_clip,
     "meta": meta,
     "stills": stills,
-    "newtonGen0": {"mean": g0["mean"], "median": g0["median"], "clips": newton_gen0},
+    "newtonGen0": {"mean": g0["mean"], "clips": newton_gen0},
 }
 dst = root / "project-page" / "static" / "js" / "data.js"
 dst.parent.mkdir(parents=True, exist_ok=True)
@@ -56,6 +55,6 @@ dst.write_text("// Generated from results/videos/*/results.json and data/tracks.
                "window.BENCH_DATA = " + json.dumps(out, indent=1) + ";\n", encoding="utf-8")
 print("clips", len(clips), "frames total", sum(frames.values()))
 for k, m in meta.items():
-    print(k, round(m["mean"], 2), "median", round(m["median"], 2), "stills", len(stills[k]))
+    print(k, round(m["mean"], 2), "stills", len(stills[k]))
 print("newton gen0", round(g0["mean"], 3))
 

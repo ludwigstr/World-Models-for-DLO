@@ -139,7 +139,6 @@
     if (mine) {
       var bi = vals.indexOf(sorted[0]), wi = vals.indexOf(sorted[N - 1]);
       kpis.push({ v: f2(mean), l: 'mean mm/node' });
-      kpis.push({ v: f2(quantile(sorted, 0.5)), l: 'median' });
       kpis.push({ v: f2(sorted[0]), l: 'best clip (' + (bi + 1) + ')' });
       kpis.push({ v: f2(sorted[N - 1]), l: 'worst clip (' + (wi + 1) + ')' });
       kpis.push({ v: f2(quantile(sorted, 0.25)) + '–' + f2(quantile(sorted, 0.75)), l: 'middle 50 % of clips', small: true });
@@ -275,9 +274,6 @@
           '<div class="tt-row"><span>Clips</span><b>' + b.length + '</b></div>' +
           '<div class="tt-row"><span>Clip numbers</span><b>' + b.join(', ') + '</b></div>');
       });
-      var med = quantile(sorted, 0.5);
-      el('line', { x1: sx(med), x2: sx(med), y1: T, y2: B, style: 'stroke: var(--ink); stroke-width: 1.5; opacity: 0.6' }, svg);
-      text(svg, sx(med) + 5, T + 10, 'median ' + med.toFixed(2), {}, 'fill: var(--ink); font-size: 11px; font-weight: 600; paint-order: stroke; stroke: var(--surface); stroke-width: 4px');
       document.getElementById('ap-hist-sub').textContent = N + ' clips in ' + bw + ' mm/node bins';
     }
 
@@ -305,12 +301,10 @@
         var maxChars = narrow ? 22 : 40;
         lab.textContent = v.label.length > maxChars ? v.label.slice(0, maxChars - 1) + '…' : v.label;
         el('path', { 'class': 'bar', d: hbarPath(L, sx(v.mean), y, barH), style: 'fill:' + (v.current ? color : 'var(--axis)') }, g);
-        if (v.median != null) el('line', { x1: sx(v.median), x2: sx(v.median), y1: y - 3, y2: y + barH + 3, style: 'stroke: var(--ink); stroke-width: 2' }, g);
         var vt = text(g, sx(v.mean) + 7, y + barH / 2 + 4, v.mean.toFixed(2), { 'class': 'value-label' });
         var cl = el('tspan', { dx: 5 }, vt); cl.textContent = v.clips + ' clips'; cl.setAttribute('style', MUTED + '; font-weight: 400');
         hover(g, '<div class="tt-title">' + esc(v.label) + '</div>' +
           '<div class="tt-row"><span>Mean</span><b>' + v.mean.toFixed(2) + ' mm/node</b></div>' +
-          (v.median != null ? '<div class="tt-row"><span>Median</span><b>' + v.median.toFixed(2) + '</b></div>' : '') +
           '<div class="tt-row"><span>Clips</span><b>' + v.clips + '</b></div>');
       });
       text(svg, R, H - 2, 'mm/node', { 'text-anchor': 'end' }, MUTED);
@@ -404,11 +398,9 @@
     var vals = clips.map(function (c) { return mine.values[c]; });
     var sorted = vals.slice().sort(function (a, b) { return a - b; });
     var mean = vals.reduce(function (s, v) { return s + v; }, 0) / N;
-    var median = quantile(sorted, 0.5);
     var best = vals.indexOf(sorted[0]), worst = vals.indexOf(sorted[N - 1]);
     document.getElementById('ap-perclip-stats').innerHTML =
       '<div class="stat"><span class="stat-value">' + mean.toFixed(2) + '</span><span class="stat-label">mean mm/node</span></div>' +
-      '<div class="stat"><span class="stat-value">' + median.toFixed(2) + '</span><span class="stat-label">median</span></div>' +
       '<div class="stat"><span class="stat-value">' + sorted[0].toFixed(2) + '</span><span class="stat-label">best: clip ' + (best + 1) + '</span></div>' +
       '<div class="stat"><span class="stat-value">' + sorted[N - 1].toFixed(2) + '</span><span class="stat-label">worst: clip ' + (worst + 1) + '</span></div>' +
       (mine.interim ? '<p class="muted-note ap-note">Generation 0 of the running 36-clip fit (the warm start); the fit is still improving.</p>' : '');

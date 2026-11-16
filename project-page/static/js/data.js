@@ -470,63 +470,54 @@ window.BENCH_DATA = {
    "mean": 15.778798678898896,
    "metric": "16 nodes, mean over cables, every frame incl. frame 0",
    "approach": "Caporali et al., FiLM MLP trained on data from the 36 clips, online (m, k_b, k_d)",
-   "median": 14.534500000000001,
    "folder": "caporali_15.8"
   },
   "phystwin": {
    "mean": 22.0,
    "metric": "14 inner nodes (ends kinematic), mean over cables, every frame",
    "approach": "PhysTwin, per-clip spring-mass twin; two-stage fit (CMA-ES then per-spring gradient), window stage-2 run",
-   "median": 17.5,
    "folder": "phystwin_22.0"
   },
   "adaptigraph": {
    "mean": 10.3,
    "metric": "16 nodes (ends pinned), mean over cables, frames 5..T-1 (after warm-up)",
    "approach": "AdaptiGraph, GBND rebuilt (3-step training, rest-shape + rotation inputs, noise) on simulation only; 4 phi (one per cable) shared over all clips",
-   "median": 9.11,
    "folder": "adaptigraph_10.3"
   },
   "genesis": {
    "mean": 12.682763598171766,
    "metric": "16 nodes, mean over cables, every frame (genesis_general_fit_cmaes._eval_one)",
    "approach": "Genesis general fit, 36-clip refit (stopped after generation 33)",
-   "median": 10.0725,
    "folder": "genesis_12.7"
   },
   "yang": {
    "mean": 16.003002484639484,
    "metric": "16 nodes (ends pinned), mean over cables, frames 5..T-1 (after warm-up)",
    "approach": "Yang et al., IN + bi-LSTM trained on Newton rollouts from the DE fit (stored network replayed, no re-training)",
-   "median": 11.949000000000002,
    "folder": "yang_16.0"
   },
   "ropedreamer": {
    "mean": 18.49,
    "metric": "16 nodes (ends pinned), mean over cables, frames 5..T-1 (after warm-up)",
    "approach": "RopeDreamer, RSSM over a quaternionic chain, trained on MuJoCo rollouts of the 36 clips",
-   "median": 15.21,
    "folder": "ropedreamer_18.5"
   },
   "newton": {
    "mean": 7.6,
    "metric": "xy mean node distance, every frame",
    "approach": "Newton native rod (VBD), shared CMA-ES fit on all clips",
-   "median": 7.6,
    "folder": "newton"
   },
   "mujoco": {
    "mean": 9.7,
    "metric": "mean node distance, every frame",
    "approach": "MuJoCo elasticity.cable (DER), CMA-ES general fit (181 parameters)",
-   "median": 7.73,
    "folder": "mujoco_9.7"
   },
   "dlolab": {
    "mean": 12.0,
    "metric": "16 nodes, mean over cables, every frame",
    "approach": "DLO-Lab differentiable Cosserat rod, gradient descent from scratch on all 36 clips",
-   "median": 7.39,
    "folder": "dlolab_12.0"
   }
  },
@@ -2706,7 +2697,6 @@ window.BENCH_DATA = {
  },
  "newtonGen0": {
   "mean": 10.178356784046855,
-  "median": 8.724237530302005,
   "clips": {
    "20261021_160124": 9.525,
    "20261021_162340": 12.678,
