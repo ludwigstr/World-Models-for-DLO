@@ -6,9 +6,9 @@ export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONUNBUFFER
 mkdir -p out; S=out/ropedreamer_synth; CK=out/ropedreamer_S.pt; R=out/ropedreamer_eval_36.json
 for f in $S $CK $R; do [ -e "$f" ] && { echo "refusing to overwrite $f"; exit 1; }; done
 echo "[$(date '+%F %T')] 0/3 check of the MuJoCo parameters (fresh-process validation, expected 9.83 mm/node)"
-CUDA_VISIBLE_DEVICES="" python3 validate_params.py mujoco mujoco_general_fit_gen50.npz --tracks ../data/tracks --out out/mujoco_gen50_validate.json --workers 12
+CUDA_VISIBLE_DEVICES="" python3 validate.py mujoco mujoco_general_fit_gen50.npz --tracks ../data/tracks --out out/mujoco_gen50_validate.json --workers 12
 echo "[$(date '+%F %T')] 1/3 simulated rollouts"
-CUDA_VISIBLE_DEVICES="" python3 make_dataset.py --env general --general-fit mujoco_general_fit_gen50.npz --randomize \
+CUDA_VISIBLE_DEVICES="" python3 dataset.py --env general --general-fit mujoco_general_fit_gen50.npz --randomize \
   --motion speed --speed-range 0.8 1.2 --tracks ../data/tracks --allow-eval-clips --frames-per-clip 28000 --twin-reference --workers "$W" --out $S
 echo "[$(date '+%F %T')] 2/3 training"
 CUDA_VISIBLE_DEVICES=$G python3 train.py --synth $S --size S --seq-len 120 --beta 1.0 --pos-weight 0 --rollout-weight 1000 \

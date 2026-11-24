@@ -554,7 +554,7 @@ def step_action(s0, real, k, n_steps):
     return np.array(out, np.float32)
 
 
-from simulator import NodeConstraints
+from simulate import NodeConstraints
 
 
 def guide_batch(sim, p_prev, setpoint, prm, k_p, n_steps, cons_target=None):

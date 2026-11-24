@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "scripts")); sys.path.insert(0, str(ROOT))
 
 
-from scene import CLIP_TRIMS
+from simulate import CLIP_TRIMS
 
 
 TRACKS = Path(os.environ.get("GENERAL_FIT_TRACKS") or "../data/tracks")
@@ -69,7 +69,7 @@ def unpack(x):
 
 def _eval_one(job):
     cand_i, clip, x = job
-    import scene as R
+    import simulate as R
     if clip not in _CACHE:
         z = np.load(TRACKS / f"{clip}.npz")
         _CACHE[clip] = ({k: z[f"c{k}"] for k in range(4)}, float(z["fps"]))

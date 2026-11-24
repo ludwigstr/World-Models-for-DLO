@@ -23,8 +23,8 @@ import torch
 ROOT = Path(__file__).resolve().parent
 
 
-from gnn import H, dp_of, dyaw_nodes, real_yaw
-from gnn import PhysWorldGNN
+from model import H, dp_of, dyaw_nodes, real_yaw
+from model import PhysWorldGNN
 
 
 LABEL = "PhysWorld (pooled GNN, per-node Phi), 36-clip refit"

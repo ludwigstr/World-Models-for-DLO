@@ -19,9 +19,9 @@ _ENGINE = _pre.parse_known_args()[0].engine
 
 
 if _ENGINE == "newton":
-    from simulator import sim_newton_THETA_BOUNDS as THETA_BOUNDS, sim_newton_THETA_DEFAULT as THETA_DEFAULT, sim_newton_THETA_NAMES as THETA_NAMES, theta_dict
+    from simulate import sim_newton_THETA_BOUNDS as THETA_BOUNDS, sim_newton_THETA_DEFAULT as THETA_DEFAULT, sim_newton_THETA_NAMES as THETA_NAMES, theta_dict
 else:
-    from simulator import OneStep, THETA_BOUNDS, THETA_DEFAULT, THETA_NAMES, theta_dict
+    from simulate import OneStep, THETA_BOUNDS, THETA_DEFAULT, THETA_NAMES, theta_dict
 
 
 TRACKS = Path("../data/tracks")
@@ -115,7 +115,7 @@ def main():
     newton_cache = {}
 
     def evaluate_newton(xs):
-        from simulator import onestep_errors
+        from simulate import onestep_errors
         tl = [(frames[c], _DATA[c][1], i) for c, i in trans]
         sq = np.zeros((len(xs), len(tl))); ab = np.zeros((len(xs), len(tl)))
         for c0 in range(0, len(xs), a.batch_cands):

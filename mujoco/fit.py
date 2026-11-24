@@ -5,9 +5,9 @@ import re
 import time
 from pathlib import Path
 import numpy as np
-from scene import CLIP_TRIMS
-from scene import build_xml, cable_ball_joints, set_per_joint_stiffness
-from scene import board_normal_axes, rest_quats
+from simulate import CLIP_TRIMS
+from simulate import build_xml, cable_ball_joints, set_per_joint_stiffness
+from simulate import board_normal_axes, rest_quats
 
 
 ROOT = Path(__file__).resolve().parent
@@ -76,7 +76,7 @@ def make_model(shp, p):
 
 def _eval_one(job):
     cand_i, clip, x = job
-    from scene import rollout_errs
+    from simulate import rollout_errs
     shp, fps = _CACHE[clip]
     try:
         m = make_model(shp, unpack(x))

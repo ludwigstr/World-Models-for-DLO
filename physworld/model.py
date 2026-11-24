@@ -61,7 +61,7 @@ class PhysWorldGNN(nn.Module):
 import time
 import numpy as np
 import torch
-from twin import drive_from_nodes
+from simulate import drive_from_nodes
 
 
 H = 3

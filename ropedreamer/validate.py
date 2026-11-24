@@ -12,10 +12,10 @@ import numpy as np
 ROOT = Path(__file__).resolve().parent
 
 
-from simulator import CLIP_TRIMS
+from simulate import CLIP_TRIMS
 
 
-MODS = {"mujoco": "mujoco_general_fit_cmaes"}
+MODS = {"mujoco": "fit"}
 
 
 def main():

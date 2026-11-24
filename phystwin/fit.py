@@ -9,8 +9,8 @@ import torch
 ROOT = Path(__file__).resolve().parent
 
 
-from twin import stage1, stage2, resim_error
-from twin import SpringMassTwin, build_topology
+from simulate import stage1, stage2, resim_error
+from simulate import SpringMassTwin, build_topology
 
 
 def main():

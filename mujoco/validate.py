@@ -12,7 +12,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parent
 
 
-from scene import CLIP_TRIMS
+from simulate import CLIP_TRIMS
 
 
 MODS = {"mujoco": "fit"}

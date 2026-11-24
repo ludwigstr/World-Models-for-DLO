@@ -7,7 +7,7 @@ IDENT=yang_newton_ident.json
 if [ "${RUN_DE:-0}" = "1" ]; then
   IDENT=${P}_ident.json; [ -e "$IDENT" ] && { echo "refusing to overwrite $IDENT"; exit 1; }
   echo "[$(date '+%F %T')] 1/4 differential evolution (14 batches, about 48 h)"
-  python3 identify.py --engine newton --tracks ../data/tracks --clips all --maxiter 13 --popsize 15 --tol 0.01 \
+  python3 fit.py --engine newton --tracks ../data/tracks --clips all --maxiter 13 --popsize 15 --tol 0.01 \
     --bound k_stretch=1,8 --bound d_bend=-6,1 --batch-cands 3 --init-from yang_newton_paper3_ident.json --init-frac 0.1 \
     --time-cap-h 0 --out $IDENT
 else
@@ -15,7 +15,7 @@ else
 fi
 for f in ${P}_synth ${P}_inbilstm.pt ${P}_inbilstm_36.json; do [ -e "$f" ] && { echo "refusing to overwrite $f"; exit 1; }; done
 echo "[$(date '+%F %T')] 2/4 simulated training data (Newton)"
-python3 make_dataset.py --engine newton --env yang --ident $IDENT --motion speed --randomize --tracks ../data/tracks \
+python3 dataset.py --engine newton --env yang --ident $IDENT --motion speed --randomize --tracks ../data/tracks \
   --allow-eval-clips --per-clip 100 --batch 512 --out ${P}_synth
 echo "[$(date '+%F %T')] 3/4 training"
 python3 train.py --data ${P}_synth --out ${P}_inbilstm.pt --epochs 60 --gap-ref-tol 0.010

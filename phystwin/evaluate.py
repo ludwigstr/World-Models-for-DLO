@@ -22,7 +22,7 @@ import torch
 ROOT = Path(__file__).resolve().parent
 
 
-from twin import SpringMassTwin, build_topology
+from simulate import SpringMassTwin, build_topology
 
 
 LABEL = "PhysTwin (per-clip spring-mass twin), 36-clip refit"

@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "scripts"))
 
 
 from model import INBiLSTM, end_actions, turning
-from simulator import CLIP_TRIMS
+from simulate import CLIP_TRIMS
 
 
 TRACKS = Path("../data/tracks")

@@ -8,7 +8,7 @@ import torch
 torch.set_num_threads(int(os.environ.get("OMP_NUM_THREADS", "4")))
 
 
-from simulator import DLOParams, DLOSimulator
+from simulate import DLOParams, DLOSimulator
 from model import turning_angles
 from model import train_fold, step_action, NOMINAL
 from model import guide_batch

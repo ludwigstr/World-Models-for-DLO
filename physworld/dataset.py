@@ -16,8 +16,8 @@ wp.config.log_level = getattr(wp, "LOG_WARNING", None) or 30
 wp.init()
 
 
-from twin import Twin, drive_from_nodes, rho_for_dt, MS_CFL
-import twin as SW
+from simulate import Twin, drive_from_nodes, rho_for_dt, MS_CFL
+import simulate as SW
 
 
 def log(s):

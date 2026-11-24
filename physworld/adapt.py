@@ -10,8 +10,8 @@ import torch
 ROOT = Path(__file__).resolve().parent
 
 
-import gnn as G
-from gnn import PhysWorldGNN
+import model as G
+from model import PhysWorldGNN
 
 
 def main():

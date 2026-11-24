@@ -64,7 +64,7 @@ def zero_x(C):
 def grad_worker(gpu, backend, bptt, conn):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
     import torch
-    import scene as R
+    import simulate as R
     import genesis as gs
     C = _layout()
     names = ["hub"] + [f"plug{k}" for k in range(4)]

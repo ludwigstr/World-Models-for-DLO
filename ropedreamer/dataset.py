@@ -13,8 +13,8 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "scripts"))
 
 
-from simulator import Drive, NAMES, make_model, unstable, vertices
-from simulator import ALL_CLIP_TRIMS
+from simulate import Drive, NAMES, make_model, unstable, vertices
+from simulate import ALL_CLIP_TRIMS
 
 
 DR_RANGES = {"bend": (0.5, 2.0), "twist": (0.5, 2.0), "stretch": (0.5, 2.0), "damping": (1 / 3, 3.0),
@@ -176,7 +176,7 @@ def _mujoco_speed_run(m, seq, sub, tabs, cav):
 
 def _job_speed(job):
     import mujoco
-    import simulator as SW
+    import simulate as SW
     npz, j, seed, x, out_dir, env, randomize, motion = job[:8]
     opts = job[8] if len(job) > 8 else {}
     assert env == "general", "speed motion with MuJoCo is implemented for --env general"
@@ -195,7 +195,7 @@ def _job_speed(job):
     fps = float(z["fps"])
     T = len(F)
     rng = np.random.default_rng([seed, 4242])
-    import mujoco_general_fit_cmaes as G
+    import fit as G
     p = G.unpack(x)
     meta = {"motion": "speed"}
     if randomize:
@@ -274,7 +274,7 @@ def _job(job):
     seq0 = Drive.pose_seq([[shp[k][t] for k in range(4)] for t in range(T)])
     seq, meta = (seq0, {"scale": 1.0, "warp": 1.0, "perturbed": False}) if j == 0 else transform_seq(seq0, rng, T)
     if env == "general":
-        import mujoco_general_fit_cmaes as G
+        import fit as G
         p = G.unpack(x)
         if randomize:
             dr = sample_dr(seed)
@@ -312,19 +312,19 @@ def _job(job):
 
 
 def dr_theta_newton(x, f):
-    import simulator as SN
+    import sim_newton as SN
     g = {"k_stretch": "stretch", "d_stretch": "damping", "k_bend": "bend", "d_bend": "damping",
          "k_twist": "twist", "d_twist": "damping", "mass_per_m": "mass", "mu": "mu"}
     y = np.array(x, float)
-    for i, name in enumerate(SN.sim_newton_THETA_NAMES):
+    for i, name in enumerate(SN.THETA_NAMES):
         y[i] += np.log10(f[g[name]])
-    i = SN.sim_newton_THETA_NAMES.index("mass_per_m")
+    i = SN.THETA_NAMES.index("mass_per_m")
     y[i] = np.clip(y[i], *np.log10(MASS_BOUNDS))
     return y
 
 
 def run_newton(jobs, x, out_dir, batch, randomize=False):
-    import simulator as SN
+    import sim_newton as SN
     todo = []
     for npz, j, seed, *_ in jobs:
         clip = Path(npz).stem
@@ -348,7 +348,7 @@ def run_newton(jobs, x, out_dir, batch, randomize=False):
         tb = time.time()
         drs = [sample_dr(r[3]) if randomize else None for r in B]
         X = np.stack([dr_theta_newton(x, f) if f else np.asarray(x, float) for f in drs])
-        Vs = SN.sim_newton_rollouts([r[5] for r in B], [r[6] for r in B], B[0][4], X, device="cuda:0")
+        Vs = SN.rollouts([r[5] for r in B], [r[6] for r in B], B[0][4], X, device="cuda:0")
         for (path, clip, j, seed, fps, rest, _, meta, Tseq), V, f in zip(B, Vs, drs):
             L = np.linalg.norm(np.diff(V, axis=2), axis=-1).sum(-1)
             offs = L - L[:1]
@@ -365,7 +365,7 @@ def run_newton(jobs, x, out_dir, batch, randomize=False):
 
 
 def run_newton_general(jobs, out_dir, batch, randomize):
-    import simulator as NG
+    import newton_general as NG
     kw = NG.fit_kwargs()
     todo = []
     for npz, j, seed, *_ in jobs:
@@ -415,12 +415,12 @@ def run_newton_general(jobs, out_dir, batch, randomize):
 
 
 def run_newton_speed(jobs, out_dir, batch, randomize, env, x=None):
-    import simulator as SW
-    import simulator as NG
+    import simulate as SW
+    import newton_general as NG
     if env == "newton_general":
         kw = NG.fit_kwargs()
     else:
-        import simulator as SN
+        import sim_newton as SN
     items = []
     for npz, j, seed, *_ in jobs:
         clip = Path(npz).stem
@@ -496,7 +496,7 @@ def run_newton_speed(jobs, out_dir, batch, randomize, env, x=None):
                     F16 = np.zeros((len(r[2]), 4, 16, 2))
                     F16[:, :, [0, 1, 14, 15]] = r[2]
                     scheds.append(SN.schedule_tracked(F16))
-                Vs = SN.sim_newton_rollouts([r[0]["F"][0] for r in B], scheds, B[0][0]["fps"], np.stack([r[0]["X"] for r in B]),
+                Vs = SN.rollouts([r[0]["F"][0] for r in B], scheds, B[0][0]["fps"], np.stack([r[0]["X"] for r in B]),
                                  device="cuda:0", check_every=25, stats=st)
             for (it, kind, E, w), V, (nv, dm, pr) in zip(B, Vs, st):
                 if kind == "ref":
@@ -567,7 +567,7 @@ def main():
         DEADLINE = time.mktime(time.strptime(a.deadline, "%Y-%m-%d %H:%M"))
         print(f"deadline {a.deadline} ({DEADLINE:.0f})", flush=True)
     if a.speed_range:
-        import simulator as _SW
+        import simulate as _SW
         _SW.SPEED_RANGE = tuple(a.speed_range)
         print(f"speed_warp.SPEED_RANGE = {_SW.SPEED_RANGE}", flush=True)
     assert not (a.engine == "newton" and a.env != "yang"), "--engine newton needs --env yang"
@@ -591,7 +591,7 @@ def main():
     (out_dir / "config.json").write_text(json.dumps({**vars(a), "x": x.tolist(), "n_clips": len(files),
                                                      "dr_ranges": DR_RANGES if a.randomize else None,
                                                      "mass_bounds": MASS_BOUNDS,
-                                                     "speed_range": (__import__("simulator", fromlist=["x"]).SPEED_RANGE
+                                                     "speed_range": (__import__("simulate", fromlist=["x"]).SPEED_RANGE
                                                                      if a.motion == "speed" else None)}, indent=1))
     print(f"domain randomization: {'ON ' + json.dumps(DR_RANGES) if a.randomize else 'off'}", flush=True)
     if a.frames_per_clip:

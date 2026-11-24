@@ -4,10 +4,10 @@ import time
 from pathlib import Path
 import numpy as np
 import torch
-from simulator import DLOSimulator, DLOParams
-from simulator import SimConfig
-from simulator import rollout, terminal_edge_action
-from simulator import arc_length
+from simulate import DLOSimulator, DLOParams
+from simulate import SimConfig
+from simulate import rollout, terminal_edge_action
+from simulate import arc_length
 
 
 ROOT = Path(__file__).resolve().parent

@@ -23,8 +23,8 @@ def worker(conn, device, clips, a):
     try:
         os.environ["OMP_NUM_THREADS"] = "1"
         import torch
-        import twin as F
-        from twin import Twin
+        import simulate as F
+        from simulate import Twin
         tws, Ws = {}, {}
         for c in clips:
             z = np.load(ROOT / a.tracks / f"{c}.npz"); P = np.stack([z[f"c{k}"] for k in range(4)])
@@ -104,7 +104,7 @@ def main():
     ap.add_argument("--min-rel", type=float, default=0.005)
     a = ap.parse_args()
     import torch
-    from twin import BOUNDS, RHO_PHYS
+    from simulate import BOUNDS, RHO_PHYS
     out_dir = ROOT / f"data/wm/physworld_mpm_twins{a.dir_suffix}"
     out_dir.mkdir(parents=True, exist_ok=False)
     clips = a.clips or sorted(p.stem for p in (ROOT / a.tracks).glob("*.npz"))

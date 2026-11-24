@@ -9,7 +9,7 @@ import torch
 ROOT = Path(__file__).resolve().parent
 
 
-import gnn as G
+import model as G
 
 
 SEC_PER_DEMO_EPOCH = 685.0 / 360

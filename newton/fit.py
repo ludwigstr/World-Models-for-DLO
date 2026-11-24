@@ -4,8 +4,8 @@ import os
 import time
 import cma
 import numpy as np
-import scene as P
-from scene import CLIP_TRIMS, _clip_frame_t1, _init_worker, _z_loss_mm, safe_savez
+import simulate as P
+from simulate import CLIP_TRIMS, _clip_frame_t1, _init_worker, _z_loss_mm, safe_savez
 
 
 ROOT = P.ROOT
@@ -116,7 +116,7 @@ def load_tracks(c):
 
 def _eval_clip_job(args):
     x, c = args
-    from scene import eval_clip
+    from simulate import eval_clip
     cache = P._worker_cache
     cache.setdefault("t_clips", {})
     if c not in cache["t_clips"]:
@@ -173,8 +173,8 @@ def warm_row():
 
 def _eval_job(args):
     (x,) = args
-    from scene import load_clip
-    from scene import eval_clip
+    from simulate import load_clip
+    from simulate import eval_clip
     cache = P._worker_cache
     if "clips" not in cache:
         cache["clips"], cache["targets"] = {}, {}
@@ -318,8 +318,8 @@ def main():
 
     if not TRACKS_DIR:
         log(f"=== final validation: {FIT_SOLVER_ITERATIONS} iterations, all 14 clips (IN-SAMPLE) ===")
-    from scene import load_clip
-    from scene import eval_clip
+    from simulate import load_clip
+    from simulate import eval_clip
     kw = unpack(best_row)
     if not TRACKS_DIR:
         per_clip, per_clip_z = {}, {}

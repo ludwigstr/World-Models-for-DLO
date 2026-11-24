@@ -1,5 +1,5 @@
 # exact versions behind every number in HANDOFF.md. genesis itself is NOT installed: the patched copy in
-# ../extern/DLO-Lab-perjoint is imported through scene.py. The fit runs on CPU.
+# ../extern/DLO-Lab-perjoint is imported through simulate.py. The fit runs on CPU.
 psutil==7.0.0
 quadrants==0.8.0
 pydantic==2.13.4
