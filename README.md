@@ -72,18 +72,3 @@ folder (`data/` for PhysWorld).
 Workers, GPUs and the number of generations are set through environment variables at the top of each `run.sh`,
 for example `WORKERS=24 GENS=60 ./run.sh`. Genesis runs with `genesis-world` 1.3.3; pass its interpreter as
 `PY=/path/to/python ./run.sh`.
-
-The fits of MuJoCo, Genesis and Newton and the identification of Yang et al. behind the table were started from
-earlier fits, so a run from scratch does not reproduce the stored parameters exactly.
-
-## Stored results
-
-The table can be checked without rerunning a chain, for example:
-
-```
-cd mujoco
-python3 validate.py mujoco ../results/mujoco/mujoco_general_fit.npz --tracks ../data/tracks --out out/validate.json
-
-cd ../phystwin
-python3 evaluate.py --out out/replay
-```
