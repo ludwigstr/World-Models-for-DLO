@@ -14,10 +14,10 @@ echo "[$(date '+%F %T')] 3/3 online estimation + evaluation per clip"
 export WIRE_NOMINAL="0.04,1.0,20,0.15" WIRE_REST_MODE=frame0 WIRE_REST_CAP=0.6
 for f in ../data/tracks/*.npz; do
   c=$(basename $f .npz)
-  python3 estimate.py --clip $c --variant online --arch film --in-sample --base-ckpt $CK --epochs 0 \
+  python3 estimate.py --clip $c --variant online --arch film --in-sample --base-ckpt $CK \
     --stride 1 --tracks-npz $f --no-video --out out/neural_video --results-json $RJ
 done
 python3 -c "
-import json; d=json.load(open('$RJ')); v=[x['mittel'] for x in d.values() if isinstance(x,dict) and 'mittel' in x]
+import json; d=json.load(open('$RJ')); v=[x['mittel'] for x in d]
 print(f'n={len(v)} mean {sum(v)/len(v):.2f} mm/node (table: 15.8)')"
 echo "[$(date '+%F %T')] CHAIN DONE"

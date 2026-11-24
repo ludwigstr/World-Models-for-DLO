@@ -10,7 +10,7 @@ torch.set_num_threads(int(os.environ.get("OMP_NUM_THREADS", "4")))
 
 from simulate import DLOParams, DLOSimulator
 from model import turning_angles
-from model import train_fold, step_action, NOMINAL
+from model import step_action, NOMINAL
 from model import guide_batch
 
 
@@ -252,7 +252,6 @@ def main():
     print(f"{args.clip}: {len(cables[0])} Frames getrackt ({args.variant}), "
           f"trainiere Hold-out-Fold ...", flush=True)
 
-    trans = torch.load(ROOT / "transitions_1s_all.pt", weights_only=False)["transitions"]
     if args.base_ckpt:
         base_ckpt = args.base_ckpt
     elif args.variant == "seq":
@@ -273,9 +272,9 @@ def main():
         model = train_fold_seq(trans_seq, hold, base_ckpt, args.epochs, 3e-4,
                                nominal_for_width(n_in))
     else:
-        model = train_fold(trans, hold, base_ckpt,
-                           args.epochs, 3e-4, len_weight=len_weight,
-                           nominal=nominal_for_width(n_in))
+        from model import load_predictor
+        model, _ = load_predictor(ROOT / base_ckpt, DEV)
+        model.eval()
 
     sim = DLOSimulator(n_nodes=16, dt=4e-5, device=DEV)
     param_trace = []

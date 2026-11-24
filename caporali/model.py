@@ -493,53 +493,6 @@ def pinn_weight(epoch, epochs, lam_max, warmup=0.3, rate=5.0):
     return lam_max * (1.0 - np.exp(-rate * p)) / (1.0 - np.exp(-rate))
 
 
-def train_fold(trans, hold_clip, ckpt, epochs, lr, len_weight=0.0,
-               shape_weight=0.0, noise_mm=0.0, pinn_lambda=0.0,
-               pinn_warmup=0.3, exit_lambda=0.0, nominal=None):
-    tr = [t for t in trans if t["clip"] != hold_clip]
-    Vi, Vo, A, P, R = build_tensors(tr, NOMINAL if nominal is None else nominal)
-    from torch.utils.data import DataLoader, TensorDataset
-    loader = DataLoader(TensorDataset(Vi, Vo, A, P, R), batch_size=128,
-                        shuffle=True, drop_last=True)
-    model, _ = load_predictor(ROOT / ckpt, DEV)
-    if epochs == 0:
-        model.eval()
-        return model
-    for p in model.parameters():
-        p.requires_grad_(True)
-    opt = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=1e-4)
-    sched = torch.optim.lr_scheduler.OneCycleLR(
-        opt, max_lr=lr, total_steps=epochs * len(loader), pct_start=0.15)
-    for ep in range(epochs):
-        model.train()
-        lam = pinn_weight(ep, epochs, pinn_lambda, pinn_warmup) if pinn_lambda else 0.0
-        for vi, vo, a, p, r in loader:
-            vi, vo = vi.to(DEV), vo.to(DEV)
-            a, p, r = a.to(DEV), p.to(DEV), r.to(DEV)
-            if noise_mm:
-                vi = vi + torch.randn_like(vi) * (noise_mm / 1000.0)
-                r = _turning_angles_batch(vi).clamp(-0.35, 0.35)
-            pred = model(vi, a, p, r)
-            loss = torch.nn.functional.mse_loss(pred, vo)
-            if len_weight:
-                loss = loss + len_weight * torch.nn.functional.mse_loss(
-                    edge_length(pred), edge_length(vi))
-            if shape_weight:
-                loss = loss + shape_weight * shape_loss(pred, vo)
-            if exit_lambda:
-                loss = loss + exit_lambda * exit_straight_loss(pred)
-            if lam:
-                ds = (edge_length(vi) / (vi.shape[1] - 1)).unsqueeze(-1)
-                loss = loss + lam * arclen_residual(pred, ds)
-            opt.zero_grad(set_to_none=True)
-            loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-            opt.step()
-            sched.step()
-    model.eval()
-    return model
-
-
 def step_action(s0, real, k, n_steps):
     def edge(V, at_end):
         a, b = (V[-2], V[-1]) if at_end else (V[0], V[1])
