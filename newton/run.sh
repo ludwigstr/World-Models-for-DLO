@@ -12,7 +12,7 @@ else
 fi
 log "fit start"
 WIRE_TRACKS=../data/tracks WIRE_Z_WEIGHT=0 WIRE_MASS_PIN=0.044 \
-WIRE_WARM=newton_fit_everything_pinned.npz WIRE_WARM_FULL=1 WIRE_RESUME=${RESUME:-0} \
+WIRE_RESUME=${RESUME:-0} \
 WIRE_OUT=$P.npz WIRE_FITLOG=${P}_log.jsonl WIRE_GPUS=${NEWTON_GPUS:-0} WIRE_WORKERS=${NEWTON_WORKERS:-4} \
 WIRE_POPSIZE=18 WIRE_GENS=${GENS:-30} WIRE_STOP_BY="${STOP_BY:-$(date -d "+7 days" "+%F %H:%M")}" \
     python3 fit.py >> ${P}_stdout.log 2>&1 || { log "fit failed (see ${P}_stdout.log)"; exit 1; }

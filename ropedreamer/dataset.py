@@ -550,7 +550,7 @@ def main():
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--out", default="data/wm/yang_synth")
     ap.add_argument("--env", default="yang", choices=["yang", "general", "newton_general"])
-    ap.add_argument("--general-fit", default="data/mujoco_general_fit3.npz")
+    ap.add_argument("--general-fit", default="../mujoco/out/mujoco_fit.npz")
     ap.add_argument("--engine", default="mujoco", choices=["mujoco", "newton"])
     ap.add_argument("--batch", type=int, default=128)
     ap.add_argument("--randomize", dest="randomize", action="store_true", default=True)

@@ -14,6 +14,9 @@ from model import load_tracks, load_synth, WindowDataset, state_offset, trajecto
 import model as RD
 
 
+OBS_NOISE = {'sigma_perp': 0.00072, 'sigma_tan': 0.0001, 'end_ext': 0.0035, 'end_ext_sd': 0.001, 'straighten': 0.5, 'sigma_end': 0.0005, 'sigma_shape_static': 0.0075, 'sigma_shape_dyn': 0.0095, 'rho_shape': 0.9, 'end_off0': 0.004, 'end_off15': 0.002, 'smooth_max': 0.6}
+
+
 def open_loop_mm(model, trajs_t, off, warm, horizon, device, n_max=64):
     model.eval()
     errs, recs = [], []
@@ -63,7 +66,7 @@ def main():
     ap.add_argument("--warm", type=int, default=5)
     ap.add_argument("--val-frac", type=float, default=0.1)
     ap.add_argument("--loader-workers", type=int, default=8)
-    ap.add_argument("--obs-noise", default="")
+    ap.add_argument("--obs-noise", action="store_true")
     ap.add_argument("--gap-ref-tol", type=float, default=None)
     ap.add_argument("--val-by-rollout", action="store_true")
     ap.add_argument("--val-by-clip", action="store_true")
@@ -108,7 +111,7 @@ def main():
     else:
         val = list(trajs); train = list(trajs)
     off = state_offset(trajs)
-    obs_noise = json.loads((ROOT / a.obs_noise).read_text())["params"] if a.obs_noise else None
+    obs_noise = OBS_NOISE if a.obs_noise else None
     if obs_noise:
         print(f"obs-noise augmentation: {obs_noise}", flush=True)
     ds_tr = WindowDataset(train, a.seq_len, seed=a.seed, obs_noise=obs_noise)

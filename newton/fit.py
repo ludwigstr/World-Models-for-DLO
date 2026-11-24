@@ -45,9 +45,6 @@ STOP_BY = (time.mktime(time.strptime(os.environ["WIRE_STOP_BY"], "%Y-%m-%d %H:%M
            if os.environ.get("WIRE_STOP_BY") else None)
 
 
-WARM_FILE = os.environ.get("WIRE_WARM", "data/newton_fit_percable.npz")
-
-
 OUT = ROOT / os.environ.get("WIRE_OUT", "data/newton_fit_everything.npz")
 
 
@@ -152,23 +149,10 @@ def unpack(row):
                 per_joint_rest=pj(I_REST))
 
 
-def warm_row():
-    prev = np.asarray(np.load(ROOT / WARM_FILE, allow_pickle=True)["best"], float)
-    if MASS_PIN and len(prev) == N_PAR and os.environ.get("WIRE_WARM_FULL") == "1":
-        return prev.copy()
-    if MASS_PIN:
-        assert len(prev) == 63, f"expected row 14's 63-value set, got {len(prev)}"
-        ke, kd = prev[:14], prev[14:28]
-        eps, tau, K = prev[28], prev[29], prev[30]
-        mu = prev[31:35]
-        rest, kt = prev[35:49], prev[49:63]
-        t4 = lambda v: np.tile(v, N_C)
-        return np.concatenate([t4(ke), t4(kd), t4(kt), [eps, tau, K], mu, t4(rest)])
-    assert len(prev) == 174, f"expected row 15's 174-value set, got {len(prev)}"
-    ke, kd, mass = prev[:56], prev[56:112], prev[112:116]
-    eps, tau = prev[116], prev[117]
-    rest = prev[118:174]
-    return np.concatenate([ke, kd, ke.copy(), mass, [eps, tau, X0_STRETCH], X0_GLOB, rest])
+def start_row():
+    assert MASS_PIN, "set WIRE_MASS_PIN"
+    return np.concatenate([np.full(N_PJ, 0.5), np.full(N_PJ, 0.05), np.full(N_PJ, 0.5), [0.5, 1.0, X0_STRETCH],
+                           X0_GLOB, np.zeros(N_PJ)])
 
 
 def _eval_job(args):
@@ -208,11 +192,8 @@ def main():
 
     log(f"=== Newton EVERYTHING fit: {N_PAR} params, all per cable, nothing shared, nothing default (CMA-ES)"
         + (f"; MASS PINNED {MASS_PIN} kg/m" if MASS_PIN else "") + " ===")
-    log(f"popsize={POPSIZE}, gens={MAX_GENERATIONS}, workers={N_WORKERS} on GPUs {GPU_IDS}; warm start {WARM_FILE} "
-        + ("(a finished run of this fit, used as is)" if MASS_PIN and os.environ.get("WIRE_WARM_FULL") == "1"
-           else "(row 14 copied onto each cable)" if MASS_PIN
-           else f"(row 15) with twist := bend, K stretch {X0_STRETCH:g}, mu {X0_GLOB}"))
-    row0 = warm_row()
+    log(f"popsize={POPSIZE}, gens={MAX_GENERATIONS}, workers={N_WORKERS} on GPUs {GPU_IDS}; start at the default values")
+    row0 = start_row()
     assert len(row0) == N_PAR
     x0 = to_x(row0)
     ctx = mp.get_context("spawn")
@@ -264,12 +245,12 @@ def main():
             xy0, z0 = float(np.mean([e[0] for e in r0])), float(np.mean([e[1] for e in r0]))
             v0 = np.array([e[0] for e in r0])
             OUT.with_name(OUT.stem + "_gen0.json").write_text(json.dumps(
-                {"warm": WARM_FILE, "mean": float(v0.mean()),
+                {"mean": float(v0.mean()),
                  "clips": {c: e[0] for c, e in zip(TRAIN_CLIPS, r0)}}, indent=1))
             log(f"gen 0 per clip: mean {v0.mean():.3f} -> {OUT.stem}_gen0.json")
         else:
             (xy0, z0), = eval_population([x0])
-        log(f"gen 0/{MAX_GENERATIONS} (x0 = {WARM_FILE if os.environ.get('WIRE_WARM_FULL') == '1' else 'row ' + ('14' if MASS_PIN else '15')}, nothing moved): fit={fitness(xy0, z0):.2f} "
+        log(f"gen 0/{MAX_GENERATIONS} (default values): fit={fitness(xy0, z0):.2f} "
             f"(xy={xy0:.2f}, z-err={z0:.2f}mm) ({time.time()-t0:.0f}s)")
         stds = ([STD_PJ] * (3 * N_PJ) + [STD_MASS] * N_MASS + [STD_DAHL] * 2 + [STD_GLOB] * 5
                 + [STD_REST] * N_PJ)

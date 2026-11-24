@@ -73,8 +73,6 @@ def main():
     ap.add_argument("--engine", default="mujoco", choices=["mujoco", "newton"])
     ap.add_argument("--batch-cands", type=int, default=20)
     ap.add_argument("--bound", action="append", default=[])
-    ap.add_argument("--init-from", default="")
-    ap.add_argument("--init-frac", type=float, default=0.1)
     ap.add_argument("--time-cap-h", type=float, default=0.0)
     a = ap.parse_args()
     TRACKS = ROOT / a.tracks
@@ -169,15 +167,6 @@ def main():
         return f
 
     init = "latinhypercube"
-    if a.init_from:
-        x_ws = np.array(json.loads((ROOT / a.init_from).read_text())["theta_log10"], float)
-        lo, hi = np.array(THETA_BOUNDS, float).T
-        rng0 = np.random.default_rng(a.seed)
-        n_pop = a.popsize * len(x_ws)
-        init = np.clip(x_ws + rng0.normal(0.0, 1.0, (n_pop, len(x_ws))) * a.init_frac * (hi - lo), lo, hi)
-        init[0] = np.clip(x_ws, lo, hi)
-        print(f"warm start: initial population of {n_pop} around {a.init_from} {np.round(x_ws, 3).tolist()}, "
-              f"std {a.init_frac} x bound range", flush=True)
 
     def cb(xk, convergence=None):
         last = hist[-1]["sec"] if hist else 0.0
@@ -195,7 +184,7 @@ def main():
         pool.close(); pool.join()
     out = {"engine": a.engine, "method": "scipy differential_evolution best1bin on Eq. (1), one-step error, observed-state reset",
            "clips": clips, "tracks": str(TRACKS), "n_transitions": len(trans), "settle": a.settle, "popsize": a.popsize,
-           "maxiter": a.maxiter, "tol": a.tol, "init_from": a.init_from, "init_frac": a.init_frac,
+           "maxiter": a.maxiter, "tol": a.tol, 
            "time_cap_h": a.time_cap_h, "seed": a.seed, "nit": int(res.nit), "nfev": int(res.nfev),
            "message": str(res.message), "theta_log10": res.x.tolist(), "theta": theta_dict(res.x),
            "theta_names": THETA_NAMES, "bounds_log10": THETA_BOUNDS,

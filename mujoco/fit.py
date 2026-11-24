@@ -89,7 +89,6 @@ def _eval_one(job):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--resume", required=True)
     ap.add_argument("--mass-max", type=float, default=MASS_HI)
     ap.add_argument("--sigma0", type=float, default=1.0)
     ap.add_argument("--tracks", default="")
@@ -120,7 +119,8 @@ def main():
         z = np.load(TRACKS / f"{c}.npz")
         _CACHE[c] = ({k: z[f"c{k}"] for k in range(4)}, float(z["fps"]))
 
-    x0 = np.asarray(np.load(ROOT / a.resume, allow_pickle=True)["best_x"], float)
+    x0 = np.concatenate([np.full(N_PJ, np.log(0.1)), np.zeros(N_PJ), np.full(N_PJ, np.log(0.15)),
+                         np.full(N_C, np.log(1e5)), np.full(N_C, np.log(1e5)), [0.0], np.full(N_C, np.log(MASS0))])
     assert len(x0) == N_PAR
     if a.smoke:
         for c in clips[:2]:
@@ -133,7 +133,7 @@ def main():
     hi = ([np.inf] * N_PJ + [a.max_deg] * N_PJ + [np.log(5.0)] * N_PJ + [np.inf] * (2 * N_C) + [np.log(5.0)]
           + [np.log(a.mass_max)] * N_C)
     log(f"=== MuJoCo GENERAL fit: {N_PAR} params, per cable, mass free per cable in {MASS_LO} .. {a.mass_max} kg/m (CMA-ES) ===")
-    log(f"popsize {a.popsize}, gens {a.gens}, workers {a.workers}; " + f"start {a.resume}, sigma0 {a.sigma0}; "
+    log(f"popsize {a.popsize}, gens {a.gens}, workers {a.workers}; " + f"start at the default values, sigma0 {a.sigma0}; "
         + f"fitness = table metric over {len(clips)} clips")
 
     pool = mp.get_context("fork").Pool(a.workers)
@@ -152,7 +152,7 @@ def main():
     f0 = evaluate([x0])[0]
     gen0_secs, gen_secs = time.time() - t0, []
     stop_ts = time.mktime(time.strptime(a.stop_by, '%Y-%m-%d %H:%M')) if a.stop_by else 0.0
-    log(f"gen 0 ({'resumed best' if a.resume else f'row 4 at mass {MASS0}'}): {f0:.3f} mm/node ({time.time() - t0:.0f}s)")
+    log(f"gen 0 (default values): {f0:.3f} mm/node ({time.time() - t0:.0f}s)")
     hist = [{"gen": 0, "best": f0}]
     best_f, best_x = f0, x0.copy()
     es = cma.CMAEvolutionStrategy(x0, a.sigma0, {"popsize": a.popsize, "verbose": -9, "CMA_stds": stds, "bounds": [lo, hi]})

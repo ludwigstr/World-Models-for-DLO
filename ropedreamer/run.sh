@@ -4,13 +4,15 @@ cd "$(dirname "$0")"
 W=${WORKERS:-18}; G=${GPU:-0}
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONUNBUFFERED=1
 mkdir -p out; S=out/ropedreamer_synth; CK=out/ropedreamer_S.pt; R=out/ropedreamer_eval_36.json
+FIT=${MUJOCO_FIT:-../mujoco/out/mujoco_fit.npz}
+[ -e "$FIT" ] || { echo "run ../mujoco/run.sh first ($FIT is missing)"; exit 1; }
 for f in $S $CK $R; do [ -e "$f" ] && { echo "refusing to overwrite $f"; exit 1; }; done
 echo "[$(date '+%F %T')] 1/3 simulated rollouts"
-CUDA_VISIBLE_DEVICES="" python3 dataset.py --env general --general-fit mujoco_general_fit_gen50.npz --randomize \
+CUDA_VISIBLE_DEVICES="" python3 dataset.py --env general --general-fit "$FIT" --randomize \
   --motion speed --speed-range 0.8 1.2 --tracks ../data/tracks --allow-eval-clips --frames-per-clip 28000 --twin-reference --workers "$W" --out $S
 echo "[$(date '+%F %T')] 2/3 training"
 CUDA_VISIBLE_DEVICES=$G python3 train.py --synth $S --size S --seq-len 120 --beta 1.0 --pos-weight 0 --rollout-weight 1000 \
-  --lr 1e-4 --batch 32 --val-frac 0.1 --val-by-rollout --gap-ref-tol 0.010 --obs-noise ropedreamer_twins14_noise_params_v3.json \
+  --lr 1e-4 --batch 32 --val-frac 0.1 --val-by-rollout --gap-ref-tol 0.010 --obs-noise \
   --loader-workers 8 --select val_loss --out $CK
 echo "[$(date '+%F %T')] 3/3 evaluation on the 36 clips"
 CUDA_VISIBLE_DEVICES=$G python3 evaluate.py --ckpt $CK --tracks ../data/tracks --out $R

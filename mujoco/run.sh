@@ -3,13 +3,13 @@ set -euo pipefail
 cd "$(dirname "$0")"
 W=${WORKERS:-12}; GENS=${GENS:-60}
 export OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 CUDA_VISIBLE_DEVICES="" PYTHONUNBUFFERED=1
-mkdir -p out; P=out/mujoco_general_fit3
+mkdir -p out; P=out/mujoco_fit
 for f in $P.npz ${P}_log.jsonl ${P}_validate.json; do
   [ -e "$f" ] && { echo "refusing to overwrite $f"; exit 1; }
 done
-echo "[$(date '+%F %T')] CMA-ES fit ($GENS generations, $W workers, warm start mujoco_general_fit3.npz)"
+echo "[$(date '+%F %T')] CMA-ES fit ($GENS generations, $W workers)"
 python3 fit.py --tracks ../data/tracks --mass-max 0.5 --popsize 18 --workers "$W" \
-  --resume mujoco_general_fit3.npz --sigma0 0.5 --gens "$GENS" --out $P.npz --log ${P}_log.jsonl
+  --gens "$GENS" --out $P.npz --log ${P}_log.jsonl
 echo "[$(date '+%F %T')] fresh-process validation"
 python3 validate.py mujoco $P.npz --tracks ../data/tracks --out ${P}_validate.json --workers "$W"
 echo "[$(date '+%F %T')] CHAIN DONE"
