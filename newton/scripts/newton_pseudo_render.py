@@ -7,7 +7,7 @@ import warp as wp
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from mujoco_scene import (track_clip, _rotz, DIR, COLORS, BOARD_W, BOARD_H,
+from harness_scene import (track_clip, _rotz, DIR, COLORS, BOARD_W, BOARD_H,
                           HUB_CAVS, PLUG_CAV, CAV_Z, PLATFORM_HALF, MODULE_HALF)
 from newton_full_scene import make_kinematic
 

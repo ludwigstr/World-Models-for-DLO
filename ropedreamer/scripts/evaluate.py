@@ -25,13 +25,8 @@ def main():
     a = ap.parse_args()
     ck = torch.load(ROOT / a.ckpt, map_location=a.device, weights_only=False)
     RD.REPR = ck.get("repr", "chain")
-    if ck.get("model", "ropedreamer") == "deformnet":
-        from wire_model.deformnet import DeformNet
-        model = DeformNet(ck["n_nodes"], beta=ck["beta"], pos_weight=ck.get("pos_weight", 0.0), free_nats=ck.get("free_nats", 0.0),
-                          rollout_weight=ck.get("rollout_weight", 0.0), warm=ck.get("warm", 5)).to(a.device)
-    else:
-        model = RopeDreamer(ck["n_nodes"], ck["size"], beta=ck["beta"], pos_weight=ck.get("pos_weight", 0.0), free_nats=ck.get("free_nats", 0.0),
-                            rollout_weight=ck.get("rollout_weight", 0.0), warm=ck.get("warm", 5), repr=ck.get("repr", "chain")).to(a.device)
+    model = RopeDreamer(ck["n_nodes"], ck["size"], beta=ck["beta"], pos_weight=ck.get("pos_weight", 0.0), free_nats=ck.get("free_nats", 0.0),
+                        rollout_weight=ck.get("rollout_weight", 0.0), warm=ck.get("warm", 5), repr=ck.get("repr", "chain")).to(a.device)
     model.load_state_dict(ck["state_dict"]); model.eval()
     off = ck["offset"].to(a.device)
     trajs = load_tracks([ROOT / a.tracks])

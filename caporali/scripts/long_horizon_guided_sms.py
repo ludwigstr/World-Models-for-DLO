@@ -147,7 +147,7 @@ def main():
             continue
 
         horizon_s = (t1 - t0) / fps
-        print(f"[{ci+1}/{len(clips)}] {clip}: LOCO-Training, "
+        print(f"[{ci+1}/{len(clips)}] {clip}: Hold-out-Training, "
               f"Horizont {horizon_s:.0f}s ...", flush=True)
         if args.tau:
             model = train_fold_seq(trans, clip, "data/nn_twoend_transformer.pt",

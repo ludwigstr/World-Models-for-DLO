@@ -49,7 +49,7 @@ def _eval_one(job):
     cand_i, clip, x = job
     shp, fps = _CACHE[clip]
     import mujoco
-    from mujoco_full_loco import rollout_errs
+    from mujoco_rollout import rollout_errs
     m = mujoco.MjModel.from_xml_string(build_xml(shp))
     if clip not in _AXIS:
         _AXIS[clip] = board_normal_axes(m)

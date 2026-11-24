@@ -166,7 +166,7 @@ def main():
             continue
 
         horizon_s = (t1 - t0) / fps
-        print(f"[{ci+1}/{len(clips)}] {clip}: LOCO-Modell trainieren, "
+        print(f"[{ci+1}/{len(clips)}] {clip}: Hold-out-Modell trainieren, "
               f"Horizont {horizon_s:.0f}s ({t1-t0} Frames) ...", flush=True)
         model = train_fold(trans, clip, "data/nn_twoend_transformer.pt", args.epochs, 3e-4,
                           len_weight=args.len_weight, shape_weight=args.shape_weight)

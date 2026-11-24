@@ -13,7 +13,7 @@ sys.path.insert(0, str(DLO_LAB))
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT))
 
-from mujoco_scene import (track_clip, _rotz, DIR, CAV_Z, HUB_CAVS, PLUG_CAV,
+from harness_scene import (track_clip, _rotz, DIR, CAV_Z, HUB_CAVS, PLUG_CAV,
                           COLORS,
                           BOARD_W, BOARD_H, PLATFORM_HALF, PLATE_HALF, PLATE_Z,
                           MODULE_HALF, MODULE_Z, PLATFORM_Z)

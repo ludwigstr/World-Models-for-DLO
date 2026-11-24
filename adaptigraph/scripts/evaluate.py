@@ -9,7 +9,7 @@ import torch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT)]
 from wire_model.adaptigraph.model_v2 import AdaptiGraphV2
-from wire_model.yang.model import end_actions, turning
+from wire_model.adaptigraph.features import end_actions, turning
 
 WARM = 5
 

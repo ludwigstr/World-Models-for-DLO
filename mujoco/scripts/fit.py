@@ -58,7 +58,7 @@ def make_model(shp, p):
 
 def _eval_one(job):
     cand_i, clip, x = job
-    from mujoco_full_loco import rollout_errs
+    from mujoco_rollout import rollout_errs
     shp, fps = _CACHE[clip]
     try:
         m = make_model(shp, unpack(x))

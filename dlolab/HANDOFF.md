@@ -67,7 +67,7 @@ pip install -r requirements_dlolab.txt
   change the numbers, so keep them pinned. If something does not install, say what you changed in your report.
 - **Not installed:** `genesis` itself. It comes from `extern/DLO-Lab-perjoint` via `sys.path`.
 
-The folder is self-contained. Paths resolve relative to this folder. The path constants in `scripts/mujoco_scene.py`,
+The folder is self-contained. Paths resolve relative to this folder. The path constants in `scripts/harness_scene.py`,
 `wire_model/perception/seg_masks.py` and `wire_model/perception/fastdlo_mask.py` belong to live video tracking, which is
 not used here: routes come from the npz files.
 
@@ -182,7 +182,7 @@ the table carries them as "running".
 | `scripts/rod_scene.py` | rod scene and `eval_clip` (the simulation and the metric) |
 | `scripts/validate.py` | fresh-process validation |
 | `scripts/dlolab_path.py` | selects the patched DLO-Lab copy |
-| `scripts/{clip_set,fit_clip,forecast_frames,genesis_full_scene,mujoco_camera,mujoco_scene}.py`, `wire_model/` | imported helpers |
+| `scripts/{clip_set,fit_clip,forecast_frames,genesis_full_scene,board_camera,harness_scene}.py`, `wire_model/` | imported helpers |
 | `extern/DLO-Lab-perjoint/` | patched DLO-Lab, with its license and real `genesis/assets`; repo history and teaser image removed. Force-added: the root `.gitignore` ignores `extern/` |
 | `../data/tracks/` | the 36 clips, with a README on the selection |
 | `data/genesis_rod_allclip_best.json` | read at start by the script even when resuming; needed for the file to load |

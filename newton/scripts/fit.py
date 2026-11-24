@@ -122,7 +122,7 @@ def warm_row():
 
 def _eval_job(args):
     (x,) = args
-    from mujoco_scene import track_clip
+    from harness_scene import track_clip
     from newton_full_scene import eval_clip
     cache = P._worker_cache
     if "clips" not in cache:
@@ -267,7 +267,7 @@ def main():
 
     if not TRACKS_DIR:
         log(f"=== final validation: {FIT_SOLVER_ITERATIONS} iterations, all 14 clips (IN-SAMPLE) ===")
-    from mujoco_scene import track_clip
+    from harness_scene import track_clip
     from newton_full_scene import eval_clip
     kw = unpack(best_row)
     if not TRACKS_DIR:

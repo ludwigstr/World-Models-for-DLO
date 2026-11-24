@@ -9,7 +9,7 @@ sys.path[:0] = [str(ROOT / "scripts"), str(ROOT)]
 from evaluate import dp_of, features
 from render import write_results
 from wire_model.adaptigraph.model_v2 import AdaptiGraphV2
-from wire_model.yang.model import turning
+from wire_model.adaptigraph.features import turning
 
 LABEL = "AdaptiGraph (sim-trained, 4 phi), 36-clip refit"
 

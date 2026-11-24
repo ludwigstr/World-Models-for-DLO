@@ -13,8 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from clip_set import CLIP_TRIMS
 
-MODS = {"mujoco": "mujoco_general_fit_cmaes", "genesis": "genesis_general_fit_cmaes",
-        "dlolab": "dlolab_general_fit_cmaes"}
+MODS = {"mujoco": "mujoco_general_fit_cmaes"}
 
 
 def main():
@@ -63,7 +62,7 @@ def main():
         res = dict(ex.map(run, clips))
     out.write_text(json.dumps(res, indent=1))
     v = np.array([e for e in res.values() if isinstance(e, float)])
-    print(f"{a.engine}: mean {v.mean():.3f} median {np.median(v):.3f} n={len(v)}/{len(clips)} "
+    print(f"{a.engine}: mean {v.mean():.3f} n={len(v)}/{len(clips)} "
           f"(failed scored as-is: {sum(e >= 1e3 for e in v)} at 1e3)  wall {time.time() - t0:.0f}s", flush=True)
 
 

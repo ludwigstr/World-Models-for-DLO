@@ -3,7 +3,13 @@ from __future__ import annotations
 import torch
 from torch import Tensor, nn
 
-from wire_model.adaptigraph.model import mlp
+
+def mlp(d_in, d_h, d_out, n=2):
+    layers, d = [], d_in
+    for _ in range(n):
+        layers += [nn.Linear(d, d_h), nn.ReLU()]; d = d_h
+    return nn.Sequential(*layers, nn.Linear(d, d_out))
+
 
 SCALE = 0.1
 ACT = 0.01

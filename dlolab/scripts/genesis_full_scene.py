@@ -7,7 +7,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from mujoco_scene import (track_clip, _rotz, DIR, COLORS,
+from harness_scene import (track_clip, _rotz, DIR, COLORS,
                           BOARD_W, BOARD_H, HUB_CAVS, PLUG_CAV, CAV_Z,
                           PLATFORM_HALF, PLATE_HALF, PLATE_Z, MODULE_HALF,
                           MODULE_Z, PLATFORM_Z, CAV_R)
@@ -468,7 +468,7 @@ def eval_clip(clip, t1_sec=None, dt=1e-3, steps_per_frame=None,
               kp_cable=80.0, kv_cable=4.0, mu=1.0, pin_cable_ends=False,
               nodes_out=None, nodes3_out=None, shp_fps=None, **cable_kw):
     import cv2
-    from mujoco_scene import track_clip as _track_clip
+    from harness_scene import track_clip as _track_clip
 
     t1 = None
     if t1_sec is not None:
@@ -619,7 +619,7 @@ def eval_clip(clip, t1_sec=None, dt=1e-3, steps_per_frame=None,
 
 
 def genesis_camera(tf, height_m=15.0, pad_mm=60.0):
-    from mujoco_camera import board_camera, BOARD_H_MM
+    from board_camera import board_camera, BOARD_H_MM
     pos, right_3d, up_3d = board_camera(tf, height_m=height_m)
     fovy_m = BOARD_H_MM / 1000.0 + 2 * pad_mm / 1000.0
     fov_deg = 2 * np.degrees(np.arctan(fovy_m / (2 * height_m)))

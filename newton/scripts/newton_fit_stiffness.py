@@ -10,7 +10,7 @@ import warp as wp
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from mujoco_scene import track_clip, CAV_Z, DIR as CLIP_DIR
+from harness_scene import track_clip, CAV_Z, DIR as CLIP_DIR
 from newton_full_scene import make_kinematic
 
 ROOT = Path(__file__).resolve().parents[1]

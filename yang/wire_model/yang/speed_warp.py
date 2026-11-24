@@ -84,7 +84,7 @@ def _rot(v, a):
 
 
 def mover_poses(E):
-    from mujoco_scene import HUB_CAVS, PLUG_CAV
+    from harness_scene import HUB_CAVS, PLUG_CAV
     out = (E[:, :, 1] - E[:, :, 0]).mean(1)
     hy = np.arctan2(out[:, 1], out[:, 0]) + np.pi / 2
     hm = np.array(HUB_CAVS).mean(0)
@@ -100,7 +100,7 @@ def mover_poses(E):
 def attachments(E, kind):
     if kind == "nodes":
         return np.stack([E[:, :, 0], E[:, :, 3]], 2)
-    from mujoco_scene import HUB_CAVS, PLUG_CAV
+    from harness_scene import HUB_CAVS, PLUG_CAV
     C, Y = mover_poses(E)
     A = np.empty((len(E), 4, 2, 2))
     for k in range(4):
@@ -110,7 +110,7 @@ def attachments(E, kind):
 
 
 def footprint_gap(E):
-    from mujoco_scene import PLATFORM_HALF
+    from harness_scene import PLATFORM_HALF
     C, _ = mover_poses(E)
     i, j = np.triu_indices(5, 1)
     d = np.abs(C[:, i] - C[:, j]).max(-1)

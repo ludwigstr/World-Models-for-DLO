@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / "scripts"), str(ROOT)]
 from evaluate import WARM, dp_of, features, load_tracks
 from wire_model.adaptigraph.model_v2 import AdaptiGraphV2
-from wire_model.yang.model import turning
+from wire_model.adaptigraph.features import turning
 
 
 @torch.no_grad()

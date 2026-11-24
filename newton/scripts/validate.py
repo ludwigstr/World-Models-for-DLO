@@ -28,7 +28,7 @@ def one(job):
         z = np.load(ROOT / tracks / f"{c}.npz")
         shp, fps = {k: np.asarray(z[f"c{k}"], float) for k in range(4)}, float(z["fps"])
     else:
-        from mujoco_scene import track_clip
+        from harness_scene import track_clip
         shp, _, _, fps = track_clip(c, t0=8, t1=E._clip_frame_t1(c, E.CLIP_TRIMS[c]))
     errs = N.eval_clip(c, shp_fps=(shp, fps), solver_iterations=10, device=_dev.get("device"), **kw)
     return c, float(np.mean(errs)), len(shp[0]), time.time() - t

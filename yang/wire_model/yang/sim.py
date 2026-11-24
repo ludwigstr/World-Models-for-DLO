@@ -27,7 +27,7 @@ def theta_dict(x):
 
 def make_model(shp, x, frame_idx=0):
     import mujoco
-    from mujoco_scene import build_xml, cable_ball_joints
+    from harness_scene import build_xml, cable_ball_joints
     p = theta_dict(x)
     xml = build_xml(shp, frame_idx=frame_idx, radius=RADIUS, bend=p["E_bend"], twist=p["G_twist"],
                     mass_per_m=p["mass_per_m"], mu=p["mu"])
@@ -58,7 +58,7 @@ class Drive:
 
     @staticmethod
     def poses(frame):
-        from mujoco_scene import HUB_CAVS, PLUG_CAV, _rotz
+        from harness_scene import HUB_CAVS, PLUG_CAV, _rotz
         out = np.mean([P[1] - P[0] for P in frame], axis=0)
         hy = np.arctan2(out[1], out[0]) + np.pi / 2
         hoff = _rotz(np.array(HUB_CAVS).mean(0), hy)
@@ -149,7 +149,7 @@ class OneStep:
 
     def __init__(self, shp, fps, x, settle=200):
         import mujoco
-        from mujoco_scene import lift_profile
+        from harness_scene import lift_profile
         self.shp, self.fps, self.settle = shp, fps, settle
         self.m = make_model(shp, x)
         self.d = mujoco.MjData(self.m)

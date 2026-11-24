@@ -7,7 +7,7 @@ import warp as wp
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from mujoco_scene import track_clip, CAV_Z, DIR
+from harness_scene import track_clip, CAV_Z, DIR
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -39,7 +39,7 @@ def resample_per_joint(vals, n_joints, subdiv=1, scale=None):
 
 def initial_route3(shp, k, table_fraction=0.6, z_table=0.003, z_conn=None,
                    subdiv=1):
-    from mujoco_scene import CAV_Z as _CAV_Z
+    from harness_scene import CAV_Z as _CAV_Z
     if z_conn is None:
         z_conn = _CAV_Z
     P = subdivide_path(shp[k][0].astype(float), subdiv)
@@ -148,7 +148,7 @@ def build_scene(builder, shp, *, radius, stretch_stiffness, bend_stiffness, bend
 
     platform_bodies, module_bodies = {}, {}
     if scene_collision:
-        from mujoco_scene import (BOARD_W, BOARD_H, PLATFORM_HALF, MODULE_HALF,
+        from harness_scene import (BOARD_W, BOARD_H, PLATFORM_HALF, MODULE_HALF,
                                   PLATFORM_Z, MODULE_Z, PLATE_HALF, PLATE_Z)
         from newton_pseudo_render import mover_poses as _mover_poses
         board_body = builder.add_body(
@@ -305,7 +305,7 @@ def eval_clip(clip, t1_sec=None, radius=0.003,
             bq[bodies[0]] = np.concatenate([p0a + f * (p1a - p0a), nlerp_quat(q0a, q1a, f)])
             bq[bodies[-1]] = np.concatenate([p0b + f * (p1b - p0b), nlerp_quat(q0b, q1b, f)])
         if scene_collision:
-            from mujoco_scene import PLATFORM_Z, MODULE_Z
+            from harness_scene import PLATFORM_Z, MODULE_Z
             for name in movers_a:
                 pos_a, yaw_a = movers_a[name]
                 pos_b, yaw_b = movers_b[name]

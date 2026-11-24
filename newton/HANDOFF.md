@@ -66,7 +66,7 @@ pip install -r requirements_newton.txt
 
 The folder is self-contained: `scripts/` plus the `wire_model/` modules they import, `data/` and `state/`. Every
 script resolves paths relative to this folder (`Path(__file__).parents[1]`). Two absolute path constants
-(`scripts/mujoco_scene.py:44`, `wire_model/perception/seg_masks.py:39`) belong to the live-video tracking path. That
+(`scripts/harness_scene.py:44`, `wire_model/perception/seg_masks.py:39`) belong to the live-video tracking path. That
 path is not used here: routes come from the npz.
 
 ## 4. Check that your setup reproduces the original (do this first)
@@ -201,7 +201,7 @@ machine's run.
 | `scripts/newton_full_scene.py` | scene building + `eval_clip` (the simulation and the metric) |
 | `scripts/validate.py` | fresh-process validation on a track folder |
 | `scripts/newton_fit_percable_cmaes.py` | worker init, GPU assignment, `safe_savez` |
-| `scripts/{clip_set,fit_clip,forecast_frames,mujoco_scene,newton_fit_stiffness,newton_pseudo_render}.py`, `wire_model/` | imported helpers |
+| `scripts/{clip_set,fit_clip,forecast_frames,harness_scene,newton_fit_stiffness,newton_pseudo_render}.py`, `wire_model/` | imported helpers |
 | `../data/tracks/` | the 36 clips (+ README with the selection) |
 | `data/newton_fit_everything_pinned.npz` | warm start = earlier optimum (`best`, 231 values, stored layout see `unpack()`) |
 | `state/newton_fit_everything_pinned_gen0.json` | main machine's generation 0 per clip (reference for check 2) |

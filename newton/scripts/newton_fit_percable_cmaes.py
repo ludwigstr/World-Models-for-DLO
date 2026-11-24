@@ -119,7 +119,7 @@ def _clip_frame_t1(clip, cutoff_sec):
     if cutoff_sec is None:
         return None
     import cv2
-    from mujoco_scene import DIR
+    from harness_scene import DIR
     cap = cv2.VideoCapture(f"{DIR}/{clip}.mp4")
     fps = cap.get(cv2.CAP_PROP_FPS) or 4.0
     cap.release()
@@ -161,7 +161,7 @@ def _z_loss_mm(z_nodes, targets_mm):
 
 def _eval_job(args):
     (log_row,) = args
-    from mujoco_scene import track_clip
+    from harness_scene import track_clip
     from newton_full_scene import eval_clip
     if "clips" not in _worker_cache:
         _worker_cache["clips"] = {}
@@ -301,7 +301,7 @@ def main():
         p.close(); p.join()
 
     log("=== final validation: fitted shared params, full scene, 10 iterations (IN-SAMPLE) ===")
-    from mujoco_scene import track_clip
+    from harness_scene import track_clip
     from newton_full_scene import eval_clip
     ke, kd, mass, eps, tau, rest, extra, kt = _params_from_log(_to_x(best_row))
     per_clip, per_clip_z = {}, {}

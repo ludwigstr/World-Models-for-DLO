@@ -126,7 +126,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--tag", required=True)
     ap.add_argument("--weld-fit", default=None)
-    ap.add_argument("--out-dir", default="data/mujoco_full_loco")
+    ap.add_argument("--out-dir", default="data/mujoco_rollout")
     ap.add_argument("--mass-per-m", type=float, default=None)
     ap.add_argument("--mu", type=float, default=None)
     ap.add_argument("--damping", type=float, default=None)
@@ -198,7 +198,7 @@ def main():
 
     mittel = np.array([v["mittel"] for v in results.values()])
     print(f"\n[{args.tag}] {len(mittel)} Clips, Median {np.median(mittel):.1f}  Mittel {mittel.mean():.1f} mm/Knoten")
-    print(f"MUJOCO_FULL_LOCO_{args.tag.upper()}_FERTIG")
+    print(f"MUJOCO_ROLLOUT_{args.tag.upper()}_FERTIG")
 
 
 if __name__ == "__main__":

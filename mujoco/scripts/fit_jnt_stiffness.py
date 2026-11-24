@@ -69,7 +69,7 @@ def _eval_one(job):
     shp, fps = _CACHE[clip]
     import mujoco
     from mujoco_scene import set_per_joint_stiffness
-    from mujoco_full_loco import rollout_errs
+    from mujoco_rollout import rollout_errs
     m = mujoco.MjModel.from_xml_string(build_xml(shp))
     if stiff is not None:
         set_per_joint_stiffness(m, stiff)

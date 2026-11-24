@@ -206,10 +206,6 @@ def build_xml(shp, frame_idx=0, radius=0.003, bend=1.0e5, twist=1.0e5,
 
   <compiler autolimits="true"/>
   <size njmax="2000" nconmax="1000"/>
-  <!-- Thin, stiff cables need a tighter integration/contact solve than the
-       MuJoCo defaults.  At 2 ms with the default soft contact they could move
-       through the board by more than two cable diameters before the solver
-       arrested them. -->
   <option gravity="0 0 -9.81" integrator="implicit" timestep="0.0005"
           iterations="100" ls_iterations="50"/>
   <statistic center="{BOARD_W/2:.3f} {BOARD_H/2:.3f} 0.05" extent="1.2"/>
@@ -217,27 +213,6 @@ def build_xml(shp, frame_idx=0, radius=0.003, bend=1.0e5, twist=1.0e5,
 
   <worldbody>
     <light diffuse=".7 .7 .7" pos="{BOARD_W/2:.3f} {BOARD_H/2:.3f} 3" dir="0 0 -1"/>
-    <!-- mu is identified against the footage, not assumed. An earlier version
-         fixed mass_per_m at a plausible wire value and swept mu alone, landing
-         on 3.0 -- high for a dry contact pair, the tell that it was absorbing
-         physics the elastic cable does not carry (plastic set above all,
-         measured in this project to be the dominant shape parameter and not
-         representable in mujoco.elasticity.cable). Sweeping mu and mass_per_m
-         together instead, holding mu*mass_per_m*g (max static grip) roughly
-         fixed and letting cable inertia rise, found a clearly better and more
-         robust optimum on the 18-clip LOCO set (mu=1.0, mass_per_m=0.15;
-         Median 41.0->36.3, Mittel 44.2->40.5 mm/node; won on 12/18 clips vs.
-         mu=3.0). Pushing further (mu=0.75, mass_per_m=0.20) rolled back
-         slightly, so this is a real optimum, not a monotone trend to chase
-         further. Still an effective parameter pair, not a material one -- the
-         two hardest clips (already >65mm at baseline) do better with MORE
-         friction, suggesting they need grip that inertia alone can't supply. -->
-    <!-- The friction TRIPLE is sliding / torsional / rolling. MuJoCo reads the
-         2nd only at condim>=4 and the 3rd only at condim=6, so with the
-         condim=3 this scene used everywhere, the 0.05 and 0.002 above were
-         never evaluated: two of the three friction types were switched OFF,
-         not merely left unfitted. `condim` is a parameter now so that can be
-         measured instead of assumed. -->
     <geom name="board" type="plane" size="{BOARD_W/2:.3f} {BOARD_H/2:.3f} 0.02"
           pos="{BOARD_W/2:.3f} {BOARD_H/2:.3f} 0" rgba="0.86 0.86 0.83 1"
           condim="{condim}" friction="{mu} {mu_tor} {mu_roll}"/>

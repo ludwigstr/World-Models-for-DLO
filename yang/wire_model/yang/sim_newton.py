@@ -147,7 +147,7 @@ class Engine:
         import newton
         import warp as wp
         from newton_full_scene import make_kinematic
-        from mujoco_scene import (BOARD_W, BOARD_H, PLATFORM_HALF, MODULE_HALF, PLATFORM_Z, MODULE_Z,
+        from harness_scene import (BOARD_W, BOARD_H, PLATFORM_HALF, MODULE_HALF, PLATFORM_Z, MODULE_Z,
                                   PLATE_HALF, PLATE_Z)
         wp.config.quiet = True
         self.W = len(rests)

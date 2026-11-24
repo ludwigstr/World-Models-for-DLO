@@ -6,7 +6,7 @@ ROOT = Path(__file__).resolve().parents[1]
 wp.config.log_level = getattr(wp, "LOG_WARNING", None) or 30
 wp.init()
 from wire_model.physworld_mpm.twin import Twin, drive_from_nodes, rho_for_dt, MS_CFL
-from wire_model.yang import speed_warp as SW
+from wire_model import speed_warp as SW
 
 
 def log(s):

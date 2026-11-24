@@ -290,7 +290,7 @@ def main():
               for k in range(4)}
     cables = [shp[k] for k in range(4)]
     print(f"{args.clip}: {len(cables[0])} Frames getrackt ({args.variant}), "
-          f"trainiere LOCO-Fold ...", flush=True)
+          f"trainiere Hold-out-Fold ...", flush=True)
 
     trans = torch.load(ROOT / "data/transitions_1s_all.pt", weights_only=False)["transitions"]
     if args.base_ckpt:

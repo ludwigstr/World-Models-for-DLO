@@ -75,11 +75,8 @@ def main():
     ap.add_argument("--select", default="val_loss", choices=["val_loss", "openloop"])
     ap.add_argument("--horizon", type=int, default=50)
     ap.add_argument("--repr", default="chain", choices=["chain", "positions"])
-    ap.add_argument("--model", default="ropedreamer", choices=["ropedreamer", "deformnet"])
     a = ap.parse_args()
     torch.manual_seed(a.seed); np.random.seed(a.seed)
-    if a.model == "deformnet":
-        a.repr = "positions"
     RD.REPR = a.repr
     log_f = open(ROOT / (a.out.replace(".pt", "_log.jsonl")), "a")
 
@@ -126,13 +123,8 @@ def main():
     dl_tr = torch.utils.data.DataLoader(ds_tr, batch_size=a.batch, shuffle=True, drop_last=True, **lkw)
     dl_va = torch.utils.data.DataLoader(ds_va, batch_size=a.batch, **lkw)
     val_t = [trajectory_tensors(t["P"]) for t in val]
-    if a.model == "deformnet":
-        from wire_model.deformnet import DeformNet
-        model = DeformNet(16, beta=a.beta, free_nats=a.free_nats, pos_weight=a.pos_weight,
-                          rollout_weight=a.rollout_weight, warm=a.warm).to(a.device)
-    else:
-        model = RopeDreamer(16, a.size, beta=a.beta, free_nats=a.free_nats, pos_weight=a.pos_weight,
-                            rollout_weight=a.rollout_weight, warm=a.warm, repr=a.repr).to(a.device)
+    model = RopeDreamer(16, a.size, beta=a.beta, free_nats=a.free_nats, pos_weight=a.pos_weight,
+                        rollout_weight=a.rollout_weight, warm=a.warm, repr=a.repr).to(a.device)
     if a.init:
         ck0 = torch.load(ROOT / a.init, map_location=a.device, weights_only=False)
         model.load_state_dict(ck0["state_dict"]); off = ck0["offset"].cpu()
@@ -186,7 +178,7 @@ def main():
         if improved:
             best, bad = score, 0
             torch.save({"state_dict": model.state_dict(), "size": a.size, "n_nodes": 16, "offset": off,
-                        "seq_len": a.seq_len, "beta": a.beta, "pos_weight": a.pos_weight, "rollout_weight": a.rollout_weight, "warm": a.warm, "repr": a.repr, "model": a.model, "free_nats": a.free_nats, "epoch": ep, "val_loss": va["loss"] / m, "select": a.select, "best_score": best, "init": a.init, "hist": hist,
+                        "seq_len": a.seq_len, "beta": a.beta, "pos_weight": a.pos_weight, "rollout_weight": a.rollout_weight, "warm": a.warm, "repr": a.repr, "model": "ropedreamer", "free_nats": a.free_nats, "epoch": ep, "val_loss": va["loss"] / m, "select": a.select, "best_score": best, "init": a.init, "hist": hist,
                         "tracks": a.tracks, "val_clips": sorted({(t["clip"], t["cable"]) for t in val}.__iter__())}, ROOT / a.out)
         else:
             bad += 1

@@ -44,7 +44,7 @@ def _quat_yaw(y):
 
 def kin_poses(drive, t):
     from newton_full_scene import end_pose_of
-    from mujoco_scene import PLATFORM_Z, MODULE_Z
+    from harness_scene import PLATFORM_Z, MODULE_Z
     cab, movers = end_pose_of(drive, t, True)
     P = np.zeros((N_KIN, 7))
     for k, (p0, q0, p1, q1) in enumerate(cab):
@@ -58,7 +58,7 @@ def kin_poses(drive, t):
 
 
 def contact_violations(bq, cab, seglen, plat, mod, radius=0.003, own=2, nsamp=9, active=None):
-    from mujoco_scene import PLATFORM_HALF, PLATE_HALF, PLATE_Z, MODULE_HALF
+    from harness_scene import PLATFORM_HALF, PLATE_HALF, PLATE_Z, MODULE_HALF
     B = bq[cab]
     p, q = B[..., :3], B[..., 3:7]
     u, w = q[..., :3], q[..., 3:4]

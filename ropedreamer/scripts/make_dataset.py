@@ -9,7 +9,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "scripts"))
-from wire_model.yang.sim import Drive, NAMES, make_model, unstable, vertices
+from wire_model.sim import Drive, NAMES, make_model, unstable, vertices
 from clip_set import ALL_CLIP_TRIMS
 
 
@@ -162,7 +162,7 @@ def _mujoco_speed_run(m, seq, sub, tabs, cav):
 
 def _job_speed(job):
     import mujoco
-    from wire_model.yang import speed_warp as SW
+    from wire_model import speed_warp as SW
     npz, j, seed, x, out_dir, env, randomize, motion = job[:8]
     opts = job[8] if len(job) > 8 else {}
     assert env == "general", "speed motion with MuJoCo is implemented for --env general"
@@ -298,7 +298,7 @@ def _job(job):
 
 
 def dr_theta_newton(x, f):
-    from wire_model.yang import sim_newton as SN
+    from wire_model import sim_newton as SN
     g = {"k_stretch": "stretch", "d_stretch": "damping", "k_bend": "bend", "d_bend": "damping",
          "k_twist": "twist", "d_twist": "damping", "mass_per_m": "mass", "mu": "mu"}
     y = np.array(x, float)
@@ -310,7 +310,7 @@ def dr_theta_newton(x, f):
 
 
 def run_newton(jobs, x, out_dir, batch, randomize=False):
-    from wire_model.yang import sim_newton as SN
+    from wire_model import sim_newton as SN
     todo = []
     for npz, j, seed, *_ in jobs:
         clip = Path(npz).stem
@@ -351,7 +351,7 @@ def run_newton(jobs, x, out_dir, batch, randomize=False):
 
 
 def run_newton_general(jobs, out_dir, batch, randomize):
-    from wire_model.yang import newton_general as NG
+    from wire_model import newton_general as NG
     kw = NG.fit_kwargs()
     todo = []
     for npz, j, seed, *_ in jobs:
@@ -401,12 +401,12 @@ def run_newton_general(jobs, out_dir, batch, randomize):
 
 
 def run_newton_speed(jobs, out_dir, batch, randomize, env, x=None):
-    from wire_model.yang import speed_warp as SW
-    from wire_model.yang import newton_general as NG
+    from wire_model import speed_warp as SW
+    from wire_model import newton_general as NG
     if env == "newton_general":
         kw = NG.fit_kwargs()
     else:
-        from wire_model.yang import sim_newton as SN
+        from wire_model import sim_newton as SN
     items = []
     for npz, j, seed, *_ in jobs:
         clip = Path(npz).stem
@@ -553,7 +553,7 @@ def main():
         DEADLINE = time.mktime(time.strptime(a.deadline, "%Y-%m-%d %H:%M"))
         print(f"deadline {a.deadline} ({DEADLINE:.0f})", flush=True)
     if a.speed_range:
-        import wire_model.yang.speed_warp as _SW
+        import wire_model.speed_warp as _SW
         _SW.SPEED_RANGE = tuple(a.speed_range)
         print(f"speed_warp.SPEED_RANGE = {_SW.SPEED_RANGE}", flush=True)
     assert not (a.engine == "newton" and a.env != "yang"), "--engine newton needs --env yang"
@@ -577,7 +577,7 @@ def main():
     (out_dir / "config.json").write_text(json.dumps({**vars(a), "x": x.tolist(), "n_clips": len(files),
                                                      "dr_ranges": DR_RANGES if a.randomize else None,
                                                      "mass_bounds": MASS_BOUNDS,
-                                                     "speed_range": (__import__("wire_model.yang.speed_warp", fromlist=["x"]).SPEED_RANGE
+                                                     "speed_range": (__import__("wire_model.speed_warp", fromlist=["x"]).SPEED_RANGE
                                                                      if a.motion == "speed" else None)}, indent=1))
     print(f"domain randomization: {'ON ' + json.dumps(DR_RANGES) if a.randomize else 'off'}", flush=True)
     if a.frames_per_clip:
