@@ -12,7 +12,7 @@ worker() {
     [ -f $O/phystwin_$c.json ] && continue
     mkdir $Q/$c 2>/dev/null || continue
     echo "[$(date '+%F %T')] GPU $gpu: $c start"
-    CUDA_VISIBLE_DEVICES=$gpu python3 scripts/fit.py --tracks ../data/tracks --clips $c --train-frac 1.0 \
+    CUDA_VISIBLE_DEVICES=$gpu python3 fit.py --tracks ../data/tracks --clips $c --train-frac 1.0 \
       --stage2-mode window --out $O/phystwin_$c.json --save-twins $O/twins > $L/$c.log 2>&1
     echo "[$(date '+%F %T')] GPU $gpu: $c exit $? $(grep -o 'all frames [0-9.]*' $L/$c.log | tail -1)"
   done

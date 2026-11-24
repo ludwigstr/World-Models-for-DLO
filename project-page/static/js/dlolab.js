@@ -296,7 +296,7 @@
   ].map(function (n) { return '<div class="num-tile"><b>' + esc(n.v) + '</b><span>' + esc(n.l) + '</span></div>'; }).join('');
   if ($('fit-spec')) $('fit-spec').innerHTML = [
     ['Model', 'Cosserat rods of the DLO-Lab fork of Genesis (1.0.0), one per cable, ends driven by the measured motion'],
-    ['Patched solver', 'Per-element stiffness scales + multi-rod adjoint fix (dlolab/extern/DLO-Lab-perjoint; FIX 2026-11-09)'],
+    ['Patched solver', 'Per-element stiffness scales + multi-rod adjoint fix (extern/DLO-Lab-perjoint; FIX 2026-11-09)'],
     ['Optimiser', 'Gradient descent through the differentiable rod solver, from a zero start; line search on the real metric'],
     ['Objective', 'The table metric: mean node distance over all 36 clips, 16 nodes, every frame'],
     ['Start', 'Zero / uncalibrated start (no warm start); μ 0.1, damping 40 and the 4 masses (0.045 kg/m) held fixed'],

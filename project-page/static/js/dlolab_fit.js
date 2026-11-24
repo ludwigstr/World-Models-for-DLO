@@ -1,6 +1,6 @@
 
 window.DLOLAB_FIT = {
- "source": "dlolab/data/dlolab_gradient_from_zero_params.json",
+ "source": "results/dlolab/dlolab_gradient_from_zero_params.json",
  "best_f": 12.030913133657812,
  "base_f": 39.94016679604326,
  "best_gen": 10,
