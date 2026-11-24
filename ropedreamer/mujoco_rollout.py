@@ -12,11 +12,11 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from mujoco_scene import track_clip, build_xml
+from mujoco_scene import load_clip, build_xml
 from mujoco_replay import cable_vertices
 
 ROOT = Path(__file__).resolve().parent
-DIR = "/home/lustrel/Python/Hand_tracking/data/WirePrediction"
+DIR = str(Path(__file__).resolve().parent.parent / "data" / "videos")
 
 from clip_set import CLIP_TRIMS
 
@@ -32,7 +32,7 @@ def eval_clip(clip, t1_sec=None, weld_solref=None, cable_kw=None,
         fps_probe = cap.get(cv2.CAP_PROP_FPS) or 4.0
         cap.release()
         t1 = int(round(t1_sec * fps_probe))
-    shp, t0, t1, fps = track_clip(clip, t0=8, t1=t1)
+    shp, t0, t1, fps = load_clip(clip, t0=8, t1=t1)
     n_frames = len(shp[0])
 
     xml = build_xml(shp, weld_solref=weld_solref, **(cable_kw or {}))

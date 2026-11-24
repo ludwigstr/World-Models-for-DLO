@@ -1,6 +1,6 @@
 {
  "engine": "newton",
- "tracks": "/home/lustrel/Python/Wire_Model_S/data/tracks",
+ "tracks": "../data/tracks",
  "theta": {
   "k_stretch": 13280.779608507577,
   "d_stretch": 0.03321681956122511,

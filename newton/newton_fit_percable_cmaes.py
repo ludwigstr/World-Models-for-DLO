@@ -161,7 +161,7 @@ def _z_loss_mm(z_nodes, targets_mm):
 
 def _eval_job(args):
     (log_row,) = args
-    from harness_scene import track_clip
+    from harness_scene import load_clip
     from newton_full_scene import eval_clip
     if "clips" not in _worker_cache:
         _worker_cache["clips"] = {}
@@ -171,7 +171,7 @@ def _eval_job(args):
     for c in TRAIN_CLIPS:
         if c not in clips:
             t1 = _clip_frame_t1(c, CLIP_TRIMS[c])
-            shp, t0, t1_, fps = track_clip(c, t0=8, t1=t1)
+            shp, t0, t1_, fps = load_clip(c, t0=8, t1=t1)
             clips[c] = (shp, fps)
             targets[c] = np.load(ROOT / f"data/depth_targets/{c}.npz")["calibrated_mm"]
     ke, kd, mass, eps, tau, rest, extra, kt = _params_from_log(log_row)
@@ -301,13 +301,13 @@ def main():
         p.close(); p.join()
 
     log("=== final validation: fitted shared params, full scene, 10 iterations (IN-SAMPLE) ===")
-    from harness_scene import track_clip
+    from harness_scene import load_clip
     from newton_full_scene import eval_clip
     ke, kd, mass, eps, tau, rest, extra, kt = _params_from_log(_to_x(best_row))
     per_clip, per_clip_z = {}, {}
     for c in TRAIN_CLIPS:
         t1 = _clip_frame_t1(c, CLIP_TRIMS[c])
-        shp, t0_, t1_, fps = track_clip(c, t0=8, t1=t1)
+        shp, t0_, t1_, fps = load_clip(c, t0=8, t1=t1)
         tg = np.load(ROOT / f"data/depth_targets/{c}.npz")["calibrated_mm"]
         z_out = []
         errs = eval_clip(c, per_joint_ke=ke, per_joint_kd=kd, per_joint_kt=kt,

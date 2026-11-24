@@ -122,7 +122,7 @@ def warm_row():
 
 def _eval_job(args):
     (x,) = args
-    from harness_scene import track_clip
+    from harness_scene import load_clip
     from newton_full_scene import eval_clip
     cache = P._worker_cache
     if "clips" not in cache:
@@ -130,7 +130,7 @@ def _eval_job(args):
     for c in TRAIN_CLIPS:
         if c not in cache["clips"]:
             t1 = _clip_frame_t1(c, CLIP_TRIMS[c])
-            shp, t0, t1_, fps = track_clip(c, t0=8, t1=t1)
+            shp, t0, t1_, fps = load_clip(c, t0=8, t1=t1)
             cache["clips"][c] = (shp, fps)
             cache["targets"][c] = np.load(ROOT / f"data/depth_targets/{c}.npz")["calibrated_mm"]
     kw = unpack(from_x(x))
@@ -267,14 +267,14 @@ def main():
 
     if not TRACKS_DIR:
         log(f"=== final validation: {FIT_SOLVER_ITERATIONS} iterations, all 14 clips (IN-SAMPLE) ===")
-    from harness_scene import track_clip
+    from harness_scene import load_clip
     from newton_full_scene import eval_clip
     kw = unpack(best_row)
     if not TRACKS_DIR:
         per_clip, per_clip_z = {}, {}
     for c in ([] if TRACKS_DIR else TRAIN_CLIPS):
         t1 = _clip_frame_t1(c, CLIP_TRIMS[c])
-        shp, _, _, fps = track_clip(c, t0=8, t1=t1)
+        shp, _, _, fps = load_clip(c, t0=8, t1=t1)
         tg = np.load(ROOT / f"data/depth_targets/{c}.npz")["calibrated_mm"]
         z_out = []
         errs = eval_clip(c, shp_fps=(shp, fps), solver_iterations=FIT_SOLVER_ITERATIONS,

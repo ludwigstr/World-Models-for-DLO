@@ -13,7 +13,7 @@ sys.path.insert(0, str(DLO_LAB))
 sys.path.insert(0, str(ROOT / "scripts"))
 sys.path.insert(0, str(ROOT))
 
-from harness_scene import (track_clip, _rotz, DIR, CAV_Z, HUB_CAVS, PLUG_CAV,
+from harness_scene import (load_clip, _rotz, DIR, CAV_Z, HUB_CAVS, PLUG_CAV,
                           COLORS,
                           BOARD_W, BOARD_H, PLATFORM_HALF, PLATE_HALF, PLATE_Z,
                           MODULE_HALF, MODULE_Z, PLATFORM_Z)
@@ -181,7 +181,7 @@ def eval_clip(clip, t1_sec=None, dt=1e-3, steps_per_frame=None,
     if shp_fps is not None:
         shp, fps = shp_fps
     else:
-        shp, _t0, t1, fps = track_clip(clip, t0=8, t1=t1)
+        shp, _t0, t1, fps = load_clip(clip, t0=8, t1=t1)
     n_frames = len(shp[0])
     if steps_per_frame is None:
         steps_per_frame = max(1, round((1.0 / fps) / dt))

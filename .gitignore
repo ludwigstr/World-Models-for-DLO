@@ -6,3 +6,6 @@ videos/
 !data/videos/
 !results/videos/
 masks/
+/*/data/
+/*/out/
+/*/wm/

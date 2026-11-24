@@ -7,7 +7,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from mujoco_scene import track_clip, build_xml
+from mujoco_scene import load_clip, build_xml
 
 ROOT = Path(__file__).resolve().parent
 
@@ -101,7 +101,7 @@ def main():
     args = ap.parse_args()
 
     import mujoco
-    shp, t0, t1, fps = track_clip(args.clip, t0=args.t0)
+    shp, t0, t1, fps = load_clip(args.clip, t0=args.t0)
     n_frames = len(shp[0])
     xml = build_xml(shp, bend=args.bend, twist=args.twist,
                     damping=args.damping, mu=args.mu)

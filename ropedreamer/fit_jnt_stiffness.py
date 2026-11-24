@@ -10,7 +10,7 @@ import torch
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from mujoco_scene import track_clip, build_xml, DIR as CLIP_DIR
+from mujoco_scene import load_clip, build_xml, DIR as CLIP_DIR
 from mujoco_replay import replay
 
 ROOT = Path(__file__).resolve().parent
@@ -37,7 +37,7 @@ def load_clips(clip_names, log):
     for c in clip_names:
         t1 = clip_frame_t1(c, CLIP_TRIMS[c])
         t_start = time.time()
-        shp, t0, t1_, fps = track_clip(c, t0=8, t1=t1)
+        shp, t0, t1_, fps = load_clip(c, t0=8, t1=t1)
         cache[c] = (shp, fps)
         log(f"  getrackt: {c} ({len(shp[0])} Frames, {time.time()-t_start:.0f}s)")
     return cache

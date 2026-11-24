@@ -7,7 +7,7 @@ import warp as wp
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from harness_scene import track_clip, CAV_Z, DIR
+from harness_scene import load_clip, CAV_Z, DIR
 
 ROOT = Path(__file__).resolve().parent
 
@@ -250,7 +250,7 @@ def eval_clip(clip, t1_sec=None, radius=0.003,
             fps_probe = cap_probe.get(cv2.CAP_PROP_FPS) or 4.0
             cap_probe.release()
             t1 = int(round(t1_sec * fps_probe))
-        shp, t0, t1, fps = track_clip(clip, t0=8, t1=t1)
+        shp, t0, t1, fps = load_clip(clip, t0=8, t1=t1)
     n_frames = len(shp[0])
     if steps_per_frame is None:
         steps_per_frame = max(1, round((1.0 / fps) / dt))

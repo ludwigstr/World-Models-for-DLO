@@ -3,7 +3,6 @@ import os
 import sys
 from pathlib import Path
 
-import cv2
 import numpy as np
 import torch
 torch.set_num_threads(int(os.environ.get("OMP_NUM_THREADS", "4")))
@@ -11,10 +10,6 @@ torch.set_num_threads(int(os.environ.get("OMP_NUM_THREADS", "4")))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from fit_clip import read
-from harness import track_harness
-from rectify import find_board
-from tracking import HarnessTracker
 from dlo_model import DLOParams, DLOSimulator, NodeConstraints
 from train_step_model import turning_angles
 from eval_rollout import train_fold, step_action, NOMINAL
@@ -22,7 +17,6 @@ from long_horizon_guided_sms import guide_batch
 
 ROOT = Path(__file__).resolve().parent
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
-DIR = os.environ.get("WIRE_VIDEO_DIR", "/home/lustrel/Python/Hand_tracking/data/WirePrediction")
 REST_CAP = 0.35
 COLORS = [(0.85, 0.15, 0.15), (0.1, 0.6, 0.9), (1.0, 0.6, 0.0),
          (0.2, 0.8, 0.2), (0.9, 0.2, 0.9)][1:]
@@ -214,16 +208,6 @@ def roll_seq_traced(model, cables, n_nodes, n_hist, use_hist=True):
     return trace
 
 
-def draw_poly(img, pts_px, color_bgr, thick=3, marker=3, dashed=False):
-    pts = pts_px.astype(int)
-    for i in range(len(pts) - 1):
-        if dashed and i % 2 == 1:
-            continue
-        cv2.line(img, tuple(pts[i]), tuple(pts[i + 1]), color_bgr, thick, cv2.LINE_AA)
-    for p in pts:
-        cv2.circle(img, tuple(p), marker, color_bgr, -1, cv2.LINE_AA)
-
-
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--clip", default="20260602_102713")
@@ -246,48 +230,19 @@ def main():
     ap.add_argument("--guide-steps", type=int, default=4000)
     ap.add_argument("--fps-out", type=float, default=4.0)
     ap.add_argument("--out", default="data/neural_video")
-    ap.add_argument("--tracks-npz", default=None)
+    ap.add_argument("--tracks-npz", required=True)
     ap.add_argument("--results-json", default=None)
     ap.add_argument("--no-video", action="store_true")
     args = ap.parse_args()
-    if args.no_video and not args.tracks_npz:
-        raise SystemExit("--no-video needs --tracks-npz")
-
     k_p = {"raw": 0.0, "ablation": -1.0, "guided": args.kp_guided,
           "lossterm": 0.0, "online": 0.0, "online_rest": 0.0,
           "raw_pj": 0.0, "online_pj": 0.0, "seq": 0.0, "seq_nohist": 0.0}[args.variant]
     len_weight = 1.0 if args.variant == "lossterm" else 0.0
 
-    if args.no_video:
-        cap = tf = None
-    else:
-        cap = cv2.VideoCapture(f"{DIR}/{args.clip}.mp4")
-        n_all = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-        fps = cap.get(cv2.CAP_PROP_FPS) or 4.0
-        n_frames = min(n_all, args.max_frames)
-        if args.t1_sec is not None:
-            n_frames = min(n_frames, int(round(args.t1_sec * fps)) + 1)
-        tf = find_board(read(cap, 0))
-    if args.tracks_npz:
-        d = np.load(args.tracks_npz)
-        shp = {k: d[f"c{k}"] for k in range(4)}
-        t0, t1 = int(d["t0"]), int(d["t1"])
-        if cap is not None:
-            cap.release()
-        n_nodes = shp[0].shape[1]
-    else:
-        tracks, hub_i, _ = track_harness(cap, tf, n_frames, read, clip=args.clip)
-        if tracks is None:
-            raise SystemExit(f"{args.clip}: Harness nicht gefunden")
-        order = [hub_i] + [i for i in range(tracks.shape[1]) if i != hub_i]
-        tracks = tracks[:, order, :]
-        t0 = min(args.t0_buffer, max(0, n_frames // 4))
-        t1 = n_frames - 1
-        tracked = HarnessTracker(tf, clip=args.clip).run(cap, read, tracks, range(t0, t1 + 1))
-        cap.release()
-        n_nodes = len(tracked[t0][0]["shape_mm"])
-        shp = {k: np.stack([tracked[f][k]["shape_mm"] for f in range(t0, t1 + 1)])
-              for k in range(4)}
+    d = np.load(args.tracks_npz)
+    shp = {k: d[f"c{k}"] for k in range(4)}
+    t0, t1 = int(d["t0"]), int(d["t1"])
+    n_nodes = shp[0].shape[1]
     cables = [shp[k] for k in range(4)]
     print(f"{args.clip}: {len(cables[0])} Frames getrackt ({args.variant}), "
           f"trainiere Hold-out-Fold ...", flush=True)
@@ -334,70 +289,18 @@ def main():
     else:
         trace = roll_guided_traced(model, sim, cables, n_nodes, args.stride, k_p,
                                    args.guide_steps)
-    print(f"{args.clip}: Rollout fertig, {len(trace)} Frames, rendere Video ...",
+    print(f"{args.clip}: Rollout fertig, {len(trace)} Frames ...",
           flush=True)
 
     arch_tag = "" if args.arch == "transformer" else f"_{args.arch}"
     errs = []
-    if args.no_video:
-        for frame_idx, V in trace:
-            errs.append(float(np.mean([np.linalg.norm(V[k] - shp[k][frame_idx], axis=1).mean() * 1000
-                                       for k in range(4)])))
-        print(f"\n{args.clip} [{args.variant}{arch_tag}]: Start {errs[0]:.1f}  Ende {errs[-1]:.1f}  "
-              f"Mittel {np.mean(errs):.1f} mm/Knoten  (no video)")
-    else:
-        errs = render_video(args, trace, shp, tf, t0, fps, arch_tag)
+    for frame_idx, V in trace:
+        errs.append(float(np.mean([np.linalg.norm(V[k] - shp[k][frame_idx], axis=1).mean() * 1000
+                                   for k in range(4)])))
+    print(f"\n{args.clip} [{args.variant}{arch_tag}]: Start {errs[0]:.1f}  Ende {errs[-1]:.1f}  "
+          f"Mittel {np.mean(errs):.1f} mm/Knoten  (no video)")
     if args.results_json:
         _append_results(args, trace, errs, base_ckpt, n_in, param_trace)
-
-
-def render_video(args, trace, shp, tf, t0, fps, arch_tag):
-    outdir = ROOT / args.out / f"{args.variant}{arch_tag}"
-    outdir.mkdir(parents=True, exist_ok=True)
-    frames_dir = outdir / args.clip
-    frames_dir.mkdir(exist_ok=True)
-
-    corners_mm = ((70, 70), (1130, 70), (1130, 1680), (70, 1680))
-    pxc = tf.to_px(np.array(corners_mm, dtype=float))
-    cap = cv2.VideoCapture(f"{DIR}/{args.clip}.mp4")
-    H, W = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)), int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    x0, y0 = max(0, int(pxc[:, 0].min())), max(0, int(pxc[:, 1].min()))
-    x1, y1 = min(W, int(pxc[:, 0].max())), min(H, int(pxc[:, 1].max()))
-
-    def px(shape_m):
-        return tf.to_px(shape_m * 1000.0) - np.array([x0, y0])
-
-    errs = []
-    import imageio.v2 as iio
-    frame_paths = []
-    for fi, (frame_idx, V) in enumerate(trace):
-        fr = read(cap, t0 + frame_idx)
-        vis = cv2.cvtColor(fr, cv2.COLOR_BGR2RGB)[y0:y1, x0:x1].copy()
-        real = shp
-        e = []
-        for k in range(4):
-            col_rgb = COLORS[k]
-            col_bgr = (int(255 * col_rgb[2]), int(255 * col_rgb[1]), int(255 * col_rgb[0]))
-            draw_poly(vis, px(real[k][frame_idx]), col_bgr, thick=3, marker=3)
-            draw_poly(vis, px(V[k]), col_bgr, thick=2, marker=3, dashed=True)
-            e.append(float(np.linalg.norm(V[k] - real[k][frame_idx], axis=1).mean()) * 1000)
-        errs.append(float(np.mean(e)))
-        cv2.putText(vis, f"{args.variant}  t={(t0+frame_idx)/fps:.1f}s  "
-                    f"Abweichung {errs[-1]:.0f} mm/Knoten",
-                    (16, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (20, 20, 20), 2, cv2.LINE_AA)
-        p = frames_dir / f"f{fi:03d}.png"
-        iio.imwrite(p, vis)
-        frame_paths.append(p)
-
-    imgs = [iio.imread(p) for p in frame_paths]
-    h = min(im.shape[0] for im in imgs); w = min(im.shape[1] for im in imgs)
-    video_path = outdir / f"vergleich_{args.clip}.mp4"
-    iio.mimsave(video_path, [im[:h, :w] for im in imgs], fps=args.fps_out)
-
-    print(f"\n{args.clip} [{args.variant}{arch_tag}]: Start {errs[0]:.1f}  Ende {errs[-1]:.1f}  "
-          f"Mittel {np.mean(errs):.1f} mm/Knoten")
-    print(f"-> {video_path}")
-    return errs
 
 
 def _append_results(args, trace, errs, base_ckpt, n_in, param_trace):

@@ -1,6 +1,6 @@
 {
  "ckpt": "data/wm/yang_newton_inbilstm.pt",
- "tracks": "/home/lustrel/Python/Wire_Model_S/data/tracks",
+ "tracks": "../data/tracks",
  "clips": {
   "20261021_160124": {
    "start": 1.8989923000335693,

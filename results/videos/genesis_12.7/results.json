@@ -2,7 +2,7 @@
  "approach": "Genesis general fit, 36-clip refit (stopped after generation 33)",
  "params": "data/genesis_general_fit.json",
  "params_sha256": "2dfb5403f64f596d31174c93e13e50a6386e571a5a727179b540b0a429603187",
- "python": "/home/lustrel/venvs/genesis133/bin/python (genesis-world 1.3.3)",
+ "python": "python (genesis-world 1.3.3)",
  "device": "cpu, one fresh process per clip",
  "reported_source": "data/genesis_general_fit_validate.json (fresh-process validation, plain floats)",
  "clips_missing": [],

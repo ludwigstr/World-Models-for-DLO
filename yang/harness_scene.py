@@ -8,32 +8,20 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from fit_clip import read
-from harness import track_harness
-from rectify import find_board
-from tracking import HarnessTracker
 
 ROOT = Path(__file__).resolve().parent
-DIR = "/home/lustrel/Python/Hand_tracking/data/WirePrediction"
+DIR = str(ROOT.parent / "data" / "videos")
 BOARD_W, BOARD_H = 1.200, 1.680
 COLORS = [(0.1, 0.6, 0.9), (1.0, 0.6, 0.0), (0.2, 0.8, 0.2), (0.9, 0.2, 0.9)]
 
 
-def track_clip(clip, t0=8, t1=None, max_frames=400):
-    cap = cv2.VideoCapture(f"{DIR}/{clip}.mp4")
-    n_all = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
-    fps = cap.get(cv2.CAP_PROP_FPS) or 4.0
-    n_frames = min(n_all, max_frames)
-    tf = find_board(read(cap, 0))
-    tracks, hub_i, _ = track_harness(cap, tf, n_frames, read, clip=clip)
-    order = [hub_i] + [i for i in range(tracks.shape[1]) if i != hub_i]
-    tracks = tracks[:, order, :]
-    t1 = (n_frames - 1) if t1 is None else t1
-    tracked = HarnessTracker(tf, clip=clip).run(cap, read, tracks, range(t0, t1 + 1))
-    cap.release()
-    shp = {k: np.stack([tracked[f][k]["shape_mm"] for f in range(t0, t1 + 1)])
-           for k in range(4)}
-    return shp, t0, t1, fps
+TRACKS = ROOT.parent / "data" / "tracks"
+
+
+def load_clip(clip, t0=0, t1=None, max_frames=400):
+    z = np.load(TRACKS / f"{clip}.npz")
+    shp = {k: np.asarray(z[f"c{k}"], float) for k in range(4)}
+    return shp, 0, len(shp[0]) - 1, float(z["fps"])
 
 
 def _fmt_vertices(P):
@@ -275,7 +263,7 @@ def main():
     ap.add_argument("--out", default="data/mujoco/scene.xml")
     args = ap.parse_args()
 
-    shp, t0, t1, fps = track_clip(args.clip, t0=args.t0)
+    shp, t0, t1, fps = load_clip(args.clip, t0=args.t0)
     xml = build_xml(shp, bend=args.bend, twist=args.twist,
                     damping=args.damping, mu=args.mu)
     out = ROOT / args.out
