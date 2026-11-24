@@ -9,7 +9,7 @@ Ten approaches predict the shape of four cables of a wire harness while their en
 <approach>/          code of one approach, one run.sh, requirements.txt
 data/tracks/         the 36 tracked clips, one .npz per clip
 data/videos/         camera footage of the 36 clips
-results/<approach>/  parameters or network and per-clip errors of the runs behind the table
+results/<approach>/  parameters or network and per-clip errors of the reported runs
 results/videos/      overlay videos of every approach on every clip
 project-page/        sources of the project page
 ```
