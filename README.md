@@ -3,23 +3,6 @@
 Ten approaches predict the shape of four cables of a wire harness while their ends are moved, all on the same
 36 recorded clips. Project page: https://ludwigstr.github.io/World-Models-for-DLO/
 
-## Results
-
-Mean distance between predicted and tracked cable nodes over all nodes, cables, frames and clips.
-
-| Approach | Folder | Kind | Error (mm) |
-|---|---|---|---|
-| PhysWorld | `physworld/` | learned, trained on a fitted MPM twin | 7.2 |
-| Newton | `newton/` | physics simulator | 7.6 |
-| MuJoCo | `mujoco/` | physics simulator | 9.7 |
-| AdaptiGraph | `adaptigraph/` | learned, trained on simulated data | 10.3 |
-| DLO-Lab | `dlolab/` | differentiable physics simulator | 12.0 |
-| Genesis | `genesis/` | physics simulator | 12.7 |
-| Caporali et al. | `caporali/` | learned, trained on simulated data | 15.8 |
-| Yang et al. | `yang/` | learned, trained on simulated data | 16.0 |
-| RopeDreamer | `ropedreamer/` | learned, trained on simulated data | 18.5 |
-| PhysTwin | `phystwin/` | spring-mass twin per clip | 22.0 |
-
 ## Layout
 
 ```
