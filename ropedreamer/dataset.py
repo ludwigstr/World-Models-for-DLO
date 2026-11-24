@@ -195,7 +195,7 @@ def _job_speed(job):
     fps = float(z["fps"])
     T = len(F)
     rng = np.random.default_rng([seed, 4242])
-    import fit as G
+    import params as G
     p = G.unpack(x)
     meta = {"motion": "speed"}
     if randomize:
@@ -274,7 +274,7 @@ def _job(job):
     seq0 = Drive.pose_seq([[shp[k][t] for k in range(4)] for t in range(T)])
     seq, meta = (seq0, {"scale": 1.0, "warp": 1.0, "perturbed": False}) if j == 0 else transform_seq(seq0, rng, T)
     if env == "general":
-        import fit as G
+        import params as G
         p = G.unpack(x)
         if randomize:
             dr = sample_dr(seed)

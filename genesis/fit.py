@@ -68,14 +68,13 @@ def _eval_one(job):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--init", default="genesis_perjoint_sysid.json")
-    ap.add_argument("--resume", default="")
+    ap.add_argument("--resume", required=True)
     ap.add_argument("--mass-max", type=float, default=MASS_HI)
     ap.add_argument("--sigma0", type=float, default=1.0)
     ap.add_argument("--mu-max", type=float, default=5.0)
     ap.add_argument("--tracks", default="")
-    ap.add_argument("--out", default="data/genesis_general_fit.json")
-    ap.add_argument("--log", default="data/genesis_general_fit_log.jsonl")
+    ap.add_argument("--out", default="out/genesis_fit.json")
+    ap.add_argument("--log", default="out/genesis_fit_log.jsonl")
     ap.add_argument("--stop-by", default="")
     ap.add_argument("--gens", type=int, default=30)
     ap.add_argument("--popsize", type=int, default=18)
@@ -90,17 +89,11 @@ def main():
     import cma
     import multiprocessing as mp
 
-    d = json.loads((ROOT / a.init).read_text())
-    t4 = lambda v: np.tile(np.asarray(v, float), N_C)
-    x0 = np.concatenate([np.log(t4(d["stiffness"])), np.zeros(N_PJ), np.log(t4(d["damping"])), [0.0], np.full(N_C, np.log(MASS0))])
-    if a.resume:
-        x0 = np.asarray(json.loads((ROOT / a.resume).read_text())["best_x"], float)
+    x0 = np.asarray(json.loads((ROOT / a.resume).read_text())["best_x"], float)
     assert len(x0) == N_PAR
     if a.smoke:
         for c in a.smoke.split(","):
-            for m in (d["mass_per_m"], MASS0):
-                x = x0.copy(); x[I_MASS:] = np.log(m)
-                print(c, "mass", m, _eval_one((0, c, x))[2], flush=True)
+            print(c, _eval_one((0, c, x0))[2], flush=True)
         return
 
     log_f = open(ROOT / a.log, "a")
@@ -114,7 +107,7 @@ def main():
     lo = [np.log(1e-3)] * N_PJ + [-a.rest_cap] * N_PJ + [np.log(1e-4)] * N_PJ + [np.log(0.05)] + [np.log(MASS_LO)] * N_C
     hi = [np.log(100.0)] * N_PJ + [a.rest_cap] * N_PJ + [np.log(10.0)] * N_PJ + [np.log(a.mu_max)] + [np.log(a.mass_max)] * N_C
     log(f"=== Genesis GENERAL fit: {N_PAR} params, per cable, mass free per cable in {MASS_LO} .. {a.mass_max} kg/m (CMA-ES) ===")
-    log(f"popsize {a.popsize}, gens {a.gens}, workers {a.workers}; " + (f"resumed from {a.resume}, sigma0 {a.sigma0}, mu <= {a.mu_max}; " if a.resume else f"warm start {a.init} (row 7) on every cable, rest 0, mu 1.0; ")
+    log(f"popsize {a.popsize}, gens {a.gens}, workers {a.workers}; " + f"start {a.resume}, sigma0 {a.sigma0}, mu <= {a.mu_max}; "
         + f"fitness = table metric over {len(clips)} clips; mover contact on")
 
     pool = mp.get_context("spawn").Pool(a.workers)

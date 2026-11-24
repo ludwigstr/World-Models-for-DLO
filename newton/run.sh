@@ -1,9 +1,9 @@
 #!/bin/bash
 set -u
 cd "$(dirname "$0")"
-mkdir -p data
+mkdir -p out
 export OMP_NUM_THREADS=1 PYTHONUNBUFFERED=1
-P=newton_fit_everything_pinned
+P=out/newton_fit
 log() { echo "[$(date '+%F %T')] $*"; }
 if [ "${RESUME:-0}" = "1" ]; then
   [ -e $P.npz ] || { log "RESUME=1 but $P.npz is missing (copy a snapshot into this folder)"; exit 1; }

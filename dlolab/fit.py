@@ -22,17 +22,74 @@ os.environ.setdefault("OMP_NUM_THREADS", "1"); os.environ.setdefault("MKL_NUM_TH
 os.environ.setdefault("OPENBLAS_NUM_THREADS", "1"); os.environ.setdefault("PYTHONUNBUFFERED", "1")
 
 
-TRACKS = os.environ.get("GENERAL_FIT_TRACKS", "")
+TRACKS = os.environ.get("GENERAL_FIT_TRACKS") or str(ROOT.parent / "data" / "tracks")
 
 
 N_C, N_H, N_E = 4, 14, 15
+
+
+MASS0 = 0.045
+
+
+SEG_MASS0 = 0.002
+
+
+I_HS = 0
+
+
+I_SS = I_HS + N_C * N_H
+
+
+I_TS = I_SS + N_C * N_E
+
+
+I_KR = I_TS + N_C * N_H
+
+
+I_K = I_KR + N_C * N_H * 2
+
+
+I_E, I_G, I_MU, I_DAMP, I_MASS = I_K + 1, I_K + 2, I_K + 3, I_K + 4, I_K + 5
+
+
+N_PAR = I_MASS + N_C
+
+
+_CACHE = {}
+
+
+def unpack(x):
+    x = np.asarray(x, float)
+    mass = np.exp(x[I_MASS:I_MASS + N_C])
+    return dict(hinge_scale=np.exp(x[I_HS:I_SS]).reshape(N_C, N_H),
+                stretch_scale=np.exp(x[I_SS:I_TS]).reshape(N_C, N_E),
+                twist_scale=np.exp(x[I_TS:I_KR]).reshape(N_C, N_H),
+                kappa_rest=x[I_KR:I_K].reshape(N_C, N_H, 2),
+                K=float(np.exp(x[I_K])), E=float(np.exp(x[I_E])), G=float(1e5 * x[I_G] ** 2),
+                mu=float(np.exp(x[I_MU])), damping=float(np.exp(x[I_DAMP])),
+                segment_mass=SEG_MASS0 * mass / MASS0), mass
+
+
+def _eval_one(job):
+    cand_i, clip, x = job
+    import simulate as R
+    if clip not in _CACHE:
+        z = np.load(Path(TRACKS) / f"{clip}.npz")
+        _CACHE[clip] = ({k: z[f"c{k}"] for k in range(4)}, float(z["fps"]))
+    kw, _ = unpack(x)
+    try:
+        e = float(np.mean(R.eval_clip(clip, shp_fps=_CACHE[clip], use_inextensible=False, **kw)))
+        return cand_i, clip, e if np.isfinite(e) else 1e3
+    except Exception as exc:
+        print(f"  {clip}: {type(exc).__name__}: {exc}", flush=True)
+        return cand_i, clip, 1e3
 
 
 SETTLE = 300
 
 
 def _layout():
-    import fit_cmaes as C
+    import fit as C
     return C
 
 
@@ -204,7 +261,7 @@ def _metric_init():
 def _metric_job(i, clip, x, python, timeout):
     import subprocess
     xs = ",".join(repr(float(v)) for v in x)
-    code = ("import sys, numpy as np; sys.path[:0] = ['scripts', '.']; import fit_cmaes as M\n"
+    code = ("import sys, numpy as np; sys.path[:0] = ['scripts', '.']; import fit as M\n"
             f"x = np.asarray([{xs}], float)\n"
             f"print('RES', M._eval_one((0, '{clip}', x))[2])")
     env = {**os.environ, "CUDA_VISIBLE_DEVICES": "", "OMP_NUM_THREADS": "1", "MKL_NUM_THREADS": "1",
@@ -238,10 +295,10 @@ def real_metric(pool, C, xs, clips, timeout=1500):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--init", default="data/dlolab_general_stage2.json")
+    ap.add_argument("--init", default="zero")
     ap.add_argument("--resume", default="")
     ap.add_argument("--tracks", default="../data/tracks")
-    ap.add_argument("--out", default="data/dlolab_general_grad.json")
+    ap.add_argument("--out", default="out/dlolab_fit.json")
     ap.add_argument("--batch", type=int, default=6)
     ap.add_argument("--max-frames", type=int, default=0)
     ap.add_argument("--iters", type=int, default=1000)

@@ -89,13 +89,12 @@ def _eval_one(job):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--init", default="jnt_spring_rest_fit.npz")
-    ap.add_argument("--resume", default="")
+    ap.add_argument("--resume", required=True)
     ap.add_argument("--mass-max", type=float, default=MASS_HI)
     ap.add_argument("--sigma0", type=float, default=1.0)
     ap.add_argument("--tracks", default="")
-    ap.add_argument("--out", default="data/mujoco_general_fit.npz")
-    ap.add_argument("--log", default="data/mujoco_general_fit_log.jsonl")
+    ap.add_argument("--out", default="out/mujoco_fit.npz")
+    ap.add_argument("--log", default="out/mujoco_fit_log.jsonl")
     ap.add_argument("--stop-by", default="")
     ap.add_argument("--gens", type=int, default=40)
     ap.add_argument("--popsize", type=int, default=18)
@@ -121,14 +120,7 @@ def main():
         z = np.load(TRACKS / f"{c}.npz")
         _CACHE[c] = ({k: z[f"c{k}"] for k in range(4)}, float(z["fps"]))
 
-    init = np.load(ROOT / a.init, allow_pickle=True)
-    x0 = np.concatenate([np.log(np.asarray(init["best"], float)).ravel(),
-                         np.asarray(init["rest_deg"], float).ravel(),
-                         np.full(N_PJ, np.log(0.15)),
-                         np.full(N_C, np.log(1e5)), np.full(N_C, np.log(1e5)), [0.0],
-                         np.full(N_C, np.log(MASS0))])
-    if a.resume:
-        x0 = np.asarray(np.load(ROOT / a.resume, allow_pickle=True)["best_x"], float)
+    x0 = np.asarray(np.load(ROOT / a.resume, allow_pickle=True)["best_x"], float)
     assert len(x0) == N_PAR
     if a.smoke:
         for c in clips[:2]:
@@ -141,7 +133,7 @@ def main():
     hi = ([np.inf] * N_PJ + [a.max_deg] * N_PJ + [np.log(5.0)] * N_PJ + [np.inf] * (2 * N_C) + [np.log(5.0)]
           + [np.log(a.mass_max)] * N_C)
     log(f"=== MuJoCo GENERAL fit: {N_PAR} params, per cable, mass free per cable in {MASS_LO} .. {a.mass_max} kg/m (CMA-ES) ===")
-    log(f"popsize {a.popsize}, gens {a.gens}, workers {a.workers}; " + (f"resumed from {a.resume}, sigma0 {a.sigma0}; " if a.resume else f"warm start {a.init} (row 4) + bend/twist 1e5, damping 0.15, mu 1.0; ")
+    log(f"popsize {a.popsize}, gens {a.gens}, workers {a.workers}; " + f"start {a.resume}, sigma0 {a.sigma0}; "
         + f"fitness = table metric over {len(clips)} clips")
 
     pool = mp.get_context("fork").Pool(a.workers)

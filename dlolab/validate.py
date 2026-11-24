@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parent
 from simulate import CLIP_TRIMS
 
 
-MODS = {"dlolab": "fit_cmaes"}
+MODS = {"dlolab": "fit"}
 
 
 def main():
@@ -49,7 +49,7 @@ def main():
         code = [f"import sys, json, numpy as np; sys.path[:0] = ['scripts', '.']; import {mod} as M",
                 f"x = np.asarray({load}, float)"]
         if a.engine == "mujoco":
-            code.append(f"z = np.load(M.TRACKS / '{c}.npz'); M._CACHE['{c}'] = ({{k: z[f'c{{k}}'] for k in range(4)}}, float(z['fps']))")
+            code.append(f"z = np.load(str(M.TRACKS) + '/{c}.npz'); M._CACHE['{c}'] = ({{k: z[f'c{{k}}'] for k in range(4)}}, float(z['fps']))")
         code.append(f"print('RES', M._eval_one((0, '{c}', x))[2])")
         t = time.time()
         p = subprocess.run([a.python, "-c", "\n".join(code)], capture_output=True, text=True, env=env, cwd=ROOT)

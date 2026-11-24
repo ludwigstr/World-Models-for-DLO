@@ -5,6 +5,5 @@ outputs of the original runs: `results/<approach>/`, overlay videos: `results/vi
 
 ```
 cd mujoco
-./validate.sh     # table value from the stored parameters (mujoco, genesis)
-./run.sh          # full rerun
+./run.sh
 ```
