@@ -1,23 +1,28 @@
 import argparse
 import os
-import sys
 from pathlib import Path
-
 import numpy as np
 import torch
+
+
 torch.set_num_threads(int(os.environ.get("OMP_NUM_THREADS", "4")))
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from dlo_model import DLOParams, DLOSimulator, NodeConstraints
-from train_step_model import turning_angles
-from eval_rollout import train_fold, step_action, NOMINAL
-from long_horizon_guided_sms import guide_batch
+from simulator import DLOParams, DLOSimulator
+from model import turning_angles
+from model import train_fold, step_action, NOMINAL
+from model import guide_batch
+
 
 ROOT = Path(__file__).resolve().parent
+
+
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
+
+
 REST_CAP = 0.35
+
+
 COLORS = [(0.85, 0.15, 0.15), (0.1, 0.6, 0.9), (1.0, 0.6, 0.0),
          (0.2, 0.8, 0.2), (0.9, 0.2, 0.9)][1:]
 
@@ -161,7 +166,7 @@ def train_fold_seq(trans, hold_clip, ckpt, epochs, lr, nominal):
                                for t in tr]).astype(np.float32))
     loader = DataLoader(TensorDataset(Vi, Vo, A, P, R, H), batch_size=128,
                         shuffle=True, drop_last=True)
-    from estimation import load_predictor
+    from model import load_predictor
     model, _ = load_predictor(ROOT / ckpt, DEV)
     for q in model.parameters():
         q.requires_grad_(True)

@@ -1,10 +1,16 @@
-import argparse, json, sys, time
+import argparse
+import json
+import time
 from pathlib import Path
-import numpy as np, torch
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+import numpy as np
+import torch
+
+
 ROOT = Path(__file__).resolve().parent
-from twin_fit import stage1, stage2, resim_error
-from sim import SpringMassTwin, build_topology
+
+
+from twin import stage1, stage2, resim_error
+from twin import SpringMassTwin, build_topology
 
 
 def main():

@@ -3,20 +3,33 @@ import json
 import sys
 import time
 from pathlib import Path
-
 import numpy as np
 
+
 ROOT = Path(__file__).resolve().parent
+
+
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "scripts"))
+
+
 _pre = argparse.ArgumentParser(add_help=False); _pre.add_argument("--engine", default="mujoco")
+
+
 _ENGINE = _pre.parse_known_args()[0].engine
+
+
 if _ENGINE == "newton":
-    from sim_newton import THETA_BOUNDS, THETA_DEFAULT, THETA_NAMES, theta_dict
+    from simulator import sim_newton_THETA_BOUNDS as THETA_BOUNDS, sim_newton_THETA_DEFAULT as THETA_DEFAULT, sim_newton_THETA_NAMES as THETA_NAMES, theta_dict
 else:
-    from sim import OneStep, THETA_BOUNDS, THETA_DEFAULT, THETA_NAMES, theta_dict
+    from simulator import OneStep, THETA_BOUNDS, THETA_DEFAULT, THETA_NAMES, theta_dict
+
 
 TRACKS = Path("../data/tracks")
+
+
 ID_CLIPS = ["20260602_102713", "20260602_170108", "20260602_193329"]
+
+
 _DATA, _SIM = {}, {}
 
 
@@ -102,7 +115,7 @@ def main():
     newton_cache = {}
 
     def evaluate_newton(xs):
-        from sim_newton import onestep_errors
+        from simulator import onestep_errors
         tl = [(frames[c], _DATA[c][1], i) for c, i in trans]
         sq = np.zeros((len(xs), len(tl))); ab = np.zeros((len(xs), len(tl)))
         for c0 in range(0, len(xs), a.batch_cands):

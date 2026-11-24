@@ -1,10 +1,17 @@
-import argparse, json, math, os, sys, time, traceback
+import argparse
+import json
+import math
+import os
+import time
+import traceback
 import multiprocessing as mp
 from pathlib import Path
-
 import numpy as np
 
+
 ROOT = Path(__file__).resolve().parent
+
+
 GKEYS = ["lE", "lrho", "lmu", "nu", "lsy"]
 
 
@@ -15,9 +22,8 @@ def log(s):
 def worker(conn, device, clips, a):
     try:
         os.environ["OMP_NUM_THREADS"] = "1"
-        sys.path[:0] = [str(ROOT / "scripts"), str(ROOT)]
         import torch
-        import fit_twin as F
+        import twin as F
         from twin import Twin
         tws, Ws = {}, {}
         for c in clips:
@@ -97,7 +103,6 @@ def main():
     ap.add_argument("--patience", type=int, default=0)
     ap.add_argument("--min-rel", type=float, default=0.005)
     a = ap.parse_args()
-    sys.path[:0] = [str(ROOT / "scripts"), str(ROOT)]
     import torch
     from twin import BOUNDS, RHO_PHYS
     out_dir = ROOT / f"data/wm/physworld_mpm_twins{a.dir_suffix}"

@@ -4,18 +4,26 @@ import json
 import sys
 import time
 from pathlib import Path
-
 import numpy as np
 
+
 ROOT = Path(__file__).resolve().parent
+
+
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "scripts"))
-from sim import Drive, NAMES, make_model, unstable, vertices
-from clip_set import ALL_CLIP_TRIMS
+
+
+from simulator import Drive, NAMES, make_model, unstable, vertices
+from simulator import ALL_CLIP_TRIMS
 
 
 DR_RANGES = {"bend": (0.5, 2.0), "twist": (0.5, 2.0), "stretch": (0.5, 2.0), "damping": (1 / 3, 3.0),
              "mass": (0.7, 1.4), "mu": (0.5, 2.0), "rest": (0.8, 1.2), "jitter": (0.85, 1.18)}
+
+
 MASS_BOUNDS = (0.01, 0.5)
+
+
 DR_STREAM = 20261027
 
 
@@ -84,8 +92,14 @@ def transform_seq(seq, rng, T_cap):
 
 
 DEADLINE = None
+
+
 C_TRIES = 4
+
+
 CONTACT_TOL = 0.001
+
+
 OWN_SEGS = 2
 
 
@@ -162,7 +176,7 @@ def _mujoco_speed_run(m, seq, sub, tabs, cav):
 
 def _job_speed(job):
     import mujoco
-    import speed_warp as SW
+    import simulator as SW
     npz, j, seed, x, out_dir, env, randomize, motion = job[:8]
     opts = job[8] if len(job) > 8 else {}
     assert env == "general", "speed motion with MuJoCo is implemented for --env general"
@@ -298,19 +312,19 @@ def _job(job):
 
 
 def dr_theta_newton(x, f):
-    import sim_newton as SN
+    import simulator as SN
     g = {"k_stretch": "stretch", "d_stretch": "damping", "k_bend": "bend", "d_bend": "damping",
          "k_twist": "twist", "d_twist": "damping", "mass_per_m": "mass", "mu": "mu"}
     y = np.array(x, float)
-    for i, name in enumerate(SN.THETA_NAMES):
+    for i, name in enumerate(SN.sim_newton_THETA_NAMES):
         y[i] += np.log10(f[g[name]])
-    i = SN.THETA_NAMES.index("mass_per_m")
+    i = SN.sim_newton_THETA_NAMES.index("mass_per_m")
     y[i] = np.clip(y[i], *np.log10(MASS_BOUNDS))
     return y
 
 
 def run_newton(jobs, x, out_dir, batch, randomize=False):
-    import sim_newton as SN
+    import simulator as SN
     todo = []
     for npz, j, seed, *_ in jobs:
         clip = Path(npz).stem
@@ -334,7 +348,7 @@ def run_newton(jobs, x, out_dir, batch, randomize=False):
         tb = time.time()
         drs = [sample_dr(r[3]) if randomize else None for r in B]
         X = np.stack([dr_theta_newton(x, f) if f else np.asarray(x, float) for f in drs])
-        Vs = SN.rollouts([r[5] for r in B], [r[6] for r in B], B[0][4], X, device="cuda:0")
+        Vs = SN.sim_newton_rollouts([r[5] for r in B], [r[6] for r in B], B[0][4], X, device="cuda:0")
         for (path, clip, j, seed, fps, rest, _, meta, Tseq), V, f in zip(B, Vs, drs):
             L = np.linalg.norm(np.diff(V, axis=2), axis=-1).sum(-1)
             offs = L - L[:1]
@@ -351,7 +365,7 @@ def run_newton(jobs, x, out_dir, batch, randomize=False):
 
 
 def run_newton_general(jobs, out_dir, batch, randomize):
-    import newton_general as NG
+    import simulator as NG
     kw = NG.fit_kwargs()
     todo = []
     for npz, j, seed, *_ in jobs:
@@ -401,12 +415,12 @@ def run_newton_general(jobs, out_dir, batch, randomize):
 
 
 def run_newton_speed(jobs, out_dir, batch, randomize, env, x=None):
-    import speed_warp as SW
-    import newton_general as NG
+    import simulator as SW
+    import simulator as NG
     if env == "newton_general":
         kw = NG.fit_kwargs()
     else:
-        import sim_newton as SN
+        import simulator as SN
     items = []
     for npz, j, seed, *_ in jobs:
         clip = Path(npz).stem
@@ -482,7 +496,7 @@ def run_newton_speed(jobs, out_dir, batch, randomize, env, x=None):
                     F16 = np.zeros((len(r[2]), 4, 16, 2))
                     F16[:, :, [0, 1, 14, 15]] = r[2]
                     scheds.append(SN.schedule_tracked(F16))
-                Vs = SN.rollouts([r[0]["F"][0] for r in B], scheds, B[0][0]["fps"], np.stack([r[0]["X"] for r in B]),
+                Vs = SN.sim_newton_rollouts([r[0]["F"][0] for r in B], scheds, B[0][0]["fps"], np.stack([r[0]["X"] for r in B]),
                                  device="cuda:0", check_every=25, stats=st)
             for (it, kind, E, w), V, (nv, dm, pr) in zip(B, Vs, st):
                 if kind == "ref":
@@ -553,7 +567,7 @@ def main():
         DEADLINE = time.mktime(time.strptime(a.deadline, "%Y-%m-%d %H:%M"))
         print(f"deadline {a.deadline} ({DEADLINE:.0f})", flush=True)
     if a.speed_range:
-        import speed_warp as _SW
+        import simulator as _SW
         _SW.SPEED_RANGE = tuple(a.speed_range)
         print(f"speed_warp.SPEED_RANGE = {_SW.SPEED_RANGE}", flush=True)
     assert not (a.engine == "newton" and a.env != "yang"), "--engine newton needs --env yang"
@@ -577,7 +591,7 @@ def main():
     (out_dir / "config.json").write_text(json.dumps({**vars(a), "x": x.tolist(), "n_clips": len(files),
                                                      "dr_ranges": DR_RANGES if a.randomize else None,
                                                      "mass_bounds": MASS_BOUNDS,
-                                                     "speed_range": (__import__("speed_warp", fromlist=["x"]).SPEED_RANGE
+                                                     "speed_range": (__import__("simulator", fromlist=["x"]).SPEED_RANGE
                                                                      if a.motion == "speed" else None)}, indent=1))
     print(f"domain randomization: {'ON ' + json.dumps(DR_RANGES) if a.randomize else 'off'}", flush=True)
     if a.frames_per_clip:

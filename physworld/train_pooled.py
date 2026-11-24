@@ -1,10 +1,16 @@
-import argparse, datetime as dt, json, sys, time
+import argparse
+import datetime as dt
+import json
+import time
 from pathlib import Path
 import torch
 
+
 ROOT = Path(__file__).resolve().parent
-sys.path[:0] = [str(ROOT / "scripts"), str(ROOT)]
+
+
 import gnn as G
+
 
 SEC_PER_DEMO_EPOCH = 685.0 / 360
 

@@ -6,12 +6,14 @@ import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-
 import numpy as np
 
+
 ROOT = Path(__file__).resolve().parent
-sys.path.insert(0, str(ROOT / "scripts"))
-from clip_set import CLIP_TRIMS
+
+
+from scene import CLIP_TRIMS
+
 
 MODS = {"genesis": "fit"}
 

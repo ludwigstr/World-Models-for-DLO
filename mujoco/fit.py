@@ -2,29 +2,47 @@ import argparse
 import json
 import os
 import re
-import sys
 import time
 from pathlib import Path
-
 import numpy as np
+from scene import CLIP_TRIMS
+from scene import build_xml, cable_ball_joints, set_per_joint_stiffness
+from scene import board_normal_axes, rest_quats
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from clip_set import CLIP_TRIMS
-from mujoco_scene import build_xml, cable_ball_joints, set_per_joint_stiffness
-from fit_jnt_spring_rest_cmaes import board_normal_axes, rest_quats
 
 ROOT = Path(__file__).resolve().parent
+
+
 TRACKS = Path(os.environ.get("GENERAL_FIT_TRACKS") or "../data/tracks")
+
+
 CUSTOM_TRACKS = bool(os.environ.get("GENERAL_FIT_TRACKS"))
+
+
 N_C, N_J = 4, 14
+
+
 N_PJ = N_C * N_J
+
+
 MASS0, MASS_LO, MASS_HI = 0.15, 0.02, 0.2
+
+
 RADIUS = 0.003
+
+
 I_K, I_REST, I_DAMP = 0, N_PJ, 2 * N_PJ
+
+
 I_BEND, I_TWIST, I_MU = 3 * N_PJ, 3 * N_PJ + N_C, 3 * N_PJ + 2 * N_C
+
+
 I_MASS = I_MU + 1
+
+
 N_PAR = I_MASS + N_C
+
+
 _CACHE, _AXIS = {}, {}
 
 
@@ -58,7 +76,7 @@ def make_model(shp, p):
 
 def _eval_one(job):
     cand_i, clip, x = job
-    from mujoco_rollout import rollout_errs
+    from scene import rollout_errs
     shp, fps = _CACHE[clip]
     try:
         m = make_model(shp, unpack(x))

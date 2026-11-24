@@ -1,16 +1,70 @@
-import argparse, json, math, sys, time
-from pathlib import Path
-import numpy as np, torch
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-ROOT = Path(__file__).resolve().parent
-from mpm_gnn import PhysWorldGNN
+from __future__ import annotations
+import torch
+from torch import Tensor, nn
+
+
+def mlp(d_in, d_h, d_out, n=2):
+    layers, d = [], d_in
+    for _ in range(n):
+        layers += [nn.Linear(d, d_h), nn.ReLU()]; d = d_h
+    return nn.Sequential(*layers, nn.Linear(d, d_out))
+
+
+SCALE = 0.1
+
+
+ACT = 0.01
+
+
+YAW = 0.1
+
+
+class PhysWorldGNN(nn.Module):
+    def __init__(self, n_nodes=16, h=3, width=128, steps=7, radius=0.12, n_phi=2):
+        super().__init__()
+        self.N, self.h, self.radius, self.steps = n_nodes, h, radius, steps
+        d_v = 2 + 3 + n_phi
+        d_e = 2 * (h + 1) + 2
+        self.enc_v, self.enc_e = mlp(d_v, width, width, 1), mlp(d_e, width, width, 1)
+        self.prop_e = nn.ModuleList([mlp(3 * width, width, width, 1) for _ in range(steps)])
+        self.prop_v = nn.ModuleList([mlp(2 * width, width, width, 1) for _ in range(steps)])
+        self.dec = mlp(width, width, 2, 1)
+        nn.init.zeros_(self.dec[-1].weight); nn.init.zeros_(self.dec[-1].bias)
+        ctrl = torch.zeros(n_nodes, dtype=torch.bool); ctrl[0] = True; ctrl[-1] = True
+        self.register_buffer("ctrl", ctrl)
+
+    def forward(self, hist: Tensor, X: Tensor, phi: Tensor, dp: Tensor, dyaw: Tensor) -> Tensor:
+        B, N, _ = X.shape
+        allx = torch.cat([hist, X.unsqueeze(1)], 1)
+        rel = (allx.unsqueeze(3) - allx.unsqueeze(2)) / SCALE
+        rel = rel.permute(0, 2, 3, 1, 4).reshape(B, N, N, -1)
+        d = torch.cdist(X, X)
+        adj = d < self.radius
+        ar = torch.arange(N - 1, device=X.device)
+        chain = torch.zeros(N, N, dtype=torch.bool, device=X.device); chain[ar, ar + 1] = True; chain[ar + 1, ar] = True
+        adj = (adj | chain) & ~torch.eye(N, dtype=torch.bool, device=X.device)
+        typ = torch.stack([~self.ctrl, self.ctrl], -1).to(X.dtype).unsqueeze(0).expand(B, N, 2)
+        oc = (self.ctrl.unsqueeze(0) | self.ctrl.unsqueeze(1)).to(X.dtype)
+        etype = torch.stack([1 - oc, oc], -1).unsqueeze(0).expand(B, N, N, 2)
+        act = torch.cat([dp / ACT, (dyaw / YAW).unsqueeze(-1)], -1) * self.ctrl.view(1, N, 1)
+        hv = self.enc_v(torch.cat([typ, act, phi], -1))
+        m = adj.unsqueeze(-1).to(X.dtype)
+        he = self.enc_e(torch.cat([rel, etype], -1)) * m
+        for l in range(self.steps):
+            he = he + self.prop_e[l](torch.cat([he, hv.unsqueeze(2).expand(-1, -1, N, -1),
+                                                hv.unsqueeze(1).expand(-1, N, -1, -1)], -1)) * m
+            hv = hv + self.prop_v[l](torch.cat([hv, he.sum(2)], -1))
+        out = X + self.dec(hv) * SCALE * 0.1
+        return torch.where(self.ctrl.view(1, N, 1), X + dp, out)
+
+
+import time
+import numpy as np
+import torch
 from twin import drive_from_nodes
 
+
 H = 3
-
-
-def log(s):
-    print(f"[{time.strftime('%H:%M:%S')}] {s}", flush=True)
 
 
 def samples(nodes, yaw, tau):
@@ -145,55 +199,3 @@ def finetune_and_eval(model, P, phi0, mu, sd, warm, dev, iters, use_yaw, finetun
                 frames.append(pr); e.append((pr - X[t + 1]).norm(dim=-1).mean().item() * 1000)
         errs.append(np.array(e))
     return np.mean(errs, 0), phis
-
-
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--clip", required=True); ap.add_argument("--demos-tag", default="")
-    ap.add_argument("--epochs", type=int, default=60); ap.add_argument("--tau", type=int, default=3)
-    ap.add_argument("--noise-mm", type=float, default=1.0); ap.add_argument("--phi-noise", type=float, default=0.05)
-    ap.add_argument("--no-yaw", action="store_true"); ap.add_argument("--warm", type=int, default=5)
-    ap.add_argument("--phi-iters", type=int, default=100); ap.add_argument("--tag", default="")
-    ap.add_argument("--device", default="cuda:0"); ap.add_argument("--seed", type=int, default=0)
-    ap.add_argument("--phi-box", type=float, default=1.5)
-    ap.add_argument("--phi-objective", default="rollout", choices=["rollout", "onestep"])
-    ap.add_argument("--tracks", default="../data/tracks"); ap.add_argument("--dir-suffix", default="")
-    ap.add_argument("--load", default="")
-    a = ap.parse_args(); dev = a.device; torch.manual_seed(a.seed)
-    use_yaw = not a.no_yaw
-    D = torch.load(ROOT / f"data/wm/physworld_mpm_demos{a.dir_suffix}/{a.clip}{a.demos_tag}.pt", weights_only=False)
-    t0 = time.time()
-    if a.load:
-        ck = torch.load(ROOT / a.load, weights_only=False)
-        model = PhysWorldGNN(16, H).to(dev); model.load_state_dict(ck["state_dict"])
-        mu, sd = ck["phi_mu"].to(dev), ck["phi_sd"].to(dev); val = ck.get("val", float("nan"))
-        t_train = ck.get("sec_train", float("nan"))
-    else:
-        model, mu, sd, val = train(D["demos"], dev, a.epochs, a.tau, a.noise_mm, a.phi_noise, use_yaw, a.seed, log)
-        t_train = time.time() - t0
-    z = np.load(ROOT / a.tracks / f"{a.clip}.npz")
-    P = torch.tensor(np.stack([z[f"c{k}"] for k in range(4)]), dtype=torch.float32, device=dev)
-    phi0 = D["phi_twin"].to(dev)
-    e0, _ = finetune_and_eval(model, P, phi0, mu, sd, a.warm, dev, 0, use_yaw, finetune=False)
-    t1 = time.time()
-    e, phis = finetune_and_eval(model, P, phi0, mu, sd, a.warm, dev, a.phi_iters, use_yaw, box=a.phi_box or None,
-                                objective=a.phi_objective)
-    t_phi = time.time() - t1
-    res = {"clip": a.clip, "mittel": float(e.mean()), "start": float(e[0]), "ende": float(e[-1]), "n_frames": int(len(e)),
-           "per_frame": e.tolist(), "mittel_before_phi_finetune": float(e0.mean()), "val_one_step_mm": val,
-           "n_demos": len(D["demos"]), "n_train_frames": int(sum(d["nodes"].shape[0] for d in D["demos"])),
-           "phi_twin": phi0.cpu().tolist(), "phi_fitted": [p.tolist() for p in phis],
-           "sec_train": t_train, "sec_phi": t_phi, "use_yaw": use_yaw, "epochs": a.epochs, "tau": a.tau,
-           "n_gnn_params": sum(p.numel() for p in model.parameters()), "phi_box": a.phi_box, "phi_objective": a.phi_objective, "phi_iters": a.phi_iters}
-    tag = f"_{a.tag}" if a.tag else ""
-    outd = ROOT / f"data/wm/physworld_mpm_gnn{a.dir_suffix}{tag}"; outd.mkdir(parents=True, exist_ok=True)
-    (outd / f"{a.clip}.json").write_text(json.dumps(res, indent=1))
-    if not a.load:
-        torch.save({"state_dict": model.state_dict(), "phi_mu": mu.cpu(), "phi_sd": sd.cpu(), "val": val,
-                    "sec_train": t_train}, outd / f"{a.clip}.pt")
-    log(f"{a.clip}: PhysWorld (MPM twin) Mittel {e.mean():.2f} mm (before Phi fine-tuning {e0.mean():.2f}); "
-        f"train {t_train:.0f}s, Phi fit {t_phi:.0f}s")
-
-
-if __name__ == "__main__":
-    main()

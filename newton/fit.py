@@ -1,49 +1,98 @@
 import json
 import multiprocessing as mp
 import os
-import sys
 import time
-from pathlib import Path
-
 import cma
 import numpy as np
+import scene as P
+from scene import CLIP_TRIMS, _clip_frame_t1, _init_worker, _z_loss_mm, safe_savez
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-
-import newton_fit_percable_cmaes as P
-from newton_fit_percable_cmaes import CLIP_TRIMS, _clip_frame_t1, _init_worker, _z_loss_mm, safe_savez
 
 ROOT = P.ROOT
+
+
 N_C, N_J = 4, 14
+
+
 N_PJ = N_C * N_J
+
+
 GPU_IDS = [int(x) for x in os.environ.get("WIRE_GPUS", "0,1,2").split(",")]
+
+
 N_WORKERS = int(os.environ.get("WIRE_WORKERS", "6"))
+
+
 POPSIZE = int(os.environ.get("WIRE_POPSIZE", "18"))
+
+
 MAX_GENERATIONS = int(os.environ.get("WIRE_GENS", "30"))
+
+
 FIT_SOLVER_ITERATIONS = 10
+
+
 Z_WEIGHT = float(os.environ.get("WIRE_Z_WEIGHT", "0.5"))
+
+
 TRACKS_DIR = os.environ.get("WIRE_TRACKS")
+
+
 RESUME = os.environ.get("WIRE_RESUME") == "1"
+
+
 STOP_BY = (time.mktime(time.strptime(os.environ["WIRE_STOP_BY"], "%Y-%m-%d %H:%M"))
            if os.environ.get("WIRE_STOP_BY") else None)
+
+
 WARM_FILE = os.environ.get("WIRE_WARM", "data/newton_fit_percable.npz")
+
+
 OUT = ROOT / os.environ.get("WIRE_OUT", "data/newton_fit_everything.npz")
+
+
 LOG = ROOT / os.environ.get("WIRE_FITLOG", "data/newton_fit_everything_log.jsonl")
+
+
 MASS_PIN = float(os.environ["WIRE_MASS_PIN"]) if os.environ.get("WIRE_MASS_PIN") else None
+
+
 N_MASS = 0 if MASS_PIN else N_C
+
+
 X0_STRETCH = 1.0e5
+
+
 X0_GLOB = [1.0, 1.0, 0.005, 0.0001]
+
+
 STD_PJ, STD_MASS, STD_DAHL, STD_GLOB, STD_REST = 0.2, 0.2, 0.2, 0.5, 0.06
 
+
 I_KE, I_KD, I_KT = 0, N_PJ, 2 * N_PJ
+
+
 I_MASS = 3 * N_PJ
+
+
 I_DAHL = I_MASS + N_MASS
+
+
 I_K = I_DAHL + 2
+
+
 I_MU = I_K + 1
+
+
 N_LOG = I_MU + 4
+
+
 I_REST = N_LOG
+
+
 N_PAR = N_LOG + N_PJ
+
+
 if TRACKS_DIR:
     TRAIN_CLIPS = sorted(q.stem for q in (ROOT / TRACKS_DIR).glob("*.npz"))
     assert TRAIN_CLIPS, f"no npz in {TRACKS_DIR}"
@@ -51,6 +100,8 @@ if TRACKS_DIR:
         "no depth targets for this clip set: set WIRE_Z_WEIGHT=0 explicitly"
 else:
     TRAIN_CLIPS = list(CLIP_TRIMS.keys())
+
+
 ES_PICKLE = OUT.with_name(OUT.stem + "_es.pkl")
 
 
@@ -65,7 +116,7 @@ def load_tracks(c):
 
 def _eval_clip_job(args):
     x, c = args
-    from newton_full_scene import eval_clip
+    from scene import eval_clip
     cache = P._worker_cache
     cache.setdefault("t_clips", {})
     if c not in cache["t_clips"]:
@@ -122,8 +173,8 @@ def warm_row():
 
 def _eval_job(args):
     (x,) = args
-    from harness_scene import load_clip
-    from newton_full_scene import eval_clip
+    from scene import load_clip
+    from scene import eval_clip
     cache = P._worker_cache
     if "clips" not in cache:
         cache["clips"], cache["targets"] = {}, {}
@@ -267,8 +318,8 @@ def main():
 
     if not TRACKS_DIR:
         log(f"=== final validation: {FIT_SOLVER_ITERATIONS} iterations, all 14 clips (IN-SAMPLE) ===")
-    from harness_scene import load_clip
-    from newton_full_scene import eval_clip
+    from scene import load_clip
+    from scene import eval_clip
     kw = unpack(best_row)
     if not TRACKS_DIR:
         per_clip, per_clip_z = {}, {}

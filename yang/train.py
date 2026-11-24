@@ -1,16 +1,17 @@
 import argparse
 import glob
 import json
-import sys
 import time
 from pathlib import Path
-
 import numpy as np
 import torch
 
+
 ROOT = Path(__file__).resolve().parent
-sys.path.insert(0, str(ROOT))
+
+
 from model import INBiLSTM, end_actions, turning
+
 
 DT = 0.25
 

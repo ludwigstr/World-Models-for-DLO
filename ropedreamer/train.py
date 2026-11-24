@@ -1,18 +1,17 @@
 import argparse
 import json
-import sys
 import time
 from pathlib import Path
-
 import numpy as np
 import torch
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 ROOT = Path(__file__).resolve().parent
+
+
 from model import RopeDreamer
-from data import load_tracks, load_synth, WindowDataset, state_offset, trajectory_tensors, state_stats
-from kinematics import chain_to_positions
-import data as RD
+from model import load_tracks, load_synth, WindowDataset, state_offset, trajectory_tensors, state_stats
+import model as RD
 
 
 def open_loop_mm(model, trajs_t, off, warm, horizon, device, n_max=64):
@@ -49,6 +48,7 @@ def open_loop_mm(model, trajs_t, off, warm, horizon, device, n_max=64):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument
+    ap.add_argument("--tracks", nargs="+", default=["../data/tracks"])
     ap.add_argument("--synth", nargs="*", default=[])
     ap.add_argument("--size", default="S")
     ap.add_argument("--seq-len", type=int, default=32)

@@ -1,16 +1,18 @@
-import argparse, glob, sys, time
+import argparse
+import glob
+import time
 from pathlib import Path
-
 import numpy as np
 import torch
+from simulator import DLOSimulator, DLOParams
+from simulator import SimConfig
+from simulator import rollout, terminal_edge_action
+from simulator import arc_length
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from dlo_model import DLOSimulator, DLOParams
-from dataset import SimConfig
-from actions import rollout, terminal_edge_action
-from geometry import arc_length
 
 ROOT = Path(__file__).resolve().parent
+
+
 N = 16
 
 

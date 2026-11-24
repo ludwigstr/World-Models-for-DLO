@@ -1,21 +1,17 @@
-
 import argparse
 import json
-import sys
 import time
 from pathlib import Path
-
 import torch
 from torch.utils.data import DataLoader, TensorDataset
+from model import DLONetwork, DLOPredictor
+from model import ARCHITECTURES
+from model import build_normalizer, paper_metric
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-
-from nn_model import DLONetwork, DLOPredictor
-from nn_models_alt import ARCHITECTURES
-from train_nn import build_normalizer, paper_metric
 
 ROOT = Path(__file__).resolve().parent
+
+
 DEV = "cuda" if torch.cuda.is_available() else "cpu"
 
 

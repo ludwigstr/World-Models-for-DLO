@@ -1,16 +1,16 @@
 import argparse
 import json
-import sys
 from pathlib import Path
-
 import numpy as np
 import torch
 
+
 ROOT = Path(__file__).resolve().parent
-sys.path[:0] = [str(ROOT / "scripts"), str(ROOT)]
-from evaluate import WARM, dp_of, features, load_tracks
-from model_v2 import AdaptiGraphV2
-from features import turning
+
+
+from model import WARM, dp_of, features, load_tracks
+from model import AdaptiGraphV2
+from model import turning
 
 
 @torch.no_grad()
@@ -29,7 +29,6 @@ def errors(m, flags, P, phi):
         frames.append(pred)
         out.append((pred - Y).norm(dim=-1).mean(-1) * 1000)
     return torch.stack(out, 1)
-
 
 
 def main():

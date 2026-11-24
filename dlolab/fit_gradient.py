@@ -1,5 +1,4 @@
 from __future__ import annotations
-
 import argparse
 import datetime as dt
 import json
@@ -8,16 +7,27 @@ import sys
 import time
 from multiprocessing.connection import wait
 from pathlib import Path
-
 import numpy as np
 
+
 ROOT = Path(__file__).resolve().parent
+
+
 sys.path.insert(0, str(ROOT / "scripts")); sys.path.insert(0, str(ROOT))
+
+
 os.environ.setdefault("OMP_NUM_THREADS", "1"); os.environ.setdefault("MKL_NUM_THREADS", "1")
+
+
 os.environ.setdefault("OPENBLAS_NUM_THREADS", "1"); os.environ.setdefault("PYTHONUNBUFFERED", "1")
 
+
 TRACKS = os.environ.get("GENERAL_FIT_TRACKS", "")
+
+
 N_C, N_H, N_E = 4, 14, 15
+
+
 SETTLE = 300
 
 
@@ -54,7 +64,7 @@ def zero_x(C):
 def grad_worker(gpu, backend, bptt, conn):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
     import torch
-    import rod_scene as R
+    import scene as R
     import genesis as gs
     C = _layout()
     names = ["hub"] + [f"plug{k}" for k in range(4)]

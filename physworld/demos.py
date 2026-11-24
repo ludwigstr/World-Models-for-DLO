@@ -1,12 +1,23 @@
-import argparse, json, math, sys, time
+import argparse
+import math
+import time
 from pathlib import Path
-import numpy as np, torch, warp as wp
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+import numpy as np
+import torch
+import warp as wp
+
+
 ROOT = Path(__file__).resolve().parent
+
+
 wp.config.log_level = getattr(wp, "LOG_WARNING", None) or 30
+
+
 wp.init()
+
+
 from twin import Twin, drive_from_nodes, rho_for_dt, MS_CFL
-import speed_warp as SW
+import twin as SW
 
 
 def log(s):

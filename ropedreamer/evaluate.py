@@ -1,17 +1,16 @@
 import argparse
 import json
-import sys
 from pathlib import Path
-
 import numpy as np
 import torch
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+
 ROOT = Path(__file__).resolve().parent
+
+
 from model import RopeDreamer
-from data import load_tracks, trajectory_tensors
-from kinematics import chain_to_positions
-import data as RD
+from model import load_tracks, trajectory_tensors
+import model as RD
 
 
 def main():

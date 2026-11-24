@@ -4,21 +4,42 @@ import os
 import sys
 import time
 from pathlib import Path
-
 import numpy as np
 
+
 ROOT = Path(__file__).resolve().parent
+
+
 sys.path.insert(0, str(ROOT / "scripts")); sys.path.insert(0, str(ROOT))
-from clip_set import CLIP_TRIMS
+
+
+from scene import CLIP_TRIMS
+
 
 TRACKS = Path(os.environ.get("GENERAL_FIT_TRACKS") or "../data/tracks")
+
+
 CUSTOM_TRACKS = bool(os.environ.get("GENERAL_FIT_TRACKS"))
+
+
 N_C, N_J = 4, 15
+
+
 N_PJ = N_C * N_J
+
+
 MASS0, MASS_LO, MASS_HI = 0.2, 0.02, 0.2
+
+
 I_K, I_REST, I_DAMP, I_MU = 0, N_PJ, 2 * N_PJ, 3 * N_PJ
+
+
 I_MASS = I_MU + 1
+
+
 N_PAR = I_MASS + N_C
+
+
 _CACHE = {}
 
 
@@ -32,7 +53,7 @@ def unpack(x):
 def _eval_one(job):
     cand_i, clip, x = job
     os.environ["CUDA_VISIBLE_DEVICES"] = ""
-    import genesis_full_scene as G
+    import scene as G
     if clip not in _CACHE:
         z = np.load(TRACKS / f"{clip}.npz")
         _CACHE[clip] = ({k: z[f"c{k}"] for k in range(4)}, float(z["fps"]))

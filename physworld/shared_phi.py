@@ -3,14 +3,15 @@ import json
 import sys
 import time
 from pathlib import Path
-
 import numpy as np
 import torch
 
+
 ROOT = Path(__file__).resolve().parent
-sys.path[:0] = [str(ROOT / "scripts"), str(ROOT)]
+
+
 import gnn as G
-from mpm_gnn import PhysWorldGNN
+from gnn import PhysWorldGNN
 
 
 def main():

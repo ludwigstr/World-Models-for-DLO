@@ -5,12 +5,18 @@ import os
 import sys
 import time
 from pathlib import Path
-
 import numpy as np
 
+
 os.environ.setdefault("WIRE_MASS_PIN", "0.044")
+
+
 ROOT = Path(__file__).resolve().parent
+
+
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "scripts"))
+
+
 _dev = {}
 
 
@@ -22,13 +28,13 @@ def one(job):
     c, params, tracks = job
     t = time.time()
     import fit as E
-    import newton_full_scene as N
+    import scene as N
     kw = E.unpack(np.load(params, allow_pickle=True)["best"])
     if tracks:
         z = np.load(ROOT / tracks / f"{c}.npz")
         shp, fps = {k: np.asarray(z[f"c{k}"], float) for k in range(4)}, float(z["fps"])
     else:
-        from harness_scene import load_clip
+        from scene import load_clip
         shp, _, _, fps = load_clip(c, t0=8, t1=E._clip_frame_t1(c, E.CLIP_TRIMS[c]))
     errs = N.eval_clip(c, shp_fps=(shp, fps), solver_iterations=10, device=_dev.get("device"), **kw)
     return c, float(np.mean(errs)), len(shp[0]), time.time() - t
@@ -50,7 +56,7 @@ def main():
         clips = sorted(q.stem for q in (ROOT / a.tracks).glob("*.npz"))
         clips.sort(key=lambda c: -len(np.load(ROOT / a.tracks / f"{c}.npz")["c0"]))
     else:
-        from clip_set import CLIP_TRIMS
+        from scene import CLIP_TRIMS
         clips = sorted(CLIP_TRIMS)
     gpus = [int(g) for g in a.gpus.split(",")]
     ctx = mp.get_context("spawn")

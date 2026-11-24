@@ -4,18 +4,26 @@ import json
 import sys
 import time
 from pathlib import Path
-
 import numpy as np
 
+
 ROOT = Path(__file__).resolve().parent
+
+
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "scripts"))
-from sim import Drive, NAMES, make_model, unstable, vertices
-from clip_set import ALL_CLIP_TRIMS
+
+
+from simulator import Drive, NAMES, make_model, unstable, vertices
+from simulator import ALL_CLIP_TRIMS
 
 
 DR_RANGES = {"bend": (0.5, 2.0), "twist": (0.5, 2.0), "stretch": (0.5, 2.0), "damping": (1 / 3, 3.0),
              "mass": (0.7, 1.4), "mu": (0.5, 2.0), "rest": (0.8, 1.2), "jitter": (0.85, 1.18)}
+
+
 MASS_BOUNDS = (0.01, 0.5)
+
+
 DR_STREAM = 20261027
 
 
@@ -84,8 +92,14 @@ def transform_seq(seq, rng, T_cap):
 
 
 DEADLINE = None
+
+
 C_TRIES = 4
+
+
 CONTACT_TOL = 0.001
+
+
 OWN_SEGS = 2
 
 
@@ -162,7 +176,7 @@ def _mujoco_speed_run(m, seq, sub, tabs, cav):
 
 def _job_speed(job):
     import mujoco
-    import speed_warp as SW
+    import simulator as SW
     npz, j, seed, x, out_dir, env, randomize, motion = job[:8]
     opts = job[8] if len(job) > 8 else {}
     assert env == "general", "speed motion with MuJoCo is implemented for --env general"
@@ -401,7 +415,7 @@ def run_newton_general(jobs, out_dir, batch, randomize):
 
 
 def run_newton_speed(jobs, out_dir, batch, randomize, env, x=None):
-    import speed_warp as SW
+    import simulator as SW
     import newton_general as NG
     if env == "newton_general":
         kw = NG.fit_kwargs()
@@ -553,7 +567,7 @@ def main():
         DEADLINE = time.mktime(time.strptime(a.deadline, "%Y-%m-%d %H:%M"))
         print(f"deadline {a.deadline} ({DEADLINE:.0f})", flush=True)
     if a.speed_range:
-        import speed_warp as _SW
+        import simulator as _SW
         _SW.SPEED_RANGE = tuple(a.speed_range)
         print(f"speed_warp.SPEED_RANGE = {_SW.SPEED_RANGE}", flush=True)
     assert not (a.engine == "newton" and a.env != "yang"), "--engine newton needs --env yang"
@@ -577,7 +591,7 @@ def main():
     (out_dir / "config.json").write_text(json.dumps({**vars(a), "x": x.tolist(), "n_clips": len(files),
                                                      "dr_ranges": DR_RANGES if a.randomize else None,
                                                      "mass_bounds": MASS_BOUNDS,
-                                                     "speed_range": (__import__("speed_warp", fromlist=["x"]).SPEED_RANGE
+                                                     "speed_range": (__import__("simulator", fromlist=["x"]).SPEED_RANGE
                                                                      if a.motion == "speed" else None)}, indent=1))
     print(f"domain randomization: {'ON ' + json.dumps(DR_RANGES) if a.randomize else 'off'}", flush=True)
     if a.frames_per_clip:

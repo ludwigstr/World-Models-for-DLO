@@ -3,14 +3,19 @@ import glob
 import json
 import sys
 from pathlib import Path
-
 import numpy as np
 import torch
 
+
 ROOT = Path(__file__).resolve().parent
+
+
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / "scripts"))
+
+
 from model import INBiLSTM, end_actions, turning
-from clip_set import CLIP_TRIMS
+from simulator import CLIP_TRIMS
+
 
 TRACKS = Path("../data/tracks")
 

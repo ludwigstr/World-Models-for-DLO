@@ -4,25 +4,54 @@ import os
 import sys
 import time
 from pathlib import Path
-
 import numpy as np
 
+
 ROOT = Path(__file__).resolve().parent
+
+
 sys.path.insert(0, str(ROOT / "scripts")); sys.path.insert(0, str(ROOT))
-from clip_set import CLIP_TRIMS
+
+
+from scene import CLIP_TRIMS
+
 
 TRACKS = Path(os.environ.get("GENERAL_FIT_TRACKS") or "../data/tracks")
+
+
 CUSTOM_TRACKS = bool(os.environ.get("GENERAL_FIT_TRACKS"))
+
+
 N_C, N_H, N_E = 4, 14, 15
+
+
 MASS0, MASS_LO, MASS_HI = 0.045, 0.02, 0.2
+
+
 SEG_MASS0 = 0.002
+
+
 I_HS = 0
+
+
 I_SS = I_HS + N_C * N_H
+
+
 I_TS = I_SS + N_C * N_E
+
+
 I_KR = I_TS + N_C * N_H
+
+
 I_K = I_KR + N_C * N_H * 2
+
+
 I_E, I_G, I_MU, I_DAMP, I_MASS = I_K + 1, I_K + 2, I_K + 3, I_K + 4, I_K + 5
+
+
 N_PAR = I_MASS + N_C
+
+
 _CACHE = {}
 
 
@@ -40,7 +69,7 @@ def unpack(x):
 
 def _eval_one(job):
     cand_i, clip, x = job
-    import rod_scene as R
+    import scene as R
     if clip not in _CACHE:
         z = np.load(TRACKS / f"{clip}.npz")
         _CACHE[clip] = ({k: z[f"c{k}"] for k in range(4)}, float(z["fps"]))

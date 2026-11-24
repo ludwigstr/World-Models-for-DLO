@@ -1,16 +1,16 @@
 import argparse
 import json
-import sys
 import time
 from pathlib import Path
-
 import numpy as np
 import torch
 
+
 ROOT = Path(__file__).resolve().parent
-sys.path[:0] = [str(ROOT / "scripts"), str(ROOT)]
-from evaluate import dp_of, features, load_tracks, score
-from model_v2 import AdaptiGraphV2
+
+
+from model import dp_of, features, load_tracks, score
+from model import AdaptiGraphV2
 
 
 def main():
