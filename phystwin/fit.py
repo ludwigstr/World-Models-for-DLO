@@ -55,14 +55,14 @@ def main():
                      "fit_mm": float(ef[:n_fit].mean()), "test_mm": float(ef[n_fit:].mean()) if n_fit < T else None, "n_fit": n_fit,
                      "stage1_mm": cost1, "k_hom": float(np.exp(x1[0])), "radius_seg": float(x1[4]),
                      "gamma": float(gl[0]), "delta": float(gl[1]), "mu": float(gl[2]),
-                     "k_dense_median": [float(k[c][twin.adj[c].bool()].median()) for c in range(C)] if k.shape[-1] > 1 else None}
+                     "k_dense_mean": [float(k[c][twin.adj[c].bool()].mean()) for c in range(C)] if k.shape[-1] > 1 else None}
         if a.save_twins:
             d = ROOT / a.save_twins; d.mkdir(parents=True, exist_ok=True)
             torch.save({"k": k.cpu(), "gl": gl.cpu(), "radius_seg": float(x1[4]), "x1": np.asarray(x1), "adj": twin.adj.cpu(), "frame_s": frame_s}, d / f"{clip}.pt")
         out.write_text(json.dumps(res, indent=1))
         log(f"{clip}: all frames {ef.mean():.1f} | fitting frames {res[clip]['fit_mm']:.1f} | future {res[clip]['test_mm']} mm  ({time.time()-t_c:.0f}s)")
     v = np.array([r["mittel"] for r in res.values()]); f = np.array([r["fit_mm"] for r in res.values()]); t = np.array([r["test_mm"] for r in res.values() if r["test_mm"] is not None], dtype=float)
-    log(f"PhysTwin on {a.tracks}: {len(v)} clips | all frames {v.mean():.2f} (median {np.median(v):.2f}) | fitting frames {f.mean():.2f} | future prediction {t.mean() if len(t) else float('nan'):.2f} mm/node")
+    log(f"PhysTwin on {a.tracks}: {len(v)} clips | all frames {v.mean():.2f} | fitting frames {f.mean():.2f} | future prediction {t.mean() if len(t) else float('nan'):.2f} mm/node")
     log("=== PHYSTWIN_FERTIG ===")
 
 

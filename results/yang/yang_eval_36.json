@@ -6231,7 +6231,6 @@
  "protocol": "frame 0 measured, v0 = 0, open loop, measured end motions, ends pinned; mittel = mean over predicted frames 1..T-1",
  "synthetic_val_rollouts": {
   "n": 351,
-  "mean": 11.137038826942444,
-  "median": 7.494322299957275
+  "mean": 11.137038826942444
  }
 }

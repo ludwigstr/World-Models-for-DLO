@@ -3,7 +3,6 @@
  "tracks": "data/tracks",
  "protocol": "newton_full_scene.eval_clip, 10 VBD iterations, mass 0.044, 15 body origins vs first 15 tracked nodes",
  "mean": 7.562408911297941,
- "median": 6.527520161254834,
  "n_clips": 36,
  "seconds": 843.1538715362549,
  "clips": {

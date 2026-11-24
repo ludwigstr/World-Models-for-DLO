@@ -72,7 +72,7 @@ def main():
     summ = {}
     for key in ("mittel", "mittel_incl0", "mittel_warm5"):
         v = np.array([r[key] for r in res.values()])
-        summ[key] = {"mean": float(v.mean()), "median": float(np.median(v))}
+        summ[key] = {"mean": float(v.mean())}
     report = {"ckpt": a.ckpt, "tracks": str(tracks), "clips": res, "summary": summ, "n_clips": len(res),
               "protocol": "frame 0 measured, v0 = 0, open loop, measured end motions, ends pinned; "
                           "mittel = mean over predicted frames 1..T-1"}
@@ -101,11 +101,11 @@ def main():
             Pv = torch.tensor(V[:T].transpose(1, 0, 2, 3), dtype=torch.float32, device=dev)
             R = torch.tensor(zz["rest"], dtype=torch.float32, device=dev)
             sv.append(float(frame_err(rollout(net, Pv, dt, rest_shape=R), Pv)[1:].mean()))
-        report["synthetic_val_rollouts"] = {"n": len(sv), "mean": float(np.mean(sv)), "median": float(np.median(sv))}
-        print(f"held-out synthetic rollouts (source/source): {len(sv)}, mean {np.mean(sv):.2f}, median {np.median(sv):.2f} mm/node")
+        report["synthetic_val_rollouts"] = {"n": len(sv), "mean": float(np.mean(sv))}
+        print(f"held-out synthetic rollouts (source/source): {len(sv)}, mean {np.mean(sv):.2f} mm/node")
     out.write_text(json.dumps(report, indent=1))
     for key, s in summ.items():
-        print(f"{key}: mean {s['mean']:.2f}  median {s['median']:.2f} mm/node over {len(res)} clips")
+        print(f"{key}: mean {s['mean']:.2f} mm/node over {len(res)} clips")
     print(f"-> {a.out}")
 
 

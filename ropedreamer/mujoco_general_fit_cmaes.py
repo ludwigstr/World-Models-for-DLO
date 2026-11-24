@@ -188,8 +188,8 @@ def main():
     pool.close(); pool.join()
     v = np.array(list(per_clip.values()))
     np.savez(ROOT / a.out, best_x=best_x, best_f=best_f, base_f=f0, history=json.dumps(hist),
-             per_clip=json.dumps(per_clip), final_avg=v.mean(), final_median=np.median(v), **unpack(best_x))
-    log(f"final result: {v.mean():.3f} mm/node (median {np.median(v):.3f}), {len(clips)} clips IN-SAMPLE")
+             per_clip=json.dumps(per_clip), final_avg=v.mean(), **unpack(best_x))
+    log(f"final result: {v.mean():.3f} mm/node, {len(clips)} clips IN-SAMPLE")
     log("=== DONE ===")
 
 

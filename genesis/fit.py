@@ -163,8 +163,8 @@ def main():
     per_clip = {c: e for _, c, e in pool.map(_eval_one, [(0, c, best_x) for c in clips], chunksize=1)}
     pool.close(); pool.join()
     v = np.array(list(per_clip.values()))
-    save(best_x, best_f, f0, hist, per_clip=per_clip, final_avg=float(v.mean()), final_median=float(np.median(v)))
-    log(f"final result: {v.mean():.3f} mm/node (median {np.median(v):.3f}), {len(clips)} clips IN-SAMPLE")
+    save(best_x, best_f, f0, hist, per_clip=per_clip, final_avg=float(v.mean()))
+    log(f"final result: {v.mean():.3f} mm/node, {len(clips)} clips IN-SAMPLE")
     log("=== DONE ===")
 
 

@@ -76,9 +76,9 @@ def main():
     out.write_text(json.dumps({"params": a.params, "tracks": a.tracks or "live re-track (14 clips, t0=8, trims)",
                                "protocol": "newton_full_scene.eval_clip, 10 VBD iterations, mass 0.044, "
                                            "15 body origins vs first 15 tracked nodes",
-                               "mean": float(v.mean()), "median": float(np.median(v)), "n_clips": len(v),
+                               "mean": float(v.mean()), "n_clips": len(v),
                                "seconds": time.time() - t0, "clips": res}, indent=1))
-    print(f"mean {v.mean():.3f}  median {np.median(v):.3f} mm/node over {len(v)} clips, {time.time() - t0:.0f}s -> {a.out}")
+    print(f"mean {v.mean():.3f} mm/node over {len(v)} clips, {time.time() - t0:.0f}s -> {a.out}")
 
 
 if __name__ == "__main__":

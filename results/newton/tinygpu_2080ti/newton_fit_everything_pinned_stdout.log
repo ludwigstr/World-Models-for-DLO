@@ -731,7 +731,7 @@ Module newton._src.solvers.xpbd.kernels 23d48b8 load on device 'cuda:1' took 17.
 Module newton._src.solvers.xpbd.kernels 23d48b8 load on device 'cuda:3' took 14.60 ms  (cached)
 Module newton._src.solvers.xpbd.kernels 23d48b8 load on device 'cuda:0' took 13.02 ms  (cached)
 Module newton._src.solvers.xpbd.kernels 23d48b8 load on device 'cuda:0' took 13.16 ms  (cached)
-[14:24:17] gen 0 per clip: mean 10.186 median 8.728 -> newton_fit_everything_pinned_gen0.json
+[14:24:17] gen 0 per clip: mean 10.186 -> newton_fit_everything_pinned_gen0.json
 [14:24:17] gen 0/30 (x0 = data/newton_fit_everything_pinned.npz, nothing moved): fit=10.19 (xy=10.19, z-err=nanmm) (847s)
 [17:48:28] gen 1/30: best=9.28 (xy=9.28, z-err=nanmm) mean=11.27 best_ever=9.28 (12251s)  mass=pinned K=900 mu=[0.3298, 0.4569, 0.0311, 0.0001] eps/tau=0.052/0.194
 [21:12:58] gen 2/30: best=9.33 (xy=9.33, z-err=nanmm) mean=9.82 best_ever=9.28 (12270s)  mass=pinned K=900 mu=[0.3298, 0.4569, 0.0311, 0.0001] eps/tau=0.052/0.194
@@ -3707,7 +3707,7 @@ Module newton._src.solvers.xpbd.kernels 23d48b8 load on device 'cuda:2' took 116
 [20:36:52] gen 30/30: best=7.57 (xy=7.57, z-err=nanmm) mean=7.96 best_ever=7.57 (12239s)  mass=pinned K=443 mu=[0.3458, 0.431, 0.045, 0.0002] eps/tau=0.071/0.201
 [20:36:52] fit done: 30 generations, 49023s; best fit 7.57 (gen 0 was 10.19)
 [20:36:52] === final validation: 10 iterations, all 36 clips of data/tracks (IN-SAMPLE) ===
-[20:50:30] final result: xy 7.70 mm/node (median 6.52), z-err nan mm (IN-SAMPLE); mass 0.044; K_stretch 443; mu shape 0.346 cable 0.431 tors 0.0450 roll 0.00016; dahl eps 0.071 tau 0.201
+[20:50:30] final result: xy 7.70 mm/node, z-err nan mm (IN-SAMPLE); mass 0.044; K_stretch 443; mu shape 0.346 cable 0.431 tors 0.0450 roll 0.00016; dahl eps 0.071 tau 0.201
 [20:50:30]   20261021_175638      xy   18.9  z-err    nan
 [20:50:30]   20261026_130441      xy   16.0  z-err    nan
 [20:50:30]   20261028_105803      xy   15.4  z-err    nan

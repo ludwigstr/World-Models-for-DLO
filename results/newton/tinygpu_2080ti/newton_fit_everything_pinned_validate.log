@@ -762,4 +762,4 @@ Module newton._src.solvers.xpbd.kernels 23d48b8 load on device 'cuda:3' took 35.
 [34/36] 20261021_173234: 6.332 mm/node, 154 frames, 302s (total 839s)
 [35/36] 20261028_114103: 6.588 mm/node, 146 frames, 289s (total 841s)
 [36/36] 20261028_105803: 10.162 mm/node, 146 frames, 291s (total 841s)
-mean 7.562  median 6.528 mm/node over 36 clips, 843s -> data/newton_fit_everything_pinned_validate.json
+mean 7.562 mm/node over 36 clips, 843s -> data/newton_fit_everything_pinned_validate.json

@@ -264,9 +264,9 @@ def main():
             xy0, z0 = float(np.mean([e[0] for e in r0])), float(np.mean([e[1] for e in r0]))
             v0 = np.array([e[0] for e in r0])
             OUT.with_name(OUT.stem + "_gen0.json").write_text(json.dumps(
-                {"warm": WARM_FILE, "mean": float(v0.mean()), "median": float(np.median(v0)),
+                {"warm": WARM_FILE, "mean": float(v0.mean()),
                  "clips": {c: e[0] for c, e in zip(TRAIN_CLIPS, r0)}}, indent=1))
-            log(f"gen 0 per clip: mean {v0.mean():.3f} median {np.median(v0):.3f} -> {OUT.stem}_gen0.json")
+            log(f"gen 0 per clip: mean {v0.mean():.3f} -> {OUT.stem}_gen0.json")
         else:
             (xy0, z0), = eval_population([x0])
         log(f"gen 0/{MAX_GENERATIONS} (x0 = {WARM_FILE if os.environ.get('WIRE_WARM_FULL') == '1' else 'row ' + ('14' if MASS_PIN else '15')}, nothing moved): fit={fitness(xy0, z0):.2f} "
@@ -333,12 +333,12 @@ def main():
         per_clip[c] = float(np.mean(errs))
         per_clip_z[c] = _z_loss_mm(z_out, tg)
     vals = np.array(list(per_clip.values()))
-    final_avg, final_med, final_z = float(vals.mean()), float(np.median(vals)), float(np.mean(list(per_clip_z.values())))
+    final_avg, final_z = float(vals.mean()), float(np.mean(list(per_clip_z.values())))
     safe_savez(OUT, log=log, best=best_row, history=json.dumps(hist), final_avg=final_avg,
-               final_median=final_med, final_z_err=final_z,
+               final_z_err=final_z,
                per_clip=json.dumps(per_clip), per_clip_z=json.dumps(per_clip_z))
     r = best_row
-    log(f"final result: xy {final_avg:.2f} mm/node (median {final_med:.2f}), z-err {final_z:.2f} mm (IN-SAMPLE); "
+    log(f"final result: xy {final_avg:.2f} mm/node, z-err {final_z:.2f} mm (IN-SAMPLE); "
         f"mass {MASS_PIN or np.round(r[I_MASS:I_MASS+4], 3).tolist()}; K_stretch {r[I_K]:.0f}; "
         f"mu shape {r[I_MU]:.3f} cable {r[I_MU+1]:.3f} tors {r[I_MU+2]:.4f} roll {r[I_MU+3]:.5f}; "
         f"dahl eps {r[I_DAHL]:.3f} tau {r[I_DAHL+1]:.3f}")

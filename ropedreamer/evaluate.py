@@ -59,11 +59,11 @@ def main():
     curve = np.nanmean(np.stack(curves), axis=0)
     out = ROOT / a.out
     out.write_text(json.dumps(per_clip, indent=1))
-    summary = {"ckpt": a.ckpt, "tracks": a.tracks, "n_clips": len(v), "mittel": float(v.mean()), "median": float(np.median(v)),
+    summary = {"ckpt": a.ckpt, "tracks": a.tracks, "n_clips": len(v), "mittel": float(v.mean()),
                "warmup_frames": a.warm, "ends_pinned": not a.no_pin_ends, "representation_floor_mm": float(np.mean(floors)),
                "rmse_curve_mm_steps_1_50": [float(x) for x in curve]}
     Path(str(out).replace(".json", "_summary.json")).write_text(json.dumps(summary, indent=1))
-    print(f"{a.ckpt} on {a.tracks}: {len(v)} clips, Mittel {v.mean():.2f}, Median {np.median(v):.2f} mm/node "
+    print(f"{a.ckpt} on {a.tracks}: {len(v)} clips, mean {v.mean():.2f} mm/node "
           f"(frames after a {a.warm}-frame warm-up); representation floor {np.mean(floors):.2f} mm; "
           f"open-loop step 1/10/50: {curve[0]:.1f}/{curve[9]:.1f}/{curve[49]:.1f} mm")
     print(f"-> {out}")

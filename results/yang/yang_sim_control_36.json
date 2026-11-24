@@ -276,8 +276,7 @@
   }
  },
  "summary": {
-  "mean": 11.094692035638776,
-  "median": 7.920091072737696
+  "mean": 11.094692035638776
  },
  "seconds": 320.87419986724854,
  "protocol": "sim_newton.rollouts: 300-substep settle, every frame incl. frame 0, 16 nodes (15 body origins + last tip)"

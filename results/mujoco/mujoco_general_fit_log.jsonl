@@ -63,5 +63,5 @@
 [18:18:17] gen 60/1000: best 9.714  mean 9.921  best_ever 9.696  (7683s)  k 0.003..7.88  rest -23.9..+18.8  damp 0.034..1.51  mu 0.30  mass [0.2434, 0.1585, 0.2056, 0.4303]
 [18:18:17] wall-clock cap 2026-11-07 20:00 reached before gen 61: stopping, best_ever 9.696 kept
 [18:18:17] fit done: 9.696 (gen 0 13.789), 458945s
-[18:26:08] final result: 9.696 mm/node (median 7.733), 36 clips IN-SAMPLE
+[18:26:08] final result: 9.696 mm/node, 36 clips IN-SAMPLE
 [18:26:08] === DONE ===
