@@ -23,7 +23,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 
 
-PATCHED = ROOT.parent / "extern/DLO-Lab-perjoint"
+PATCHED = ROOT / "dlolab_patched"
 
 
 DLO_LAB = Path(os.environ.get("WIRE_DLOLAB", PATCHED))
